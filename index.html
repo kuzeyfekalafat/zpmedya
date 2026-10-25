@@ -711,18 +711,20 @@
         let activeProfileTab = 'posts';
         let isAdminLoggedIn = localStorage.getItem('zp_admin') === 'true';
 
-        let users = JSON.parse(localStorage.getItem('zp_users')) || {
+        // Eskiden kalan tüm bozuk hafızayı temizleyip direkt senin asıl Admin profilini yüklüyoruz
+        let users = {
             "kuzeyfe": {
                 username: "kuzeyfe",
                 email: SUPER_ADMIN_EMAIL,
                 fullName: "Kuzeyfe Kalafat",
-                category: "Kullanıcı",
+                category: "Müzisyen",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
                 isVerified: true,
-                bio: "ZP Medya Ailesine katıldı.",
+                bio: "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı",
                 password: ADMIN_PASS
             }
         };
+        localStorage.setItem('zp_users', JSON.stringify(users));
 
         function checkAdminStatus(username) {
             if (!username) return false;
@@ -743,18 +745,18 @@
         }
 
         window.onload = function() {
-            if (currentUser && users[currentUser]) {
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('app-container').style.display = 'flex';
-                renderStories();
-                renderFeed();
-                openProfile(currentUser);
-            } else {
-                currentUser = null;
-                localStorage.removeItem('zp_current_user');
-                document.getElementById('auth-screen').style.display = 'flex';
-                document.getElementById('app-container').style.display = 'none';
+            // Tarayıcı belleğinde eski kaydı varsa siliyoruz ve direkt admin profiliyle başlatıyoruz
+            if (!currentUser || !users[currentUser]) {
+                currentUser = 'kuzeyfe';
+                isAdminLoggedIn = true;
+                saveDataToStorage();
             }
+            
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('app-container').style.display = 'flex';
+            renderStories();
+            renderFeed();
+            openProfile('kuzeyfe');
         };
 
         let selectedGender = '';
@@ -815,10 +817,10 @@
                 phone: phone,
                 gender: selectedGender,
                 fullName: fullName,
-                category: isSuperAdmin ? "Kullanıcı" : "Kullanıcı",
+                category: isSuperAdmin ? "Müzisyen" : "Kullanıcı",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
                 isVerified: isSuperAdmin,
-                bio: "ZP Medya Ailesine katıldı.",
+                bio: isSuperAdmin ? "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı" : "ZP Medya Ailesine katıldı.",
                 password: password,
                 birthdate: birthdate
             };
