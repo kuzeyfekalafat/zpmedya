@@ -34,138 +34,13 @@
             min-height: 100vh;
         }
 
-        /* --- İNSTAGRAM ORİJİNAL GİRİŞ / KAYIT DUVARI --- */
-        .auth-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000000;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .auth-card {
-            width: 100%;
-            max-width: 350px;
-            background: #000000;
-            border: 1px solid var(--border-color);
-            padding: 30px 20px;
-            text-align: center;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-
-        .auth-logo {
-            font-size: 34px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 12px;
-        }
-
-        .auth-desc {
-            color: var(--text-muted);
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 18px;
-            margin-bottom: 16px;
-        }
-
-        .auth-input {
-            width: 100%;
-            background: #121212;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 10px 12px;
-            color: #fff;
-            font-size: 13px;
-            margin-bottom: 8px;
-            outline: none;
-        }
-
-        .auth-input:focus {
-            border-color: #a8a8a8;
-        }
-
-        .gender-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .gender-option {
-            flex: 1;
-            background: #121212;
-            border: 1px solid var(--border-color);
-            padding: 8px;
-            border-radius: 6px;
-            color: var(--text-muted);
-            font-size: 13px;
-            cursor: pointer;
-            text-align: center;
-            user-select: none;
-        }
-
-        .gender-option.selected {
-            background: var(--accent-blue);
-            color: #fff;
-            border-color: var(--accent-blue);
-            font-weight: 600;
-        }
-
-        .date-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-align: left;
-            margin: 4px 0 2px 4px;
-        }
-
-        .auth-btn {
-            width: 100%;
-            background: var(--accent-blue);
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-
-        .auth-switch-card {
-            width: 100%;
-            max-width: 350px;
-            background: #000000;
-            border: 1px solid var(--border-color);
-            padding: 15px;
-            text-align: center;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .auth-switch-card span {
-            color: var(--accent-blue);
-            font-weight: 600;
-            cursor: pointer;
-        }
-
         /* --- ASIL UYGULAMA İÇERİĞİ --- */
         .app-container {
             width: 100%;
             max-width: 470px;
             background-color: #000;
             min-height: 100vh;
-            display: none;
+            display: flex;
             flex-direction: column;
             position: relative;
             border-left: 1px solid var(--border-color);
@@ -407,6 +282,17 @@
         }
         .btn-submit { width: 100%; background: var(--accent-blue); color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; }
         
+        /* Tam Ekran Alt Sayfalar (Arşiv, Hareketler, Bildirimler vb. için) */
+        .sub-page {
+            position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 470px; height: 100vh;
+            background: #000; z-index: 400; display: none; flex-direction: column; overflow-y: auto;
+        }
+        .sub-page-header {
+            height: 50px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-weight: 700; font-size: 16px; position: sticky; top: 0; background: #000; z-index: 10;
+        }
+        .sub-page-header i { cursor: pointer; font-size: 20px; }
+        .sub-page-body { padding: 16px; flex: 1; }
+
         /* QR Kod Paylaşım Paneli Stilleri */
         .qr-box {
             background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
@@ -437,55 +323,14 @@
 </head>
 <body>
 
-    <!-- İNSTAGRAM GİRİŞ / KAYIT DUVARI -->
-    <div class="auth-overlay" id="auth-screen">
-        <!-- KAYIT OL PANELİ -->
-        <div class="auth-card" id="signup-box">
-            <div class="auth-logo">ZP Medya</div>
-            <div class="auth-desc">Arkadaşlarının fotoğraf ve videolarını görmek için kaydol.</div>
-            <input type="text" id="reg-email" class="auth-input" placeholder="E-posta adresi">
-            <input type="text" id="reg-fullname" class="auth-input" placeholder="Adı Soyadı">
-            <input type="text" id="reg-username" class="auth-input" placeholder="Kullanıcı adı">
-            <input type="text" id="reg-phone" class="auth-input" placeholder="Telefon numarası">
-            
-            <div class="date-label">Cinsiyet</div>
-            <div class="gender-container">
-                <div class="gender-option" id="gender-male" onclick="selectGender('Erkek')">Erkek</div>
-                <div class="gender-option" id="gender-female" onclick="selectGender('Kız')">Kız</div>
-            </div>
-
-            <div class="date-label">Doğum Tarihi</div>
-            <input type="date" id="reg-birthdate" class="auth-input">
-
-            <input type="password" id="reg-password" class="auth-input" placeholder="Şifre">
-            <input type="password" id="reg-password-confirm" class="auth-input" placeholder="Şifreyi tekrar gir">
-
-            <button class="auth-btn" onclick="registerUser()">Kaydol</button>
-        </div>
-        <div class="auth-switch-card" id="signup-switch">
-            Hesabın var mı? <span onclick="switchAuthView('login')">Giriş yap</span>
-        </div>
-
-        <!-- GİRİŞ YAP PANELİ -->
-        <div class="auth-card" id="login-box" style="display: none;">
-            <div class="auth-logo">ZP Medya</div>
-            <input type="text" id="login-username" class="auth-input" placeholder="Kullanıcı adı, telefon veya e-posta">
-            <input type="password" id="login-password" class="auth-input" placeholder="Şifre">
-            <button class="auth-btn" onclick="loginUser()">Giriş Yap</button>
-        </div>
-        <div class="auth-switch-card" id="login-switch" style="display: none;">
-            Hesabın yok mu? <span onclick="switchAuthView('signup')">Kaydol</span>
-        </div>
-    </div>
-
     <!-- ASIL UYGULAMA -->
     <div class="app-container" id="app-container">
         <!-- Sticky Header -->
         <div class="header">
             <div class="logo" id="header-title">ZP Medya</div>
             <div class="header-icons" id="header-icons-area">
-                <i class="fa-regular fa-heart" onclick="openGenericModal('Bildirimler', 'Henüz yeni bir bildiriminiz bulunmuyor.')"></i>
-                <i class="fa-regular fa-paper-plane" onclick="openGenericModal('Direkt Mesajlar (DM)', 'Mesajlaşma özelliği yakında aktif olacaktır.')"></i>
+                <i class="fa-regular fa-heart" onclick="openSubPage('notifications-page')"></i>
+                <i class="fa-regular fa-paper-plane" onclick="openSubPage('dm-page')"></i>
             </div>
         </div>
 
@@ -548,9 +393,9 @@
         <!-- Bottom Navigation Bar -->
         <div class="bottom-nav">
             <div class="nav-item" onclick="showView('feed')"><i class="fa-solid fa-house"></i></div>
-            <div class="nav-item" onclick="openGenericModal('Keşfet', 'Keşfet akışı yakında güncellenecektir.')"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div class="nav-item" onclick="openSubPage('explore-page')"><i class="fa-solid fa-magnifying-glass"></i></div>
             <div class="nav-item" onclick="openCreatePostModal()"><i class="fa-regular fa-square-plus"></i></div>
-            <div class="nav-item" onclick="openGenericModal('Reels', 'Reels videoları yakında eklenecektir.')"><i class="fa-solid fa-clapperboard"></i></div>
+            <div class="nav-item" onclick="openSubPage('reels-page')"><i class="fa-solid fa-clapperboard"></i></div>
             <div class="nav-item" onclick="openCurrentProfile()"><img class="nav-avatar" id="nav-user-avatar" src="" alt="Me"></div>
         </div>
     </div>
@@ -568,17 +413,17 @@
             <input type="text" class="settings-search" placeholder="Ara">
         </div>
 
-        <div class="settings-section-title" id="admin-menu-title" style="display:none;">Yönetici Paneli (Admin)</div>
-        <div class="settings-menu-item" id="admin-menu-btn" style="display:none;" onclick="openAdminLoginModal()">
-            <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Admin Şifresi Gir</div>
+        <div class="settings-section-title" id="admin-menu-title">Yönetici Paneli (Admin)</div>
+        <div class="settings-menu-item" id="admin-menu-btn" onclick="openSubPage('admin-panel-page')">
+            <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Yönetim Paneli & İstatistikler</div>
         </div>
 
         <div class="settings-section-title">Hesabın</div>
-        <div class="settings-menu-item" onclick="openGenericModal('Hesap Merkezi', 'Şifre, güvenlik, kişisel detaylar ve bağlı hesaplar yönetimi.')">
+        <div class="settings-menu-item" onclick="openSubPage('account-center-page')">
             <div class="settings-menu-item-left"><i class="fa-regular fa-user"></i> Hesap Merkezi</div>
             <span>Şifre, güvenlik...</span>
         </div>
-        <div class="settings-menu-item" onclick="openRegisterModalFromMenu()">
+        <div class="settings-menu-item" onclick="openSubPage('new-account-page')">
             <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-user-plus"></i> Yeni Hesap Ekle / Kaydol</div>
         </div>
 
@@ -587,35 +432,35 @@
             <div class="settings-menu-item-left"><i class="fa-regular fa-bookmark"></i> Kaydedildi</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
-        <div class="settings-menu-item" onclick="openGenericModal('Arşiv Paneli', 'Hikaye ve gönderi arşivleriniz burada listelenir.')">
+        <div class="settings-menu-item" onclick="openSubPage('archive-page')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-clock-rotate-left"></i> Arşiv</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
-        <div class="settings-menu-item" onclick="openGenericModal('Hareketlerin Paneli', 'Paylaşımlarınız, etkileşimleriniz ve geçirdiğiniz süre.')">
+        <div class="settings-menu-item" onclick="openSubPage('activity-page')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-chart-line"></i> Hareketlerin</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
-        <div class="settings-menu-item" onclick="openGenericModal('Bildirim Ayarları', 'Anında bildirim, e-posta ve SMS bildirim tercihleri.')">
+        <div class="settings-menu-item" onclick="openSubPage('notifications-settings-page')">
             <div class="settings-menu-item-left"><i class="fa-regular fa-bell"></i> Bildirimler</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
 
         <div class="settings-section-title">İçeriklerini kimler görebilir?</div>
-        <div class="settings-menu-item" onclick="openGenericModal('Hesap Gizliliği', 'Hesabınız şu an Herkese açık modundadır.')">
+        <div class="settings-menu-item" onclick="openSubPage('privacy-page')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-lock"></i> Hesap gizliliği</div>
             <span>Herkese açık</span>
         </div>
-        <div class="settings-menu-item" onclick="openGenericModal('Engellenenler', 'Engellediğiniz hesapların listesi.')">
+        <div class="settings-menu-item" onclick="openSubPage('blocked-page')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-ban"></i> Engellenenler</div>
             <span>0</span>
         </div>
 
         <div class="settings-section-title">Daha fazla bilgi ve destek</div>
-        <div class="settings-menu-item" onclick="openGenericModal('Yardım Merkezi', 'Sorun bildirme, telif hakları ve destek talepleri.')">
+        <div class="settings-menu-item" onclick="openSubPage('help-page')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-life-ring"></i> Yardım</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
-        <div class="settings-menu-item" onclick="openGenericModal('Hesap Durumu', 'Hesabınızın topluluk kurallarına uygunluk durumu ve aktiflik bilgisi.')">
+        <div class="settings-menu-item" onclick="openSubPage('account-status-page')">
             <div class="settings-menu-item-left"><i class="fa-regular fa-circle-user"></i> Hesap Durumu</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
@@ -623,6 +468,65 @@
         <div class="settings-section-title">Oturum</div>
         <div class="settings-menu-item" onclick="logoutUser()">
             <div class="settings-menu-item-left text-red"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</div>
+        </div>
+    </div>
+
+    <!-- İÇİ DOLU GERÇEK ALT SAYFALAR -->
+    <div class="sub-page" id="archive-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('archive-page')"></i>
+            <span>Arşiv</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body" style="color:var(--text-muted); font-size:14px;">
+            <p>Arşivlenen gönderileriniz ve hikayeleriniz burada saklanır. Şu an boş.</p>
+        </div>
+    </div>
+
+    <div class="sub-page" id="activity-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('activity-page')"></i>
+            <span>Hareketlerin</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body" style="color:var(--text-main); font-size:14px;">
+            <div style="background:var(--card-bg); padding:15px; border-radius:10px; margin-bottom:12px; border:1px solid var(--border-color);">
+                <div style="font-weight:700; margin-bottom:5px;">Geçirilen Süre</div>
+                <div style="color:var(--text-muted); font-size:13px;">Bugün ortalama aktif kullanım süresi: <strong>12 dakika</strong></div>
+            </div>
+            <div style="background:var(--card-bg); padding:15px; border-radius:10px; border:1px solid var(--border-color);">
+                <div style="font-weight:700; margin-bottom:5px;">Etkileşimler</div>
+                <div style="color:var(--text-muted); font-size:13px;">Toplam Beğeni: 0 | Yorum: 0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sub-page" id="privacy-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('privacy-page')"></i>
+            <span>Hesap Gizliliği</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body" style="color:var(--text-main); font-size:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:15px; border-radius:10px; border:1px solid var(--border-color);">
+                <div>
+                    <div style="font-weight:700;">Gizli Hesap</div>
+                    <div style="color:var(--text-muted); font-size:12px;">Sadece onayladığın kişiler fotoğraflarını görebilir.</div>
+                </div>
+                <input type="checkbox" style="width:20px; height:20px; accent-color:var(--accent-blue);">
+            </div>
+        </div>
+    </div>
+
+    <div class="sub-page" id="help-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('help-page')"></i>
+            <span>Yardım Merkezi</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body" style="color:var(--text-main); font-size:14px;">
+            <p style="color:var(--text-muted); margin-bottom:15px;">ZP Medya Destek hattına hoş geldiniz. Sorun bildirmek veya öneride bulunmak için aşağıdaki kanalları kullanabilirsiniz.</p>
+            <button class="btn-submit" onclick="alert('Destek talebiniz alındı!')">Sorun Bildir</button>
         </div>
     </div>
 
@@ -642,18 +546,6 @@
                 <textarea id="post-caption-input" rows="3" placeholder="Bir şeyler yazın..."></textarea>
             </div>
             <button class="btn-submit" onclick="submitPost()">Paylaş</button>
-        </div>
-    </div>
-
-    <!-- Genel Detay Paneli Modalı (Boş uyarı yerine şık pencere) -->
-    <div class="modal" id="generic-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span id="generic-modal-title">Bilgi</span>
-                <i class="fa-solid fa-xmark modal-close" onclick="closeGenericModal()"></i>
-            </div>
-            <p id="generic-modal-desc" style="color: var(--text-muted); font-size: 14px; margin: 20px 0; line-height: 1.5;"></p>
-            <button class="btn-submit" onclick="closeGenericModal()">Tamam</button>
         </div>
     </div>
 
@@ -700,25 +592,10 @@
         </div>
     </div>
 
-    <div class="modal" id="admin-login-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span>Admin Şifre Paneli</span>
-                <i class="fa-solid fa-xmark modal-close" onclick="closeAdminLoginModal()"></i>
-            </div>
-            <div class="input-group">
-                <label>Yönetici Şifresi</label>
-                <input type="password" id="admin-pass-input" placeholder="Şifrenizi girin">
-            </div>
-            <button class="btn-submit" onclick="verifyAdminLogin()">Yetkiyi Aktifleştir</button>
-        </div>
-    </div>
-
     <script>
         const ADMIN_PASS = "Kuzeyfe1986404040";
         const SUPER_ADMIN_EMAIL = "zpmedyaapp@gmail.com";
 
-        // Giriş duvarını tamamen atlayıp doğrudan admin profiliyle başlatıyoruz
         let currentUser = 'kuzeyfe';
         let activeProfileUser = 'kuzeyfe';
         let activeProfileTab = 'posts';
@@ -737,10 +614,6 @@
             }
         };
 
-        function checkAdminStatus(username) {
-            return true;
-        }
-
         let posts = JSON.parse(localStorage.getItem('zp_posts')) || [];
 
         function saveDataToStorage() {
@@ -752,7 +625,6 @@
 
         window.onload = function() {
             saveDataToStorage();
-            document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('app-container').style.display = 'flex';
             renderStories();
             renderFeed();
@@ -766,8 +638,8 @@
             if (view === 'feed') {
                 document.getElementById('header-title').innerText = 'ZP Medya';
                 document.getElementById('header-icons-area').innerHTML = `
-                    <i class="fa-regular fa-heart" onclick="openGenericModal('Bildirimler', 'Henüz yeni bir bildiriminiz bulunmuyor.')"></i>
-                    <i class="fa-regular fa-paper-plane" onclick="openGenericModal('Direkt Mesajlar (DM)', 'Mesajlaşma özelliği yakında aktif olacaktır.')"></i>
+                    <i class="fa-regular fa-heart" onclick="openSubPage('notifications-page')"></i>
+                    <i class="fa-regular fa-paper-plane" onclick="openSubPage('dm-page')"></i>
                 `;
                 renderFeed();
             } else if (view === 'profile') {
@@ -790,24 +662,10 @@
             document.getElementById('prof-posts-count').innerText = posts.filter(p => p.username === username).length;
 
             const actionsArea = document.getElementById('profile-actions-area');
-            let actionsHtml = `
+            actionsArea.innerHTML = `
                 <button class="profile-btn" onclick="openEditProfileModal()">Profili düzenle</button>
                 <button class="profile-btn" onclick="openShareProfileModal()">Profili paylaş</button>
             `;
-
-            if (username !== currentUser) {
-                let verifyBtnText = u.isVerified ? "Mavi Tik Kaldır" : "Mavi Tik Ver";
-                let verifyBtnClass = u.isVerified ? "admin-unverify-btn" : "admin-verify-btn";
-                
-                actionsHtml += `
-                    <button class="profile-btn ${verifyBtnClass}" onclick="toggleUserVerification('${username}')">${verifyBtnText}</button>
-                    <button class="profile-btn admin-delete-btn" onclick="deleteUserAccount('${username}')">Hesabı Sil</button>
-                `;
-            }
-
-            actionsArea.innerHTML = actionsHtml;
-            document.getElementById('admin-menu-title').style.display = 'block';
-            document.getElementById('admin-menu-btn').style.display = 'flex';
 
             switchProfileTab('posts');
             showView('profile');
@@ -862,8 +720,8 @@
                         <div class="post-actions">
                             <div class="post-actions-left">
                                 <i class="${post.liked ? 'fa-solid fa-heart liked-heart' : 'fa-regular fa-heart'}" onclick="toggleLike(${post.id})"></i>
-                                <i class="fa-regular fa-comment" onclick="openGenericModal('Yorumlar', 'Yorumlar paneli yakında aktifleşecek.')"></i>
-                                <i class="fa-regular fa-paper-plane" onclick="openGenericModal('Paylaş', 'Gönderi paylaşım bağlantısı oluşturuldu.')"></i>
+                                <i class="fa-regular fa-comment" onclick="alert('Yorumlar yakında')"></i>
+                                <i class="fa-regular fa-paper-plane" onclick="alert('Paylaşılıyor')"></i>
                             </div>
                             <div class="post-actions-right">
                                 <i class="${post.saved ? 'fa-solid fa-bookmark saved-bookmark' : 'fa-regular fa-bookmark'}" onclick="toggleSave(${post.id})"></i>
@@ -871,7 +729,6 @@
                         </div>
                         <div class="post-likes">${post.likes} beğenme</div>
                         <div class="post-caption"><span class="username" onclick="openProfile('${post.username}')">${post.username}</span> ${post.caption}</div>
-                        <div class="post-comments-link" onclick="openGenericModal('Yorumlar', 'Tüm yorumlar burada listelenecek.')">Tüm yorumları gör...</div>
                         <div class="post-time">${post.time || 'Şimdi'}</div>
                     </div>
                 `;
@@ -896,30 +753,6 @@
                 saveDataToStorage();
                 renderFeed();
                 if (activeProfileTab === 'saved') renderProfileGrid();
-            }
-        }
-
-        function toggleUserVerification(username) {
-            if(users[username]) {
-                users[username].isVerified = !users[username].isVerified;
-                saveDataToStorage();
-                openProfile(username);
-                renderFeed();
-            }
-        }
-
-        function deleteUserAccount(username) {
-            if (username === 'kuzeyfe') {
-                alert("Ana admin hesabı silinemez!");
-                return;
-            }
-            if (confirm(`@${username} kullanıcısını ve tüm verilerini silmek istediğine emin misin?`)) {
-                delete users[username];
-                posts = posts.filter(p => p.username !== username);
-                saveDataToStorage();
-                alert("Kullanıcı hesabı başarıyla silindi!");
-                openProfile(currentUser);
-                renderFeed();
             }
         }
 
@@ -951,7 +784,7 @@
 
             let gridHtml = '';
             filteredPosts.forEach(p => {
-                gridHtml += `<div class="profile-grid-item" onclick="openGenericModal('Gönderi', '${p.caption || "Açıklama yok"}')"><img src="${p.image}"></div>`;
+                gridHtml += `<div class="profile-grid-item"><img src="${p.image}"></div>`;
             });
 
             if (filteredPosts.length === 0) {
@@ -971,6 +804,23 @@
             document.getElementById('settings-menu').classList.remove('active');
         }
 
+        function openSubPage(pageId) {
+            closeSettingsMenu();
+            const page = document.getElementById(pageId);
+            if(page) {
+                page.style.display = 'flex';
+            } else {
+                alert("Bu alan yakında aktif olacaktır.");
+            }
+        }
+
+        function closeSubPage(pageId) {
+            const page = document.getElementById(pageId);
+            if(page) {
+                page.style.display = 'none';
+            }
+        }
+
         function openCreatePostModal() {
             document.getElementById('create-post-modal').style.display = 'flex';
         }
@@ -979,20 +829,9 @@
             document.getElementById('create-post-modal').style.display = 'none';
         }
 
-        function openGenericModal(title, desc) {
-            closeSettingsMenu();
-            document.getElementById('generic-modal-title').innerText = title;
-            document.getElementById('generic-modal-desc').innerText = desc;
-            document.getElementById('generic-modal').style.display = 'flex';
-        }
-
-        function closeGenericModal() {
-            document.getElementById('generic-modal').style.display = 'none';
-        }
-
         function openShareProfileModal() {
-            const profileUrl = window.location.href.split('?')[0] + "?user=" + (activeProfileUser || currentUser);
-            document.getElementById('share-modal-username').innerText = "@" + (activeProfileUser || currentUser);
+            const profileUrl = window.location.href.split('?')[0] + "?user=" + currentUser;
+            document.getElementById('share-modal-username').innerText = "@" + currentUser;
             document.getElementById('qr-code-img').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(profileUrl);
             document.getElementById('share-profile-modal').style.display = 'flex';
         }
@@ -1016,7 +855,7 @@
                 reader.onload = function(e) {
                     const newPost = {
                         id: Date.now(),
-                        username: currentUser || 'kuzeyfe',
+                        username: currentUser,
                         image: e.target.result,
                         caption: caption,
                         likes: 0,
@@ -1039,7 +878,7 @@
         }
 
         function openEditProfileModal() {
-            const u = users[currentUser || 'kuzeyfe'];
+            const u = users[currentUser];
             document.getElementById('edit-fullname-input').value = u.fullName;
             document.getElementById('edit-bio-input').value = u.bio;
             document.getElementById('edit-profile-modal').style.display = 'flex';
@@ -1050,9 +889,9 @@
         }
 
         function saveProfileChanges() {
-            const u = currentUser || 'kuzeyfe';
+            const u = currentUser;
             users[u].fullName = document.getElementById('edit-fullname-input').value;
-            users[u],bio = document.getElementById('edit-bio-input').value;
+            users[u].bio = document.getElementById('edit-bio-input').value;
             const avatarFile = document.getElementById('edit-avatar-file').files[0];
 
             if (avatarFile) {
@@ -1071,19 +910,9 @@
             }
         }
 
-        function openAdminLoginModal() {
-            closeSettingsMenu();
-            alert("Zaten @kuzeyfe admin hesabındasın ve tüm yönetici yetkileri aktif!");
-        }
-
         function logoutUser() {
-            alert("Ana yönetici oturumu açık durumda.");
+            alert("Ana yönetici oturumu aktif.");
             closeSettingsMenu();
-        }
-
-        function openRegisterModalFromMenu() {
-            closeSettingsMenu();
-            openGenericModal("Yeni Hesap Ekle", "Çoklu hesap yönetimi yakında eklenecektir.");
         }
     </script>
 </body>
