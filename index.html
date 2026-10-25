@@ -207,7 +207,7 @@
         }
 
         .saved-bookmark {
-            color: var(--text-main);
+            color: var(--text-main) !important;
         }
 
         .post-likes {
@@ -434,7 +434,7 @@
             color: var(--text-muted);
         }
 
-        /* Profile 4-Column Tabs */
+        /* Profile 5-Column Tabs (Posts, Saved, Reels, Repost, Tagged) */
         .profile-tabs {
             display: flex;
             border-top: 1px solid var(--border-color);
@@ -703,8 +703,8 @@
         <div class="header">
             <div class="logo" id="header-title">ZP Medya</div>
             <div class="header-icons" id="header-icons-area">
-                <i class="fa-regular fa-heart"></i>
-                <i class="fa-regular fa-paper-plane" onclick="alert('DM Yakında!')"></i>
+                <i class="fa-regular fa-heart" onclick="alert('Bildirimler yakında!')"></i>
+                <i class="fa-regular fa-paper-plane" onclick="alert('DM Mesajları yakında!')"></i>
             </div>
         </div>
 
@@ -765,10 +765,13 @@
                 </div>
             </div>
 
-            <!-- Profile 4-Column Tabs -->
+            <!-- Profile 5-Column Tabs -->
             <div class="profile-tabs">
                 <div class="profile-tab active" id="tab-posts" onclick="switchProfileTab('posts')" title="Gönderiler">
                     <i class="fa-solid fa-table-cells"></i>
+                </div>
+                <div class="profile-tab" id="tab-saved" onclick="switchProfileTab('saved')" title="Kaydedilenler">
+                    <i class="fa-regular fa-bookmark"></i>
                 </div>
                 <div class="profile-tab" id="tab-reels" onclick="switchProfileTab('reels')" title="Reels">
                     <i class="fa-solid fa-clapperboard"></i>
@@ -786,9 +789,9 @@
 
         <div class="bottom-nav">
             <div class="nav-item" onclick="showView('feed')"><i class="fa-solid fa-house"></i></div>
-            <div class="nav-item" onclick="alert('Keşfet Yakında!')"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div class="nav-item" onclick="alert('Keşfet Paneli Yakında!')"><i class="fa-solid fa-magnifying-glass"></i></div>
             <div class="nav-item" onclick="openCreatePostModal()"><i class="fa-regular fa-square-plus"></i></div>
-            <div class="nav-item" onclick="alert('Reels Yakında!')"><i class="fa-solid fa-clapperboard"></i></div>
+            <div class="nav-item" onclick="alert('Reels Paneli Yakında!')"><i class="fa-solid fa-clapperboard"></i></div>
             <div class="nav-item" onclick="openProfile('kuzeyfe')">
                 <img class="nav-avatar" id="nav-user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80" alt="Me">
             </div>
@@ -821,7 +824,7 @@
         </div>
 
         <div class="settings-section-title">ZP Medya'yı nasıl kullanıyorsun?</div>
-        <div class="settings-menu-item" onclick="closeSettingsMenu(); switchProfileTab('saved');">
+        <div class="settings-menu-item" onclick="openSavedPostsSection()">
             <div class="settings-menu-item-left"><i class="fa-regular fa-bookmark"></i> Kaydedildi</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
@@ -1181,8 +1184,8 @@
             if (view === 'feed') {
                 document.getElementById('header-title').innerText = 'ZP Medya';
                 document.getElementById('header-icons-area').innerHTML = `
-                    <i class="fa-regular fa-heart"></i>
-                    <i class="fa-regular fa-paper-plane" onclick="alert('DM Yakında!')"></i>
+                    <i class="fa-regular fa-heart" onclick="alert('Bildirimler yakında!')"></i>
+                    <i class="fa-regular fa-paper-plane" onclick="alert('DM Mesajları yakında!')"></i>
                 `;
             } else if (view === 'profile' && activeProfileUser) {
                 document.getElementById('header-title').innerText = activeProfileUser;
@@ -1194,7 +1197,6 @@
 
         function openProfile(username) {
             activeProfileUser = username;
-            activeProfileTab = 'posts';
             const u = users[username];
             if (!u) return;
 
@@ -1226,10 +1228,17 @@
         function switchProfileTab(tab) {
             activeProfileTab = tab;
             document.getElementById('tab-posts').classList.toggle('active', tab === 'posts');
+            document.getElementById('tab-saved').classList.toggle('active', tab === 'saved');
             document.getElementById('tab-reels').classList.toggle('active', tab === 'reels');
             document.getElementById('tab-repost').classList.toggle('active', tab === 'repost');
             document.getElementById('tab-tagged').classList.toggle('active', tab === 'tagged');
             renderProfileGrid();
+        }
+
+        function openSavedPostsSection() {
+            closeSettingsMenu();
+            openProfile('kuzeyfe');
+            switchProfileTab('saved');
         }
 
         function renderProfileGrid() {
@@ -1249,7 +1258,7 @@
 
             if (filteredPosts.length === 0) {
                 let msg = 'Henüz gönderi yok.';
-                if (activeProfileTab === 'saved') msg = 'Henüz kaydedilen gönderi yok.';
+                if (activeProfileTab === 'saved') msg = 'Henüz kaydedilen bir gönderiniz bulunmuyor.';
                 if (activeProfileTab === 'reels') msg = 'Henüz Reels videosu yok.';
                 if (activeProfileTab === 'repost') msg = 'Henüz yeniden paylaşılan gönderi yok.';
                 if (activeProfileTab === 'tagged') msg = 'Henüz etiketlendiğin bir gönderi yok.';
