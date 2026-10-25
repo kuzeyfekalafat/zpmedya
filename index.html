@@ -402,7 +402,7 @@
         <!-- GİRİŞ YAP PANELİ -->
         <div class="auth-card" id="login-box" style="display: none;">
             <div class="auth-logo">ZP Medya</div>
-            <input type="text" id="login-username" class="auth-input" placeholder="Kullanıcı adı veya e-posta">
+            <input type="text" id="login-username" class="auth-input" placeholder="Telefon numarası, kullanıcı adı veya e-posta">
             <input type="password" id="login-password" class="auth-input" placeholder="Şifre">
             <button class="auth-btn" onclick="loginUser()">Giriş Yap</button>
         </div>
@@ -614,8 +614,6 @@
     <script>
         const ADMIN_PASS = "Kuzeyfe1986404040";
 
-        // DİKKAT: Artık varsayılan olarak oturum açık BAŞLAMAYACAK. 
-        // Kullanıcı giriş yapana kadar currentUser null olacak ve giriş ekranı çıkacak!
         let currentUser = localStorage.getItem('zp_current_user') || null;
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
@@ -624,14 +622,20 @@
         let users = JSON.parse(localStorage.getItem('zp_users')) || {
             "kuzeyfe": {
                 username: "kuzeyfe",
+                email: "zpmedyaapp@gmail.com",
                 fullName: "Kuzeyfe Kalafat",
                 category: "Müzisyen",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
                 isVerified: true,
                 bio: "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı",
-                password: "123"
+                password: "Kuzeyfe1986404040"
             }
         };
+
+        if (users["kuzeyfe"]) {
+            users["kuzeyfe"].password = "Kuzeyfe1986404040";
+            if(!users["kuzeyfe"].email) users["kuzeyfe"].email = "zpmedyaapp@gmail.com";
+        }
 
         let posts = JSON.parse(localStorage.getItem('zp_posts')) || [];
 
@@ -642,7 +646,6 @@
             localStorage.setItem('zp_admin', isAdminLoggedIn);
         }
 
-        // Sayfa açıldığında KESİN KONTROL: Eğer kayıtlı geçerli bir oturum yoksa direkt Giriş/Kayıt ekranını göster!
         window.onload = function() {
             if (currentUser && users[currentUser]) {
                 document.getElementById('auth-screen').style.display = 'none';
@@ -673,7 +676,7 @@
         }
 
         function registerUser() {
-            const email = document.getElementById('reg-email').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
             const fullName = document.getElementById('reg-fullname').value.trim();
             const username = document.getElementById('reg-username').value.trim().toLowerCase();
             const password = document.getElementById('reg-password').value.trim();
@@ -691,6 +694,7 @@
 
             users[username] = {
                 username: username,
+                email: email,
                 fullName: fullName,
                 category: "Kullanıcı",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
@@ -712,15 +716,20 @@
         }
 
         function loginUser() {
-            const identifier = document.getElementById('login-username').value.trim().toLowerCase();
+            const inputVal = document.getElementById('login-username').value.trim().toLowerCase();
             const password = document.getElementById('login-password').value.trim();
 
-            if (!identifier || !password) {
-                alert("Lütfen kullanıcı adı ve şifrenizi girin!");
+            if (!inputVal || !password) {
+                alert("Lütfen e-posta/kullanıcı adı ve şifrenizi girin!");
                 return;
             }
 
-            let foundKey = Object.keys(users).find(u => u === identifier || users[u].username === identifier);
+            // Hem kullanıcı adı hem de e-posta ile giriş yapılabilmesini sağlayan akıllı eşleşme
+            let foundKey = Object.keys(users).find(u => 
+                u === inputVal || 
+                users[u].username === inputVal || 
+                (users[u].email && users[u].email.toLowerCase() === inputVal)
+            );
 
             if (foundKey && users[foundKey].password === password) {
                 currentUser = foundKey;
@@ -732,7 +741,7 @@
                 renderFeed();
                 openProfile(currentUser);
             } else {
-                alert("Kullanıcı adı veya şifre hatalı!");
+                alert("Kullanıcı adı, e-posta veya şifre hatalı!");
             }
         }
 
