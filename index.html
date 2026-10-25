@@ -331,6 +331,7 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
+            cursor: pointer;
         }
 
         .profile-actions-btns {
@@ -734,7 +735,7 @@
                 <div class="profile-name" id="prof-fullname">Yükleniyor...</div>
                 <div class="profile-category" id="prof-category">Müzisyen</div>
                 <div class="profile-bio-text" id="prof-biotext"></div>
-                <a href="#" class="profile-link" id="prof-link" onclick="return false;"><i class="fa-solid fa-link"></i> linktr.ee/kuzeyfe_kalafat</a>
+                <a href="https://linktr.ee/kuzeyfe_kalafat" target="_blank" class="profile-link" id="prof-link"><i class="fa-solid fa-link"></i> linktr.ee/kuzeyfe_kalafat</a>
             </div>
 
             <!-- Panon Box -->
@@ -790,7 +791,7 @@
         </div>
     </div>
 
-    <!-- Instagram Ayarlar ve Hareketler Menüsü (TAM DOLDURULMUŞ) -->
+    <!-- Instagram Ayarlar ve Hareketler Menüsü -->
     <div class="menu-backdrop" id="menu-backdrop" onclick="closeSettingsMenu()"></div>
     <div class="settings-menu" id="settings-menu">
         <div class="settings-header">
@@ -1027,7 +1028,6 @@
     </div>
 
     <script>
-        // Admin Kimlik Bilgileri
         const ADMIN_CREDENTIALS = {
             email: "zpmedyaapp@gmail.com",
             pass: "Kuzeyfe1986404040"
