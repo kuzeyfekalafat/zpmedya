@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZP Medya - Instagram Tarzı Sosyal Medya</title>
+    <title>ZP Medya - Sosyal Medya Platformu</title>
     <!-- FontAwesome Icon Library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDK (Google Firebase Integration) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
@@ -38,28 +38,15 @@
             min-height: 100vh;
         }
 
-        .app-container {
-            width: 100%;
-            max-width: 470px;
-            background-color: #000;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            border-left: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            padding-bottom: 60px;
-        }
-
-        /* --- INSTAGRAM TARZI GİRİŞ VE KAYIT EKRANI --- */
+        /* --- AUTH SCREEN (GİRİŞ / KAYIT) --- */
         .auth-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000000;
-            z-index: 500;
+            background: #000;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -107,10 +94,6 @@
             outline: none;
         }
 
-        .auth-input:focus {
-            border-color: #555;
-        }
-
         .auth-btn {
             width: 100%;
             background: var(--accent-blue);
@@ -140,7 +123,20 @@
             font-weight: 600;
             cursor: pointer;
         }
-        /* ------------------------------------------- */
+
+        /* --- APP CONTAINER --- */
+        .app-container {
+            width: 100%;
+            max-width: 470px;
+            background-color: #000;
+            min-height: 100vh;
+            display: none; /* Giriş yapınca açılacak */
+            flex-direction: column;
+            position: relative;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            padding-bottom: 60px;
+        }
 
         .verified-badge {
             color: var(--verified-color);
@@ -419,16 +415,6 @@
             margin-bottom: 6px;
         }
 
-        .profile-link {
-            color: #e0f1ff;
-            text-decoration: none;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-        }
-
         .profile-actions-btns {
             display: flex;
             gap: 8px;
@@ -474,45 +460,6 @@
 
         .panon-desc {
             font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .highlights-container {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            padding-bottom: 12px;
-            margin-bottom: 12px;
-            scrollbar-width: none;
-        }
-
-        .highlights-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .highlight-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex-shrink: 0;
-            cursor: pointer;
-        }
-
-        .highlight-ring {
-            width: 62px;
-            height: 62px;
-            border-radius: 50%;
-            border: 1px solid #333;
-            padding: 2px;
-            background: #1a1a1a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .highlight-name {
-            font-size: 11px;
-            margin-top: 4px;
             color: var(--text-muted);
         }
 
@@ -653,20 +600,8 @@
             text-align: center;
         }
 
-        .settings-menu-item span {
-            color: var(--text-muted);
-            font-size: 12px;
-        }
-
-        .text-blue {
-            color: var(--accent-blue) !important;
-            font-weight: 600;
-        }
-
-        .text-red {
-            color: var(--danger-color) !important;
-            font-weight: 600;
-        }
+        .text-blue { color: var(--accent-blue) !important; font-weight: 600; }
+        .text-red { color: var(--danger-color) !important; font-weight: 600; }
 
         .menu-backdrop {
             display: none;
@@ -709,54 +644,20 @@
             font-weight: 700;
         }
 
-        .modal-close {
-            cursor: pointer;
-            font-size: 18px;
-        }
+        .modal-close { cursor: pointer; font-size: 18px; }
 
-        .input-group {
-            margin-bottom: 12px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
         .input-group input[type="text"], .input-group textarea, .input-group input[type="password"] {
-            width: 100%;
-            background: #000;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 6px;
-            outline: none;
+            width: 100%; background: #000; border: 1px solid var(--border-color); color: #fff; padding: 8px 12px; border-radius: 6px; outline: none;
         }
-
-        .input-group input[type="file"] {
-            color: var(--text-muted);
-            font-size: 13px;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background: var(--accent-blue);
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-        }
+        .btn-submit { width: 100%; background: var(--accent-blue); color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <!-- INSTAGRAM TARZI GİRİŞ & KAYIT OLMA EKRANI -->
+    <!-- AUTH SCREEN -->
     <div class="auth-overlay" id="auth-screen">
-        <!-- KAYIT OL PANELİ -->
         <div class="auth-box" id="signup-box">
             <div class="auth-logo">ZP Medya</div>
             <div class="auth-subtext">Arkadaşlarının fotoğraf ve videolarını görmek için kaydol.</div>
@@ -766,31 +667,28 @@
             <input type="password" id="reg-password" class="auth-input" placeholder="Şifre">
             <button class="auth-btn" onclick="registerUser()">Kaydol</button>
         </div>
-
         <div class="auth-switch-box" id="signup-switch">
             Hesabın var mı? <span onclick="switchAuthView('login')">Giriş yap</span>
         </div>
 
-        <!-- GİRİŞ YAP PANELİ -->
         <div class="auth-box" id="login-box" style="display: none;">
             <div class="auth-logo">ZP Medya</div>
-            <input type="text" id="login-email" class="auth-input" placeholder="Telefon numarası, kullanıcı adı veya e-posta">
+            <input type="text" id="login-email" class="auth-input" placeholder="E-posta veya kullanıcı adı">
             <input type="password" id="login-password" class="auth-input" placeholder="Şifre">
             <button class="auth-btn" onclick="loginUser()">Giriş Yap</button>
         </div>
-
         <div class="auth-switch-box" id="login-switch" style="display: none;">
             Hesabın yok mu? <span onclick="switchAuthView('signup')">Kaydol</span>
         </div>
     </div>
 
-    <div class="app-container">
-        <!-- Header -->
+    <!-- APP CONTAINER -->
+    <div class="app-container" id="app-container">
         <div class="header">
             <div class="logo" id="header-title">ZP Medya</div>
             <div class="header-icons" id="header-icons-area">
                 <i class="fa-regular fa-heart" onclick="alert('Bildirimler yakında!')"></i>
-                <i class="fa-regular fa-paper-plane" onclick="alert('DM Mesajları yakında!')"></i>
+                <i class="fa-regular fa-paper-plane" onclick="alert('DM Yakında!')"></i>
             </div>
         </div>
 
@@ -823,7 +721,7 @@
 
             <div class="profile-bio-section">
                 <div class="profile-name" id="prof-fullname">Yükleniyor...</div>
-                <div class="profile-category" id="prof-category">Kullanıcı</div>
+                <div class="profile-category" id="prof-category">Müzisyen</div>
                 <div class="profile-bio-text" id="prof-biotext"></div>
             </div>
 
@@ -838,23 +736,12 @@
                 <div id="admin-action-area" style="display: none;"></div>
             </div>
 
-            <!-- Profile Tabs -->
             <div class="profile-tabs">
-                <div class="profile-tab active" id="tab-posts" onclick="switchProfileTab('posts')" title="Gönderiler">
-                    <i class="fa-solid fa-table-cells"></i>
-                </div>
-                <div class="profile-tab" id="tab-saved" onclick="switchProfileTab('saved')" title="Kaydedilenler">
-                    <i class="fa-regular fa-bookmark"></i>
-                </div>
-                <div class="profile-tab" id="tab-reels" onclick="switchProfileTab('reels')" title="Reels">
-                    <i class="fa-solid fa-clapperboard"></i>
-                </div>
-                <div class="profile-tab" id="tab-repost" onclick="switchProfileTab('repost')" title="Yeniden Paylaşılanlar">
-                    <i class="fa-solid fa-retweet"></i>
-                </div>
-                <div class="profile-tab" id="tab-tagged" onclick="switchProfileTab('tagged')" title="Etiketlendiğin Gönderiler">
-                    <i class="fa-regular fa-id-badge"></i>
-                </div>
+                <div class="profile-tab active" id="tab-posts" onclick="switchProfileTab('posts')" title="Gönderiler"><i class="fa-solid fa-table-cells"></i></div>
+                <div class="profile-tab" id="tab-saved" onclick="switchProfileTab('saved')" title="Kaydedilenler"><i class="fa-regular fa-bookmark"></i></div>
+                <div class="profile-tab" id="tab-reels" onclick="switchProfileTab('reels')" title="Reels"><i class="fa-solid fa-clapperboard"></i></div>
+                <div class="profile-tab" id="tab-repost" onclick="switchProfileTab('repost')" title="Yeniden Paylaşılanlar"><i class="fa-solid fa-retweet"></i></div>
+                <div class="profile-tab" id="tab-tagged" onclick="switchProfileTab('tagged')" title="Etiketlendiğin Gönderiler"><i class="fa-regular fa-id-badge"></i></div>
             </div>
 
             <div class="profile-grid" id="prof-grid"></div>
@@ -865,9 +752,7 @@
             <div class="nav-item" onclick="alert('Keşfet Yakında!')"><i class="fa-solid fa-magnifying-glass"></i></div>
             <div class="nav-item" onclick="openCreatePostModal()"><i class="fa-regular fa-square-plus"></i></div>
             <div class="nav-item" onclick="alert('Reels Yakında!')"><i class="fa-solid fa-clapperboard"></i></div>
-            <div class="nav-item" onclick="openCurrentProfile()">
-                <img class="nav-avatar" id="nav-user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80" alt="Me">
-            </div>
+            <div class="nav-item" onclick="openCurrentProfile()"><img class="nav-avatar" id="nav-user-avatar" src="" alt="Me"></div>
         </div>
     </div>
 
@@ -932,7 +817,6 @@
         </div>
     </div>
 
-    <!-- Firebase Admin Login Modal -->
     <div class="modal" id="admin-login-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -966,7 +850,10 @@
         }
         const auth = firebase.auth();
 
-        let currentUser = null;
+        const ADMIN_EMAIL = "zpmedyaapp@gmail.com";
+        const ADMIN_PASS = "Kuzeyfe1986404040";
+
+        let currentUser = localStorage.getItem('zp_current_user') || null;
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
         let isAdminLoggedIn = false;
@@ -987,9 +874,20 @@
         function saveDataToStorage() {
             localStorage.setItem('zp_users', JSON.stringify(users));
             localStorage.setItem('zp_posts', JSON.stringify(posts));
+            if(currentUser) localStorage.setItem('zp_current_user', currentUser);
         }
 
-        // --- GİRİŞ / KAYIT OLMA FONKSİYONLARI ---
+        // Oturum kontrolü
+        window.onload = function() {
+            if (currentUser && users[currentUser]) {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+                renderStories();
+                renderFeed();
+                openProfile(currentUser);
+            }
+        };
+
         function switchAuthView(type) {
             if (type === 'login') {
                 document.getElementById('signup-box').style.display = 'none';
@@ -1016,64 +914,78 @@
             }
 
             auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
+                .then(() => {
                     users[username] = {
                         username: username,
                         fullName: fullName,
                         category: "Kullanıcı",
                         avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
-                        isVerified: false,
-                        bio: "ZP Medya Ailesine katıldı."
+                        isVerified: username === 'kuzeyfe',
+                        bio: "ZP Medya Üyesi"
                     };
-                    saveDataToStorage();
                     currentUser = username;
+                    saveDataToStorage();
                     document.getElementById('auth-screen').style.display = 'none';
-                    openProfile(username);
+                    document.getElementById('app-container').style.display = 'flex';
                     renderStories();
                     renderFeed();
-                    alert("Hesabınız başarıyla oluşturuldu!");
+                    openProfile(currentUser);
+                    alert("Kayıt başarılı!");
                 })
-                .catch((error) => {
-                    alert("Kayıt Hatası: " + error.message);
-                });
+                .catch(err => alert("Kayıt Hatası: " + err.message));
         }
 
         function loginUser() {
-            const email = document.getElementById('login-email').value.trim();
+            const identifier = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value.trim();
 
-            if (!email || !password) {
-                alert("Lütfen e-posta ve şifrenizi girin!");
+            if (!identifier || !password) {
+                alert("Lütfen alanları doldurun!");
                 return;
             }
 
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const userEmail = userCredential.user.email;
-                    let foundUser = Object.keys(users).find(u => u === userEmail || userEmail.includes(u));
-                    currentUser = foundUser || "kuzeyfe";
-                    
+            let loginEmail = identifier.includes('@') ? identifier : identifier + "@zpmedya.com";
+
+            auth.signInWithEmailAndPassword(loginEmail, password)
+                .then(res => {
+                    let found = Object.keys(users).find(u => users[u].username === identifier || identifier === 'kuzeyfe');
+                    currentUser = found || Object.keys(users)[0] || 'kuzeyfe';
+                    saveDataToStorage();
                     document.getElementById('auth-screen').style.display = 'none';
-                    openProfile(currentUser);
+                    document.getElementById('app-container').style.display = 'flex';
                     renderStories();
                     renderFeed();
+                    openProfile(currentUser);
                 })
-                .catch((error) => {
-                    alert("Giriş Hatası: " + error.message);
+                .catch(err => {
+                    if (identifier === ADMIN_EMAIL && password === ADMIN_PASS) {
+                        currentUser = "kuzeyfe";
+                        isAdminLoggedIn = true;
+                        saveDataToStorage();
+                        document.getElementById('auth-screen').style.display = 'none';
+                        document.getElementById('app-container').style.display = 'flex';
+                        renderStories();
+                        renderFeed();
+                        openProfile(currentUser);
+                        alert("Admin Girişi Başarılı!");
+                    } else {
+                        alert("Giriş Hatası: " + err.message);
+                    }
                 });
         }
 
         function logoutUser() {
             auth.signOut().then(() => {
                 currentUser = null;
+                localStorage.removeItem('zp_current_user');
                 closeSettingsMenu();
+                document.getElementById('app-container').style.display = 'none';
                 document.getElementById('auth-screen').style.display = 'flex';
             });
         }
 
         function openCurrentProfile() {
             if (currentUser) openProfile(currentUser);
-            else openProfile('kuzeyfe');
         }
 
         function getVerifiedBadgeHTML(username) {
@@ -1085,11 +997,11 @@
 
         function renderStories() {
             const wrapper = document.getElementById('stories-wrapper');
-            const userAvatar = users[currentUser] ? users[currentUser].avatar : users['kuzeyfe'].avatar;
+            const u = users[currentUser] || users['kuzeyfe'];
             wrapper.innerHTML = `
                 <div class="story-item" onclick="openCreatePostModal()">
                     <div class="story-ring" style="background: #333;">
-                        <img class="story-img" src="${userAvatar}" alt="Sen">
+                        <img class="story-img" src="${u.avatar}" alt="Sen">
                     </div>
                     <span class="story-username">Hikaye Ekle</span>
                 </div>
@@ -1100,7 +1012,7 @@
             const wrapper = document.getElementById('posts-wrapper');
             let html = '';
             if (posts.length === 0) {
-                wrapper.innerHTML = `<div style="text-align:center; padding: 50px 20px; color: var(--text-muted);">Henüz gönderi yok. Gönderi paylaşmak için alttaki (+) butonuna basabilirsin.</div>`;
+                wrapper.innerHTML = `<div style="text-align:center; padding: 50px 20px; color: var(--text-muted);">Henüz gönderi yok. (+) butonundan paylaşabilirsin.</div>`;
                 return;
             }
 
@@ -1113,20 +1025,25 @@
                                 <img class="post-avatar" src="${u.avatar}">
                                 <span class="post-username">${post.username} ${getVerifiedBadgeHTML(post.username)}</span>
                             </div>
+                            <i class="fa-solid fa-ellipsis" style="color:var(--text-muted); cursor:pointer;" onclick="openSettingsMenu()"></i>
                         </div>
-                        <div class="post-image-container">
+                        <div class="post-image-container" ondblclick="toggleLike(${post.id})">
                             <img class="post-image" src="${post.image}">
                         </div>
                         <div class="post-actions">
                             <div class="post-actions-left">
                                 <i class="${post.liked ? 'fa-solid fa-heart liked-heart' : 'fa-regular fa-heart'}" onclick="toggleLike(${post.id})"></i>
+                                <i class="fa-regular fa-comment" onclick="alert('Yorumlar yakında!')"></i>
+                                <i class="fa-regular fa-paper-plane" onclick="alert('Paylaşılıyor...')"></i>
                             </div>
                             <div class="post-actions-right">
                                 <i class="${post.saved ? 'fa-solid fa-bookmark saved-bookmark' : 'fa-regular fa-bookmark'}" onclick="toggleSave(${post.id})"></i>
                             </div>
                         </div>
                         <div class="post-likes">${post.likes} beğenme</div>
-                        <div class="post-caption"><span class="username">${post.username}</span> ${post.caption}</div>
+                        <div class="post-caption"><span class="username" onclick="openProfile('${post.username}')">${post.username}</span> ${post.caption}</div>
+                        <div class="post-comments-link">Tüm yorumları gör...</div>
+                        <div class="post-time">${post.time || 'Şimdi'}</div>
                     </div>
                 `;
             });
@@ -1156,6 +1073,7 @@
         function showView(view) {
             document.getElementById('feed-view').style.display = view === 'feed' ? 'block' : 'none';
             document.getElementById('profile-view').style.display = view === 'profile' ? 'block' : 'none';
+            if (view === 'feed') renderFeed();
         }
 
         function openProfile(username) {
@@ -1169,20 +1087,42 @@
             document.getElementById('prof-biotext').innerText = u.bio || '';
             document.getElementById('prof-posts-count').innerText = posts.filter(p => p.username === username).length;
 
+            const adminArea = document.getElementById('admin-action-area');
+            if (username !== currentUser && (isAdminLoggedIn || currentUser === 'kuzeyfe')) {
+                adminArea.style.display = 'block';
+                adminArea.innerHTML = u.isVerified ? 
+                    `<button class="profile-btn admin-unverify-btn" onclick="toggleUserVerification('${username}')">Mavi Tik Kaldır</button>` :
+                    `<button class="profile-btn admin-verify-btn" onclick="toggleUserVerification('${username}')">Mavi Tik Ver</button>`;
+            } else {
+                adminArea.style.display = 'none';
+            }
+
             switchProfileTab('posts');
             showView('profile');
+        }
+
+        function toggleUserVerification(username) {
+            if(users[username]) {
+                users[username].isVerified = !users[username].isVerified;
+                saveDataToStorage();
+                openProfile(username);
+                renderFeed();
+            }
         }
 
         function switchProfileTab(tab) {
             activeProfileTab = tab;
             document.getElementById('tab-posts').classList.toggle('active', tab === 'posts');
             document.getElementById('tab-saved').classList.toggle('active', tab === 'saved');
+            document.getElementById('tab-reels').classList.toggle('active', tab === 'reels');
+            document.getElementById('tab-repost').classList.toggle('active', tab === 'repost');
+            document.getElementById('tab-tagged').classList.toggle('active', tab === 'tagged');
             renderProfileGrid();
         }
 
         function openSavedPostsSection() {
             closeSettingsMenu();
-            openCurrentProfile();
+            openProfile(currentUser);
             switchProfileTab('saved');
         }
 
@@ -1202,7 +1142,7 @@
             });
 
             if (filteredPosts.length === 0) {
-                gridHtml = `<p style="grid-column: 1/-1; color: var(--text-muted); text-align: center; padding: 30px;">Henüz gönderi bulunmuyor.</p>`;
+                gridHtml = `<p style="grid-column: 1/-1; color: var(--text-muted); text-align: center; padding: 30px;">Henüz içerik bulunmuyor.</p>`;
             }
 
             grid.innerHTML = gridHtml;
@@ -1229,24 +1169,27 @@
         function submitPost() {
             const fileInput = document.getElementById('post-file-input');
             const caption = document.getElementById('post-caption-input').value || '';
-            const author = currentUser || "kuzeyfe";
 
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const newPost = {
                         id: Date.now(),
-                        username: author,
+                        username: currentUser || 'kuzeyfe',
                         image: e.target.result,
                         caption: caption,
                         likes: 0,
                         liked: false,
-                        saved: false
+                        saved: false,
+                        time: "Şimdi"
                     };
                     posts.unshift(newPost);
                     saveDataToStorage();
                     closeCreatePostModal();
+                    document.getElementById('post-caption-input').value = '';
+                    fileInput.value = '';
                     renderFeed();
+                    showView('feed');
                 }
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
@@ -1291,9 +1234,19 @@
                 .then(() => {
                     isAdminLoggedIn = true;
                     closeAdminLoginModal();
-                    alert("Firebase Admin Girişi Başarılı!");
+                    alert("Admin Girişi Başarılı!");
+                    openProfile(currentUser);
                 })
-                .catch(err => alert("Hata: " + err.message));
+                .catch(err => {
+                    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+                        isAdminLoggedIn = true;
+                        closeAdminLoginModal();
+                        alert("Yönetici Girişi Başarılı!");
+                        openProfile(currentUser);
+                    } else {
+                        alert("Hata: " + err.message);
+                    }
+                });
         }
     </script>
 </body>
