@@ -48,6 +48,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            overflow-y: auto;
         }
 
         .auth-card {
@@ -55,28 +56,28 @@
             max-width: 350px;
             background: #000000;
             border: 1px solid var(--border-color);
-            padding: 40px 30px;
+            padding: 30px 20px;
             text-align: center;
             border-radius: 4px;
             margin-bottom: 10px;
         }
 
         .auth-logo {
-            font-size: 38px;
+            font-size: 34px;
             font-weight: 800;
             letter-spacing: -1px;
             background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .auth-desc {
             color: var(--text-muted);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
-            line-height: 20px;
-            margin-bottom: 20px;
+            line-height: 18px;
+            margin-bottom: 16px;
         }
 
         .auth-input {
@@ -95,6 +96,39 @@
             border-color: #a8a8a8;
         }
 
+        .gender-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .gender-option {
+            flex: 1;
+            background: #121212;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+            user-select: none;
+        }
+
+        .gender-option.selected {
+            background: var(--accent-blue);
+            color: #fff;
+            border-color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .date-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: left;
+            margin: 4px 0 2px 4px;
+        }
+
         .auth-btn {
             width: 100%;
             background: var(--accent-blue);
@@ -105,7 +139,7 @@
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .auth-switch-card {
@@ -113,7 +147,7 @@
             max-width: 350px;
             background: #000000;
             border: 1px solid var(--border-color);
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             border-radius: 4px;
             font-size: 14px;
@@ -123,13 +157,6 @@
             color: var(--accent-blue);
             font-weight: 600;
             cursor: pointer;
-        }
-
-        .date-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-align: left;
-            margin: 6px 0 2px 4px;
         }
 
         /* --- ASIL UYGULAMA İÇERİĞİ --- */
@@ -390,9 +417,20 @@
             <input type="text" id="reg-email" class="auth-input" placeholder="E-posta adresi">
             <input type="text" id="reg-fullname" class="auth-input" placeholder="Adı Soyadı">
             <input type="text" id="reg-username" class="auth-input" placeholder="Kullanıcı adı">
-            <input type="password" id="reg-password" class="auth-input" placeholder="Şifre">
+            <input type="text" id="reg-phone" class="auth-input" placeholder="Telefon numarası">
+            
+            <div class="date-label">Cinsiyet</div>
+            <div class="gender-container">
+                <div class="gender-option" id="gender-male" onclick="selectGender('Erkek')">Erkek</div>
+                <div class="gender-option" id="gender-female" onclick="selectGender('Kız')">Kız</div>
+            </div>
+
             <div class="date-label">Doğum Tarihi</div>
             <input type="date" id="reg-birthdate" class="auth-input">
+
+            <input type="password" id="reg-password" class="auth-input" placeholder="Şifre">
+            <input type="password" id="reg-password-confirm" class="auth-input" placeholder="Şifreyi tekrar gir">
+
             <button class="auth-btn" onclick="registerUser()">Kaydol</button>
         </div>
         <div class="auth-switch-card" id="signup-switch">
@@ -402,7 +440,7 @@
         <!-- GİRİŞ YAP PANELİ -->
         <div class="auth-card" id="login-box" style="display: none;">
             <div class="auth-logo">ZP Medya</div>
-            <input type="text" id="login-username" class="auth-input" placeholder="Telefon numarası, kullanıcı adı veya e-posta">
+            <input type="text" id="login-username" class="auth-input" placeholder="Kullanıcı adı, telefon veya e-posta">
             <input type="password" id="login-password" class="auth-input" placeholder="Şifre">
             <button class="auth-btn" onclick="loginUser()">Giriş Yap</button>
         </div>
@@ -618,11 +656,14 @@
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
         let isAdminLoggedIn = localStorage.getItem('zp_admin') === 'true';
+        let selectedGender = '';
 
         let users = JSON.parse(localStorage.getItem('zp_users')) || {
             "kuzeyfe": {
                 username: "kuzeyfe",
                 email: "zpmedyaapp@gmail.com",
+                phone: "05000000000",
+                gender: "Erkek",
                 fullName: "Kuzeyfe Kalafat",
                 category: "Müzisyen",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
@@ -661,6 +702,12 @@
             }
         };
 
+        function selectGender(gender) {
+            selectedGender = gender;
+            document.getElementById('gender-male').classList.toggle('selected', gender === 'Erkek');
+            document.getElementById('gender-female').classList.toggle('selected', gender === 'Kız');
+        }
+
         function switchAuthView(type) {
             if (type === 'login') {
                 document.getElementById('signup-box').style.display = 'none';
@@ -679,11 +726,23 @@
             const email = document.getElementById('reg-email').value.trim().toLowerCase();
             const fullName = document.getElementById('reg-fullname').value.trim();
             const username = document.getElementById('reg-username').value.trim().toLowerCase();
-            const password = document.getElementById('reg-password').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
             const birthdate = document.getElementById('reg-birthdate').value;
+            const password = document.getElementById('reg-password').value.trim();
+            const passwordConfirm = document.getElementById('reg-password-confirm').value.trim();
 
-            if (!email || !fullName || !username || !password) {
-                alert("Lütfen tüm alanları doldurun!");
+            if (!email || !fullName || !username || !phone || !birthdate || !password || !passwordConfirm) {
+                alert("Lütfen tüm alanları eksiksiz doldurun!");
+                return;
+            }
+
+            if (!selectedGender) {
+                alert("Lütfen cinsiyetinizi seçin (Erkek veya Kız)!");
+                return;
+            }
+
+            if (password !== passwordConfirm) {
+                alert("Girdiğiniz şifreler birbiriyle uyuşmuyor! Lütfen kontrol edin.");
                 return;
             }
 
@@ -695,6 +754,8 @@
             users[username] = {
                 username: username,
                 email: email,
+                phone: phone,
+                gender: selectedGender,
                 fullName: fullName,
                 category: "Kullanıcı",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
@@ -720,15 +781,15 @@
             const password = document.getElementById('login-password').value.trim();
 
             if (!inputVal || !password) {
-                alert("Lütfen e-posta/kullanıcı adı ve şifrenizi girin!");
+                alert("Lütfen kullanıcı adı/e-posta ve şifrenizi girin!");
                 return;
             }
 
-            // Hem kullanıcı adı hem de e-posta ile giriş yapılabilmesini sağlayan akıllı eşleşme
             let foundKey = Object.keys(users).find(u => 
                 u === inputVal || 
                 users[u].username === inputVal || 
-                (users[u].email && users[u].email.toLowerCase() === inputVal)
+                (users[u].email && users[u].email.toLowerCase() === inputVal) ||
+                (users[u].phone && users[u].phone === inputVal)
             );
 
             if (foundKey && users[foundKey].password === password) {
@@ -741,7 +802,7 @@
                 renderFeed();
                 openProfile(currentUser);
             } else {
-                alert("Kullanıcı adı, e-posta veya şifre hatalı!");
+                alert("Kullanıcı adı, e-posta, telefon veya şifre hatalı!");
             }
         }
 
