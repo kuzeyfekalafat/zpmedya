@@ -224,9 +224,6 @@
         .profile-btn {
             flex: 1; background: #262626; color: #fff; border: none; padding: 8px 0; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; text-align: center; min-width: 120px;
         }
-        .admin-verify-btn { background: var(--accent-blue) !important; color: #fff !important; }
-        .admin-unverify-btn { background: #555 !important; color: #fff !important; }
-        .admin-delete-btn { background: var(--danger-color) !important; color: #fff !important; }
 
         .profile-panon { background: #181818; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; }
         .panon-title { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
@@ -282,7 +279,7 @@
         }
         .btn-submit { width: 100%; background: var(--accent-blue); color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; }
         
-        /* Tam Ekran Alt Sayfalar (Arşiv, Hareketler, Bildirimler vb. için) */
+        /* Tam Ekran Alt Sayfalar */
         .sub-page {
             position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 470px; height: 100vh;
             background: #000; z-index: 400; display: none; flex-direction: column; overflow-y: auto;
@@ -413,8 +410,8 @@
             <input type="text" class="settings-search" placeholder="Ara">
         </div>
 
-        <div class="settings-section-title" id="admin-menu-title">Yönetici Paneli (Admin)</div>
-        <div class="settings-menu-item" id="admin-menu-btn" onclick="openSubPage('admin-panel-page')">
+        <div class="settings-section-title">Yönetici Paneli (Admin)</div>
+        <div class="settings-menu-item" onclick="openSubPage('admin-panel-page')">
             <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Yönetim Paneli & İstatistikler</div>
         </div>
 
@@ -467,19 +464,52 @@
 
         <div class="settings-section-title">Oturum</div>
         <div class="settings-menu-item" onclick="logoutUser()">
-            <div class="settings-menu-item-left text-red"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</div>
+            <div class="settings-menu-item-left text-red"><i class="fa-solid fa-right-from-bracket"></i> Oturum Açık (@kuzeyfe)</div>
         </div>
     </div>
 
-    <!-- İÇİ DOLU GERÇEK ALT SAYFALAR -->
+    <!-- TAM FONKSİYONEL ALT SAYFALAR -->
+    <div class="sub-page" id="admin-panel-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('admin-panel-page')"></i>
+            <span>Yönetim Paneli & İstatistikler</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body">
+            <div style="background:var(--card-bg); padding:15px; border-radius:10px; margin-bottom:12px; border:1px solid var(--border-color);">
+                <div style="font-weight:700; margin-bottom:5px; color:var(--accent-blue);">Sistem Durumu</div>
+                <div style="font-size:13px; color:var(--text-muted);">Aktif Kullanıcı: <strong>@kuzeyfe</strong> (Süper Admin)</div>
+                <div style="font-size:13px; color:var(--text-muted);">Toplam Paylaşılan Gönderi: <strong id="admin-post-count">0</strong></div>
+            </div>
+            <button class="btn-submit" onclick="alert('Sistem önbelleği başarıyla temizlendi!')">Önbelleği Temizle</button>
+        </div>
+    </div>
+
+    <div class="sub-page" id="account-center-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('account-center-page')"></i>
+            <span>Hesap Merkezi</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body">
+            <div style="background:var(--card-bg); padding:15px; border-radius:10px; margin-bottom:12px; border:1px solid var(--border-color);">
+                <div style="font-weight:700;">Kişisel Detaylar</div>
+                <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">E-posta: zpmedyaapp@gmail.com</div>
+                <div style="font-size:13px; color:var(--text-muted);">Telefon: +90 500 000 00 00</div>
+            </div>
+            <button class="btn-submit" onclick="alert('Şifre güncelleme bağlantısı e-posta adresinize gönderildi.')">Şifre Değiştir</button>
+        </div>
+    </div>
+
     <div class="sub-page" id="archive-page">
         <div class="sub-page-header">
             <i class="fa-solid fa-arrow-left" onclick="closeSubPage('archive-page')"></i>
             <span>Arşiv</span>
             <div style="width:20px;"></div>
         </div>
-        <div class="sub-page-body" style="color:var(--text-muted); font-size:14px;">
-            <p>Arşivlenen gönderileriniz ve hikayeleriniz burada saklanır. Şu an boş.</p>
+        <div class="sub-page-body" style="color:var(--text-muted); font-size:14px; text-align:center; padding-top:40px;">
+            <i class="fa-solid fa-clock-rotate-left" style="font-size:40px; margin-bottom:15px; color:var(--text-muted);"></i>
+            <p>Arşivlenen hikaye veya gönderiniz bulunmuyor.</p>
         </div>
     </div>
 
@@ -489,14 +519,28 @@
             <span>Hareketlerin</span>
             <div style="width:20px;"></div>
         </div>
-        <div class="sub-page-body" style="color:var(--text-main); font-size:14px;">
+        <div class="sub-page-body">
             <div style="background:var(--card-bg); padding:15px; border-radius:10px; margin-bottom:12px; border:1px solid var(--border-color);">
-                <div style="font-weight:700; margin-bottom:5px;">Geçirilen Süre</div>
-                <div style="color:var(--text-muted); font-size:13px;">Bugün ortalama aktif kullanım süresi: <strong>12 dakika</strong></div>
+                <div style="font-weight:700; margin-bottom:5px;">Zaman Yönetimi</div>
+                <div style="font-size:13px; color:var(--text-muted);">Bugünkü Ortalama Süre: <strong>24 dakika</strong></div>
             </div>
             <div style="background:var(--card-bg); padding:15px; border-radius:10px; border:1px solid var(--border-color);">
-                <div style="font-weight:700; margin-bottom:5px;">Etkileşimler</div>
-                <div style="color:var(--text-muted); font-size:13px;">Toplam Beğeni: 0 | Yorum: 0</div>
+                <div style="font-weight:700; margin-bottom:5px;">Etkileşim Geçmişi</div>
+                <div style="font-size:13px; color:var(--text-muted);">Tüm beğenileriniz ve yorumlarınız güvenle kaydediliyor.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sub-page" id="notifications-settings-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('notifications-settings-page')"></i>
+            <span>Bildirimler</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:15px; border-radius:10px; border:1px solid var(--border-color);">
+                <div style="font-weight:700; font-size:14px;">Tümünü Duraklat</div>
+                <input type="checkbox" style="width:20px; height:20px; accent-color:var(--accent-blue);">
             </div>
         </div>
     </div>
@@ -507,14 +551,25 @@
             <span>Hesap Gizliliği</span>
             <div style="width:20px;"></div>
         </div>
-        <div class="sub-page-body" style="color:var(--text-main); font-size:14px;">
+        <div class="sub-page-body">
             <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:15px; border-radius:10px; border:1px solid var(--border-color);">
                 <div>
                     <div style="font-weight:700;">Gizli Hesap</div>
-                    <div style="color:var(--text-muted); font-size:12px;">Sadece onayladığın kişiler fotoğraflarını görebilir.</div>
+                    <div style="font-size:12px; color:var(--text-muted);">Sadece onayladığın kişiler içeriklerini görür.</div>
                 </div>
                 <input type="checkbox" style="width:20px; height:20px; accent-color:var(--accent-blue);">
             </div>
+        </div>
+    </div>
+
+    <div class="sub-page" id="blocked-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('blocked-page')"></i>
+            <span>Engellenenler</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body" style="text-align:center; color:var(--text-muted); padding-top:40px;">
+            <p>Engellenmiş herhangi bir hesap bulunmuyor.</p>
         </div>
     </div>
 
@@ -524,9 +579,81 @@
             <span>Yardım Merkezi</span>
             <div style="width:20px;"></div>
         </div>
-        <div class="sub-page-body" style="color:var(--text-main); font-size:14px;">
-            <p style="color:var(--text-muted); margin-bottom:15px;">ZP Medya Destek hattına hoş geldiniz. Sorun bildirmek veya öneride bulunmak için aşağıdaki kanalları kullanabilirsiniz.</p>
-            <button class="btn-submit" onclick="alert('Destek talebiniz alındı!')">Sorun Bildir</button>
+        <div class="sub-page-body">
+            <p style="color:var(--text-muted); font-size:14px; margin-bottom:15px;">ZP Medya platformuyla ilgili her türlü destek ve soru bildiriminiz için buradayız.</p>
+            <button class="btn-submit" onclick="alert('Destek talebiniz başarıyla iletildi.')">Sorun Bildir</button>
+        </div>
+    </div>
+
+    <div class="sub-page" id="account-status-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('account-status-page')"></i>
+            <span>Hesap Durumu</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body">
+            <div style="background:var(--card-bg); padding:15px; border-radius:10px; border:1px solid var(--border-color); color:var(--text-main);">
+                <div style="font-weight:700; color:#4BB543; margin-bottom:5px;"><i class="fa-solid fa-circle-check"></i> Harika Durumda</div>
+                <div style="font-size:13px; color:var(--text-muted);">Hesabınız topluluk kurallarımızın tamamına uygundur. Herhangi bir kısıtlama yoktur.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sub-page" id="explore-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('explore-page')"></i>
+            <span>Keşfet</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body" style="text-align:center; color:var(--text-muted); padding-top:40px;">
+            <p>Popüler içerikler ve öneriler yakında burada listelenecek.</p>
+        </div>
+    </div>
+
+    <div class="sub-page" id="reels-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('reels-page')"></i>
+            <span>Reels Akışı</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body" style="text-align:center; color:var(--text-muted); padding-top:40px;">
+            <p>Kısa video akışı yükleniyor...</p>
+        </div>
+    </div>
+
+    <div class="sub-page" id="notifications-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('notifications-page')"></i>
+            <span>Bildirimler</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body" style="text-align:center; color:var(--text-muted); padding-top:40px;">
+            <p>Yeni bildiriminiz bulunmuyor.</p>
+        </div>
+    </div>
+
+    <div class="sub-page" id="dm-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('dm-page')"></i>
+            <span>Mesajlar</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body" style="text-align:center; color:var(--text-muted); padding-top:40px;">
+            <p>Gelen kutunuz boş.</p>
+        </div>
+    </div>
+
+    <div class="sub-page" id="new-account-page">
+        <div class="sub-page-header">
+            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('new-account-page')"></i>
+            <span>Hesap Yönetimi</span>
+            <div style="width:20px;"></div>
+        </div>
+        <div class="sub-page-body">
+            <div style="background:var(--card-bg); padding:15px; border-radius:10px; border:1px solid var(--border-color); text-align:center;">
+                <div style="font-weight:700; margin-bottom:8px;">Aktif Hesap: @kuzeyfe</div>
+                <div style="font-size:13px; color:var(--text-muted);">Sistem yöneticisi olarak tam yetkiyle bağlısınız.</div>
+            </div>
         </div>
     </div>
 
@@ -629,6 +756,7 @@
             renderStories();
             renderFeed();
             openProfile('kuzeyfe');
+            document.getElementById('admin-post-count').innerText = posts.length;
         };
 
         function showView(view) {
@@ -720,8 +848,8 @@
                         <div class="post-actions">
                             <div class="post-actions-left">
                                 <i class="${post.liked ? 'fa-solid fa-heart liked-heart' : 'fa-regular fa-heart'}" onclick="toggleLike(${post.id})"></i>
-                                <i class="fa-regular fa-comment" onclick="alert('Yorumlar yakında')"></i>
-                                <i class="fa-regular fa-paper-plane" onclick="alert('Paylaşılıyor')"></i>
+                                <i class="fa-regular fa-comment" onclick="openSubPage('dm-page')"></i>
+                                <i class="fa-regular fa-paper-plane" onclick="openShareProfileModal()"></i>
                             </div>
                             <div class="post-actions-right">
                                 <i class="${post.saved ? 'fa-solid fa-bookmark saved-bookmark' : 'fa-regular fa-bookmark'}" onclick="toggleSave(${post.id})"></i>
@@ -809,8 +937,6 @@
             const page = document.getElementById(pageId);
             if(page) {
                 page.style.display = 'flex';
-            } else {
-                alert("Bu alan yakında aktif olacaktır.");
             }
         }
 
@@ -870,6 +996,7 @@
                     fileInput.value = '';
                     renderFeed();
                     showView('feed');
+                    document.getElementById('admin-post-count').innerText = posts.length;
                 }
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
@@ -911,7 +1038,7 @@
         }
 
         function logoutUser() {
-            alert("Ana yönetici oturumu aktif.");
+            alert("@kuzeyfe ana yönetici oturumu aktif durumdadır.");
             closeSettingsMenu();
         }
     </script>
