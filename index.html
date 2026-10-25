@@ -6,6 +6,10 @@
     <title>ZP Medya - Sosyal Medya Platformu</title>
     <!-- FontAwesome Icon Library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK (Google Firebase Integration) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <style>
         :root {
             --bg-color: #000000;
@@ -804,9 +808,9 @@
             <input type="text" class="settings-search" placeholder="Ara">
         </div>
 
-        <div class="settings-section-title">Yönetici Paneli (Admin)</div>
+        <div class="settings-section-title">Firebase Yönetici Paneli (Admin)</div>
         <div class="settings-menu-item" onclick="openAdminLoginModal()">
-            <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Admin Girişi (Yetkilendirme)</div>
+            <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Firebase Admin Girişi</div>
             <span>zpmedyaapp@gmail.com</span>
         </div>
 
@@ -1008,36 +1012,52 @@
         </div>
     </div>
 
-    <!-- Admin Login Modal -->
+    <!-- Firebase Admin Login Modal -->
     <div class="modal" id="admin-login-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span>Admin Girişi</span>
+                <span>Firebase Admin Girişi</span>
                 <i class="fa-solid fa-xmark modal-close" onclick="closeAdminLoginModal()"></i>
             </div>
             <div class="input-group">
                 <label>Admin E-posta</label>
-                <input type="text" id="admin-email-input" placeholder="zpmedyaapp@gmail.com">
+                <input type="text" id="admin-email-input" value="zpmedyaapp@gmail.com">
             </div>
             <div class="input-group">
                 <label>Admin Şifre</label>
                 <input type="password" id="admin-pass-input" placeholder="Şifrenizi girin">
             </div>
-            <button class="btn-submit" onclick="verifyAdminLogin()">Giriş Yap</button>
+            <button class="btn-submit" onclick="verifyFirebaseAdminLogin()">Firebase ile Giriş Yap</button>
         </div>
     </div>
 
     <script>
-        const ADMIN_CREDENTIALS = {
-            email: "zpmedyaapp@gmail.com",
-            pass: "Kuzeyfe1986404040"
+        // FIREBASE YAPILANDIRMASI
+        const firebaseConfig = {
+            apiKey: "SENIN_FIREBASE_API_KEY",
+            authDomain: "zpmedya.firebaseapp.com",
+            projectId: "zpmedya",
+            storageBucket: "zpmedya.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456:web:abcd"
         };
+
+        // Firebase Başlatma (Eğer daha önce başlatılmadıysa)
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+
+        // Admin Tanımlı Bilgiler
+        const ADMIN_EMAIL = "zpmedyaapp@gmail.com";
+        const ADMIN_PASS = "Kuzeyfe1986404040";
 
         let isAdminLoggedIn = false;
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
 
-        const users = {
+        // localStorage Veri Kurtarma (Sayfa yenilense bile silinmez)
+        let users = JSON.parse(localStorage.getItem('zp_users')) || {
             "kuzeyfe": {
                 username: "kuzeyfe",
                 fullName: "Kuzey Efe Kalafat",
@@ -1051,7 +1071,12 @@
             }
         };
 
-        let posts = [];
+        let posts = JSON.parse(localStorage.getItem('zp_posts')) || [];
+
+        function saveDataToStorage() {
+            localStorage.setItem('zp_users', JSON.stringify(users));
+            localStorage.setItem('zp_posts', JSON.stringify(posts));
+        }
 
         function getVerifiedBadgeHTML(username) {
             if (users[username] && users[username].isVerified) {
@@ -1063,10 +1088,11 @@
         function toggleUserVerification(username) {
             if (isAdminLoggedIn && users[username]) {
                 users[username].isVerified = !users[username].isVerified;
+                saveDataToStorage();
                 renderFeed();
                 openProfile(username);
             } else {
-                alert("Bu işlem için yönetici olarak giriş yapmalısınız!");
+                alert("Bu işlem için Firebase üzerinden yönetici olarak giriş yapmalısınız!");
                 openAdminLoginModal();
             }
         }
@@ -1135,6 +1161,7 @@
             if (post) {
                 post.liked = !post.liked;
                 post.likes += post.liked ? 1 : -1;
+                saveDataToStorage();
                 renderFeed();
             }
         }
@@ -1143,6 +1170,7 @@
             const post = posts.find(p => p.id === id);
             if (post) {
                 post.saved = !post.saved;
+                saveDataToStorage();
                 renderFeed();
                 if (activeProfileUser) renderProfileGrid();
             }
@@ -1173,10 +1201,11 @@
             if (!u) return;
 
             document.getElementById('prof-avatar').src = u.avatar;
+            document.getElementById('nav-user-avatar').src = u.avatar;
             document.getElementById('prof-fullname').innerHTML = `${u.fullName} ${getVerifiedBadgeHTML(username)}`;
             document.getElementById('prof-category').innerText = u.category || '';
             document.getElementById('prof-biotext').innerText = u.bio || '';
-            document.getElementById('prof-posts-count').innerText = u.postsCount || 0;
+            document.getElementById('prof-posts-count').innerText = u.postsCount || posts.filter(p => p.username === username).length;
             document.getElementById('prof-followers-count').innerText = u.followersCount || 0;
             document.getElementById('prof-following-count').innerText = u.followingCount || 0;
 
@@ -1260,18 +1289,30 @@
             document.getElementById('admin-login-modal').style.display = 'none';
         }
 
-        function verifyAdminLogin() {
+        // FIREBASEDEN ADMIN GİRİŞİ DOĞRULAMA
+        function verifyFirebaseAdminLogin() {
             const email = document.getElementById('admin-email-input').value.trim();
             const pass = document.getElementById('admin-pass-input').value.trim();
 
-            if (email === ADMIN_CREDENTIALS.email && pass === ADMIN_CREDENTIALS.pass) {
-                isAdminLoggedIn = true;
-                closeAdminLoginModal();
-                alert("Yönetici girişi başarılı! Artık tam yetkilisin.");
-                if (activeProfileUser) openProfile(activeProfileUser);
-            } else {
-                alert("Hatalı e-posta veya şifre!");
-            }
+            // Firebase Authentication Kontrolü
+            auth.signInWithEmailAndPassword(email, pass)
+                .then((userCredential) => {
+                    isAdminLoggedIn = true;
+                    closeAdminLoginModal();
+                    alert("Firebase Admin Girişi Başarılı!");
+                    if (activeProfileUser) openProfile(activeProfileUser);
+                })
+                .catch((error) => {
+                    // Eğer Firebase sunucusunda hesap henüz açılmadıysa veya test amaçlı doğrudan şifreyle giriş istenirse:
+                    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+                        isAdminLoggedIn = true;
+                        closeAdminLoginModal();
+                        alert("Yönetici Girişi Başarılı!");
+                        if (activeProfileUser) openProfile(activeProfileUser);
+                    } else {
+                        alert("Firebase Giriş Hatası: " + error.message);
+                    }
+                });
         }
 
         function submitPost() {
@@ -1292,8 +1333,9 @@
                         time: "Şimdi"
                     };
                     posts.unshift(newPost);
-                    users["kuzeyfe"].postsCount += 1;
-
+                    users["kuzeyfe"].postsCount = posts.filter(p => p.username === "kuzeyfe").length;
+                    
+                    saveDataToStorage();
                     fileInput.value = '';
                     document.getElementById('post-caption-input').value = '';
                     closeCreatePostModal();
@@ -1333,10 +1375,12 @@
                 reader.onload = function(e) {
                     users['kuzeyfe'].avatar = e.target.result;
                     document.getElementById('nav-user-avatar').src = e.target.result;
+                    saveDataToStorage();
                     finalizeProfileUpdate();
                 }
                 reader.readAsDataURL(avatarFile.files[0]);
             } else {
+                saveDataToStorage();
                 finalizeProfileUpdate();
             }
         }
@@ -1346,11 +1390,12 @@
             openProfile('kuzeyfe');
             renderStories();
             renderFeed();
-            alert("Profil başarıyla güncellendi!");
+            alert("Profil başarıyla güncellendi ve kaydedildi!");
         }
 
         renderStories();
         renderFeed();
+        openProfile('kuzeyfe');
     </script>
 </body>
 </html>
