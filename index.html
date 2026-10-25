@@ -34,12 +34,138 @@
             min-height: 100vh;
         }
 
+        /* --- İNSTAGRAM ORİJİNAL GİRİŞ / KAYIT DUVARI --- */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 350px;
+            background: #000000;
+            border: 1px solid var(--border-color);
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .auth-logo {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .auth-desc {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 18px;
+            margin-bottom: 16px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: #121212;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 13px;
+            margin-bottom: 8px;
+            outline: none;
+        }
+
+        .auth-input:focus {
+            border-color: #a8a8a8;
+        }
+
+        .gender-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .gender-option {
+            flex: 1;
+            background: #121212;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+            user-select: none;
+        }
+
+        .gender-option.selected {
+            background: var(--accent-blue);
+            color: #fff;
+            border-color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .date-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: left;
+            margin: 4px 0 2px 4px;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .auth-switch-card {
+            width: 100%;
+            max-width: 350px;
+            background: #000000;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .auth-switch-card span {
+            color: var(--accent-blue);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* --- ASIL UYGULAMA İÇERİĞİ --- */
         .app-container {
             width: 100%;
             max-width: 470px;
             background-color: #000;
             min-height: 100vh;
-            display: flex;
+            display: none;
             flex-direction: column;
             position: relative;
             border-left: 1px solid var(--border-color);
@@ -285,7 +411,7 @@
 
         .menu-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 250; }
 
-        /* Instagram Gönderi İki Çizgi (=) Detay Menüsü */
+        /* Instagram Gönderi İki Çizgi Menüsü */
         .ig-post-sheet {
             position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%); width: 100%; max-width: 470px;
             background: #121212; border-top-left-radius: 20px; border-top-right-radius: 20px; border-top: 1px solid var(--border-color); padding: 16px; z-index: 350; transition: bottom 0.3s ease; max-height: 85vh; overflow-y: auto;
@@ -353,6 +479,47 @@
     </style>
 </head>
 <body>
+
+    <!-- İNSTAGRAM GİRİŞ / KAYIT DUVARI -->
+    <div class="auth-overlay" id="auth-screen">
+        <!-- KAYIT OL PANELİ -->
+        <div class="auth-card" id="signup-box">
+            <div class="auth-logo">ZP Medya</div>
+            <div class="auth-desc">Arkadaşlarının fotoğraf ve videolarını görmek için kaydol.</div>
+            <input type="text" id="reg-email" class="auth-input" placeholder="E-posta adresi">
+            <input type="text" id="reg-fullname" class="auth-input" placeholder="Adı Soyadı">
+            <input type="text" id="reg-username" class="auth-input" placeholder="Kullanıcı adı">
+            <input type="text" id="reg-phone" class="auth-input" placeholder="Telefon numarası">
+            
+            <div class="date-label">Cinsiyet</div>
+            <div class="gender-container">
+                <div class="gender-option" id="gender-male" onclick="selectGender('Erkek')">Erkek</div>
+                <div class="gender-option" id="gender-female" onclick="selectGender('Kız')">Kız</div>
+            </div>
+
+            <div class="date-label">Doğum Tarihi</div>
+            <input type="date" id="reg-birthdate" class="auth-input">
+
+            <input type="password" id="reg-password" class="auth-input" placeholder="Şifre">
+            <input type="password" id="reg-password-confirm" class="auth-input" placeholder="Şifreyi tekrar gir">
+
+            <button class="auth-btn" onclick="registerUser()">Kaydol</button>
+        </div>
+        <div class="auth-switch-card" id="signup-switch">
+            Hesabın var mı? <span onclick="switchAuthView('login')">Giriş yap</span>
+        </div>
+
+        <!-- GİRİŞ YAP PANELİ -->
+        <div class="auth-card" id="login-box" style="display: none;">
+            <div class="auth-logo">ZP Medya</div>
+            <input type="text" id="login-username" class="auth-input" placeholder="Kullanıcı adı, telefon veya e-posta">
+            <input type="password" id="login-password" class="auth-input" placeholder="Şifre">
+            <button class="auth-btn" onclick="loginUser()">Giriş Yap</button>
+        </div>
+        <div class="auth-switch-card" id="login-switch" style="display: none;">
+            Hesabın yok mu? <span onclick="switchAuthView('signup')">Kaydol</span>
+        </div>
+    </div>
 
     <!-- ASIL UYGULAMA -->
     <div class="app-container" id="app-container">
@@ -454,7 +621,7 @@
             <div class="settings-menu-item-left"><i class="fa-regular fa-user"></i> Hesap Merkezi</div>
             <span>Şifre, güvenlik...</span>
         </div>
-        <div class="settings-menu-item" onclick="openSubPage('new-account-page')">
+        <div class="settings-menu-item" onclick="openAuthFromMenu()">
             <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-user-plus"></i> Yeni Hesap Ekle / Kaydol</div>
         </div>
 
@@ -498,11 +665,11 @@
 
         <div class="settings-section-title">Oturum</div>
         <div class="settings-menu-item" onclick="logoutUser()">
-            <div class="settings-menu-item-left text-red"><i class="fa-solid fa-right-from-bracket"></i> Oturum Açık (@kuzeyfe)</div>
+            <div class="settings-menu-item-left text-red"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</div>
         </div>
     </div>
 
-    <!-- Gönderi İki Çizgi (=) Menüsü (Attığın İkinci Görselin Aynısı) -->
+    <!-- Gönderi İki Çizgi Menüsü -->
     <div class="menu-backdrop" id="ig-sheet-backdrop" onclick="closeIgPostSheet()"></div>
     <div class="ig-post-sheet" id="ig-post-sheet">
         <div class="ig-sheet-top-actions">
@@ -539,7 +706,7 @@
         <div class="sub-page-body">
             <div style="background:var(--card-bg); padding:15px; border-radius:10px; margin-bottom:12px; border:1px solid var(--border-color);">
                 <div style="font-weight:700; margin-bottom:5px; color:var(--accent-blue);">Sistem Durumu</div>
-                <div style="font-size:13px; color:var(--text-muted);">Aktif Kullanıcı: <strong>@kuzeyfe</strong> (Süper Admin)</div>
+                <div style="font-size:13px; color:var(--text-muted);">Aktif Kullanıcı: <strong id="admin-current-user-text">@kuzeyfe</strong></div>
                 <div style="font-size:13px; color:var(--text-muted);">Toplam Paylaşılan Gönderi: <strong id="admin-post-count">0</strong></div>
             </div>
             <button class="btn-submit" onclick="alert('Sistem önbelleği başarıyla temizlendi!')">Önbelleği Temizle</button>
@@ -555,8 +722,8 @@
         <div class="sub-page-body">
             <div style="background:var(--card-bg); padding:15px; border-radius:10px; margin-bottom:12px; border:1px solid var(--border-color);">
                 <div style="font-weight:700;">Kişisel Detaylar</div>
-                <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">E-posta: zpmedyaapp@gmail.com</div>
-                <div style="font-size:13px; color:var(--text-muted);">Kullanıcı: @kuzeyfe</div>
+                <div style="font-size:13px; color:var(--text-muted); margin-top:4px;" id="acc-center-email">E-posta: zpmedyaapp@gmail.com</div>
+                <div style="font-size:13px; color:var(--text-muted);" id="acc-center-user">Kullanıcı: @kuzeyfe</div>
             </div>
             <button class="btn-submit" onclick="alert('Şifre güncelleme bağlantısı e-posta adresinize gönderildi.')">Şifre Değiştir</button>
         </div>
@@ -700,20 +867,6 @@
         </div>
     </div>
 
-    <div class="sub-page" id="new-account-page">
-        <div class="sub-page-header">
-            <i class="fa-solid fa-arrow-left" onclick="closeSubPage('new-account-page')"></i>
-            <span>Hesap Yönetimi</span>
-            <div style="width:20px;"></div>
-        </div>
-        <div class="sub-page-body">
-            <div style="background:var(--card-bg); padding:15px; border-radius:10px; border:1px solid var(--border-color); text-align:center;">
-                <div style="font-weight:700; margin-bottom:8px;">Aktif Hesap: @kuzeyfe</div>
-                <div style="font-size:13px; color:var(--text-muted);">Sistem yöneticisi olarak tam yetkiyle bağlısınız.</div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modals -->
     <div class="modal" id="create-post-modal">
         <div class="modal-content">
@@ -780,13 +933,13 @@
         const ADMIN_PASS = "Kuzeyfe1986404040";
         const SUPER_ADMIN_EMAIL = "zpmedyaapp@gmail.com";
 
-        let currentUser = 'kuzeyfe';
-        let activeProfileUser = 'kuzeyfe';
+        let currentUser = localStorage.getItem('zp_current_user') || null;
+        let activeProfileUser = null;
         let activeProfileTab = 'posts';
-        let isAdminLoggedIn = true;
         let activePostId = null;
+        let selectedGender = '';
 
-        let users = {
+        let users = JSON.parse(localStorage.getItem('zp_users')) || {
             "kuzeyfe": {
                 username: "kuzeyfe",
                 email: SUPER_ADMIN_EMAIL,
@@ -804,18 +957,140 @@
         function saveDataToStorage() {
             localStorage.setItem('zp_users', JSON.stringify(users));
             localStorage.setItem('zp_posts', JSON.stringify(posts));
-            localStorage.setItem('zp_current_user', currentUser);
-            localStorage.setItem('zp_admin', 'true');
+            if(currentUser) localStorage.setItem('zp_current_user', currentUser);
         }
 
         window.onload = function() {
+            if (!currentUser || !users[currentUser]) {
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('app-container').style.display = 'none';
+            } else {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+                renderStories();
+                renderFeed();
+                openProfile(currentUser);
+            }
+            document.getElementById('admin-post-count').innerText = posts.length;
+        };
+
+        function selectGender(gender) {
+            selectedGender = gender;
+            document.getElementById('gender-male').classList.toggle('selected', gender === 'Erkek');
+            document.getElementById('gender-female').classList.toggle('selected', gender === 'Kız');
+        }
+
+        function switchAuthView(type) {
+            if (type === 'login') {
+                document.getElementById('signup-box').style.display = 'none';
+                document.getElementById('signup-switch').style.display = 'none';
+                document.getElementById('login-box').style.display = 'block';
+                document.getElementById('login-switch').style.display = 'block';
+            } else {
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('login-switch').style.display = 'none';
+                document.getElementById('signup-box').style.display = 'block';
+                document.getElementById('signup-switch').style.display = 'block';
+            }
+        }
+
+        function registerUser() {
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const fullName = document.getElementById('reg-fullname').value.trim();
+            const username = document.getElementById('reg-username').value.trim().toLowerCase();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const birthdate = document.getElementById('reg-birthdate').value;
+            const password = document.getElementById('reg-password').value.trim();
+            const passwordConfirm = document.getElementById('reg-password-confirm').value.trim();
+
+            if (!email || !fullName || !username || !phone || !birthdate || !password || !passwordConfirm) {
+                alert("Lütfen tüm alanları eksiksiz doldurun!");
+                return;
+            }
+
+            if (!selectedGender) {
+                alert("Lütfen cinsiyetinizi seçin!");
+                return;
+            }
+
+            if (password !== passwordConfirm) {
+                alert("Şifreler uyuşmuyor!");
+                return;
+            }
+
+            if (users[username]) {
+                alert("Bu kullanıcı adı alınmış!");
+                return;
+            }
+
+            const isSuperAdmin = (email === SUPER_ADMIN_EMAIL || username === 'kuzeyfe');
+
+            users[username] = {
+                username: username,
+                email: email,
+                phone: phone,
+                gender: selectedGender,
+                fullName: fullName,
+                category: isSuperAdmin ? "Müzisyen" : "Kullanıcı",
+                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
+                isVerified: isSuperAdmin,
+                bio: isSuperAdmin ? "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı" : "ZP Medya Ailesine katıldı.",
+                password: password,
+                birthdate: birthdate
+            };
+
+            currentUser = username;
             saveDataToStorage();
+            
+            document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('app-container').style.display = 'flex';
             renderStories();
             renderFeed();
-            openProfile('kuzeyfe');
-            document.getElementById('admin-post-count').innerText = posts.length;
-        };
+            openProfile(currentUser);
+            alert("Hesap başarıyla oluşturuldu!");
+        }
+
+        function loginUser() {
+            const inputVal = document.getElementById('login-username').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!inputVal || !password) {
+                alert("Lütfen bilgileri girin!");
+                return;
+            }
+
+            let foundKey = Object.keys(users).find(u => 
+                u === inputVal || 
+                users[u].username === inputVal || 
+                (users[u].email && users[u].email.toLowerCase() === inputVal)
+            );
+
+            if (foundKey && users[foundKey].password === password) {
+                currentUser = foundKey;
+                saveDataToStorage();
+                
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+                renderStories();
+                renderFeed();
+                openProfile(currentUser);
+            } else {
+                alert("Hatalı kullanıcı adı veya şifre!");
+            }
+        }
+
+        function logoutUser() {
+            currentUser = null;
+            localStorage.removeItem('zp_current_user');
+            closeSettingsMenu();
+            document.getElementById('app-container').style.display = 'none';
+            document.getElementById('auth-screen').style.display = 'flex';
+        }
+
+        function openAuthFromMenu() {
+            closeSettingsMenu();
+            logoutUser();
+        }
 
         function showView(view) {
             document.getElementById('feed-view').style.display = view === 'feed' ? 'block' : 'none';
@@ -846,6 +1121,10 @@
             document.getElementById('prof-category').innerText = u.category || '';
             document.getElementById('prof-biotext').innerText = u.bio || '';
             document.getElementById('prof-posts-count').innerText = posts.filter(p => p.username === username).length;
+
+            document.getElementById('admin-current-user-text').innerText = "@" + currentUser;
+            document.getElementById('acc-center-email').innerText = "E-posta: " + (u.email || 'Belirtilmemiş');
+            document.getElementById('acc-center-user').innerText = "Kullanıcı: @" + u.username;
 
             const actionsArea = document.getElementById('profile-actions-area');
             actionsArea.innerHTML = `
@@ -1154,11 +1433,6 @@
                 closeEditProfileModal();
                 openProfile(u);
             }
-        }
-
-        function logoutUser() {
-            alert("@kuzeyfe ana yönetici oturumu aktif durumdadır.");
-            closeSettingsMenu();
         }
     </script>
 </body>
