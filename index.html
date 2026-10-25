@@ -382,7 +382,7 @@
             color: var(--text-muted);
         }
 
-        /* Highlights (Öne Çıkanlar) */
+        /* Highlights */
         .highlights-container {
             display: flex;
             gap: 16px;
@@ -429,7 +429,7 @@
             color: var(--text-muted);
         }
 
-        /* Profile 4-Column Tabs (Tam Instagram Düzeni) */
+        /* Profile 4-Column Tabs */
         .profile-tabs {
             display: flex;
             border-top: 1px solid var(--border-color);
@@ -664,7 +664,7 @@
             margin-bottom: 6px;
         }
 
-        .input-group input[type="text"], .input-group textarea {
+        .input-group input[type="text"], .input-group textarea, .input-group input[type="password"] {
             width: 100%;
             background: #000;
             border: 1px solid var(--border-color);
@@ -720,11 +720,11 @@
                         <div class="stat-label">gönderi</div>
                     </div>
                     <div>
-                        <div class="stat-number">212</div>
+                        <div class="stat-number" id="prof-followers-count">0</div>
                         <div class="stat-label">takipçi</div>
                     </div>
                     <div>
-                        <div class="stat-number">3.483</div>
+                        <div class="stat-number" id="prof-following-count">0</div>
                         <div class="stat-label">takip</div>
                     </div>
                 </div>
@@ -740,7 +740,7 @@
             <!-- Panon Box -->
             <div class="profile-panon">
                 <div class="panon-title">Panon</div>
-                <div class="panon-desc">Son 30 günde 122 görüntüleme.</div>
+                <div class="panon-desc">Son 30 günde 0 görüntüleme.</div>
             </div>
 
             <!-- Profile Buttons -->
@@ -758,21 +758,9 @@
                     </div>
                     <span class="highlight-name">Yeni</span>
                 </div>
-                <div class="highlight-item" onclick="alert('Öne çıkan hikaye açılıyor')">
-                    <div class="highlight-ring">
-                        <img class="highlight-img" src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=200&auto=format&fit=crop&q=80" alt="Öne Çıkan">
-                    </div>
-                    <span class="highlight-name">Öne Çıkanlar</span>
-                </div>
-                <div class="highlight-item" onclick="alert('Öne çıkan hikaye açılıyor')">
-                    <div class="highlight-ring">
-                        <img class="highlight-img" src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=200&auto=format&fit=crop&q=80" alt="Öne Çıkan">
-                    </div>
-                    <span class="highlight-name">Öne Çıkanlar</span>
-                </div>
             </div>
 
-            <!-- Instagram Birebir 4 Sütunlu Profil Sekmeleri -->
+            <!-- Profile 4-Column Tabs -->
             <div class="profile-tabs">
                 <div class="profile-tab active" id="tab-posts" onclick="switchProfileTab('posts')" title="Gönderiler">
                     <i class="fa-solid fa-table-cells"></i>
@@ -802,7 +790,7 @@
         </div>
     </div>
 
-    <!-- Instagram Ayarlar ve Hareketler Menüsü -->
+    <!-- Instagram Ayarlar ve Hareketler Menüsü (TAM DOLDURULMUŞ) -->
     <div class="menu-backdrop" id="menu-backdrop" onclick="closeSettingsMenu()"></div>
     <div class="settings-menu" id="settings-menu">
         <div class="settings-header">
@@ -813,6 +801,12 @@
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" class="settings-search" placeholder="Ara">
+        </div>
+
+        <div class="settings-section-title">Yönetici Paneli (Admin)</div>
+        <div class="settings-menu-item" onclick="openAdminLoginModal()">
+            <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Admin Girişi (Yetkilendirme)</div>
+            <span>zpmedyaapp@gmail.com</span>
         </div>
 
         <div class="settings-section-title">Hesabın</div>
@@ -872,7 +866,7 @@
         </div>
         <div class="settings-menu-item" onclick="alert('Engellenenler')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-ban"></i> Engellenenler</div>
-            <span>3</span>
+            <span>0</span>
         </div>
         <div class="settings-menu-item" onclick="alert('Hikaye ve Canlı Yayın')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-circle-notch"></i> Hikaye, canlı yayın ve konum</div>
@@ -998,7 +992,7 @@
                 <input type="text" id="edit-fullname-input">
             </div>
             <div class="input-group">
-                <label>Kategori (Örn: Müzisyen)</label>
+                <label>Kategori</label>
                 <input type="text" id="edit-category-input">
             </div>
             <div class="input-group">
@@ -1013,7 +1007,33 @@
         </div>
     </div>
 
+    <!-- Admin Login Modal -->
+    <div class="modal" id="admin-login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Admin Girişi</span>
+                <i class="fa-solid fa-xmark modal-close" onclick="closeAdminLoginModal()"></i>
+            </div>
+            <div class="input-group">
+                <label>Admin E-posta</label>
+                <input type="text" id="admin-email-input" placeholder="zpmedyaapp@gmail.com">
+            </div>
+            <div class="input-group">
+                <label>Admin Şifre</label>
+                <input type="password" id="admin-pass-input" placeholder="Şifrenizi girin">
+            </div>
+            <button class="btn-submit" onclick="verifyAdminLogin()">Giriş Yap</button>
+        </div>
+    </div>
+
     <script>
+        // Admin Kimlik Bilgileri
+        const ADMIN_CREDENTIALS = {
+            email: "zpmedyaapp@gmail.com",
+            pass: "Kuzeyfe1986404040"
+        };
+
+        let isAdminLoggedIn = false;
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
 
@@ -1024,32 +1044,14 @@
                 category: "Müzisyen",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
                 isVerified: true,
-                bio: "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı\n👇 Resm... devamı",
-                postsCount: 17
-            },
-            "zpmedya": {
-                username: "zpmedya",
-                fullName: "ZP Medya Resmi",
-                category: "Dijital İçerik Üreticisi",
-                avatar: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
-                isVerified: true,
-                bio: "Geleceğin Dijital Sosyal Platformu 🌐",
-                postsCount: 1
+                bio: "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı",
+                postsCount: 0,
+                followersCount: 0,
+                followingCount: 0
             }
         };
 
-        let posts = [
-            {
-                id: 1,
-                username: "kuzeyfe",
-                image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
-                caption: "zpmedya.com.tr tam Instagram profil düzeniyle yayında! 🔥",
-                likes: 124,
-                liked: false,
-                saved: true,
-                time: "2 saat önce"
-            }
-        ];
+        let posts = [];
 
         function getVerifiedBadgeHTML(username) {
             if (users[username] && users[username].isVerified) {
@@ -1059,10 +1061,13 @@
         }
 
         function toggleUserVerification(username) {
-            if (users[username]) {
+            if (isAdminLoggedIn && users[username]) {
                 users[username].isVerified = !users[username].isVerified;
                 renderFeed();
                 openProfile(username);
+            } else {
+                alert("Bu işlem için yönetici olarak giriş yapmalısınız!");
+                openAdminLoginModal();
             }
         }
 
@@ -1076,24 +1081,17 @@
                     <span class="story-username">Hikaye Ekle</span>
                 </div>
             `;
-
-            Object.keys(users).forEach(key => {
-                const u = users[key];
-                html += `
-                    <div class="story-item" onclick="openProfile('${u.username}')">
-                        <div class="story-ring">
-                            <img class="story-img" src="${u.avatar}" alt="${u.username}">
-                        </div>
-                        <span class="story-username">${u.username}</span>
-                    </div>
-                `;
-            });
             wrapper.innerHTML = html;
         }
 
         function renderFeed() {
             const wrapper = document.getElementById('posts-wrapper');
             let html = '';
+
+            if (posts.length === 0) {
+                wrapper.innerHTML = `<div style="text-align:center; padding: 50px 20px; color: var(--text-muted);">Henüz gönderi bulunmuyor. Yeni gönderi paylaşmak için alttaki (+) butonunu kullanabilirsin.</div>`;
+                return;
+            }
 
             posts.forEach(post => {
                 const u = users[post.username] || { avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80', isVerified: false };
@@ -1178,9 +1176,12 @@
             document.getElementById('prof-fullname').innerHTML = `${u.fullName} ${getVerifiedBadgeHTML(username)}`;
             document.getElementById('prof-category').innerText = u.category || '';
             document.getElementById('prof-biotext').innerText = u.bio || '';
+            document.getElementById('prof-posts-count').innerText = u.postsCount || 0;
+            document.getElementById('prof-followers-count').innerText = u.followersCount || 0;
+            document.getElementById('prof-following-count').innerText = u.followingCount || 0;
 
             const adminArea = document.getElementById('admin-action-area');
-            if (username !== 'kuzeyfe') {
+            if (username !== 'kuzeyfe' && isAdminLoggedIn) {
                 adminArea.style.display = 'block';
                 if (u.isVerified) {
                     adminArea.innerHTML = `<button class="profile-btn admin-unverify-btn" onclick="toggleUserVerification('${username}')">Mavi Tik Kaldır</button>`;
@@ -1213,8 +1214,6 @@
             } else if (activeProfileTab === 'saved') {
                 filteredPosts = posts.filter(p => p.saved);
             }
-
-            document.getElementById('prof-posts-count').innerText = users[activeProfileUser].postsCount || posts.filter(p => p.username === activeProfileUser).length;
 
             let gridHtml = '';
             filteredPosts.forEach(p => {
@@ -1252,9 +1251,32 @@
             document.getElementById('create-post-modal').style.display = 'none';
         }
 
+        function openAdminLoginModal() {
+            closeSettingsMenu();
+            document.getElementById('admin-login-modal').style.display = 'flex';
+        }
+
+        function closeAdminLoginModal() {
+            document.getElementById('admin-login-modal').style.display = 'none';
+        }
+
+        function verifyAdminLogin() {
+            const email = document.getElementById('admin-email-input').value.trim();
+            const pass = document.getElementById('admin-pass-input').value.trim();
+
+            if (email === ADMIN_CREDENTIALS.email && pass === ADMIN_CREDENTIALS.pass) {
+                isAdminLoggedIn = true;
+                closeAdminLoginModal();
+                alert("Yönetici girişi başarılı! Artık tam yetkilisin.");
+                if (activeProfileUser) openProfile(activeProfileUser);
+            } else {
+                alert("Hatalı e-posta veya şifre!");
+            }
+        }
+
         function submitPost() {
             const fileInput = document.getElementById('post-file-input');
-            const caption = document.getElementById('post-caption-input').value || 'ZP Medya Paylaşımı';
+            const caption = document.getElementById('post-caption-input').value || '';
 
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
