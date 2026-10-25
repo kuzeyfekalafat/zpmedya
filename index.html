@@ -1032,23 +1032,22 @@
     </div>
 
     <script>
-        // FIREBASE YAPILANDIRMASI
+        // FIREBASE CANLI YAPILANDIRMASI
         const firebaseConfig = {
-            apiKey: "SENIN_FIREBASE_API_KEY",
-            authDomain: "zpmedya.firebaseapp.com",
-            projectId: "zpmedya",
-            storageBucket: "zpmedya.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456:web:abcd"
+            apiKey: "AIzaSyAa6_TcbrxKnFtQjzrr...",
+            authDomain: "zpmedya-1047f.firebaseapp.com",
+            projectId: "zpmedya-1047f",
+            storageBucket: "zpmedya-1047f.appspot.com",
+            messagingSenderId: "211465370194",
+            appId: "1:211465370194:web:b25b3..."
         };
 
-        // Firebase Başlatma (Eğer daha önce başlatılmadıysa)
+        // Firebase Başlatma
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const auth = firebase.auth();
 
-        // Admin Tanımlı Bilgiler
         const ADMIN_EMAIL = "zpmedyaapp@gmail.com";
         const ADMIN_PASS = "Kuzeyfe1986404040";
 
@@ -1056,7 +1055,6 @@
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
 
-        // localStorage Veri Kurtarma (Sayfa yenilense bile silinmez)
         let users = JSON.parse(localStorage.getItem('zp_users')) || {
             "kuzeyfe": {
                 username: "kuzeyfe",
@@ -1289,12 +1287,10 @@
             document.getElementById('admin-login-modal').style.display = 'none';
         }
 
-        // FIREBASEDEN ADMIN GİRİŞİ DOĞRULAMA
         function verifyFirebaseAdminLogin() {
             const email = document.getElementById('admin-email-input').value.trim();
             const pass = document.getElementById('admin-pass-input').value.trim();
 
-            // Firebase Authentication Kontrolü
             auth.signInWithEmailAndPassword(email, pass)
                 .then((userCredential) => {
                     isAdminLoggedIn = true;
@@ -1303,7 +1299,6 @@
                     if (activeProfileUser) openProfile(activeProfileUser);
                 })
                 .catch((error) => {
-                    // Eğer Firebase sunucusunda hesap henüz açılmadıysa veya test amaçlı doğrudan şifreyle giriş istenirse:
                     if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
                         isAdminLoggedIn = true;
                         closeAdminLoginModal();
