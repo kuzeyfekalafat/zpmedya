@@ -555,7 +555,7 @@
         </div>
     </div>
 
-    <!-- Ayarlar Menüsü -->
+    <!-- Instagram Orijinal Eksiksiz Ayarlar ve Hareketler Menüsü -->
     <div class="menu-backdrop" id="menu-backdrop" onclick="closeSettingsMenu()"></div>
     <div class="settings-menu" id="settings-menu">
         <div class="settings-header">
@@ -574,12 +574,50 @@
         </div>
 
         <div class="settings-section-title">Hesabın</div>
-        <div class="settings-menu-item" onclick="alert('Hesap Merkezi')">
+        <div class="settings-menu-item" onclick="alert('Hesap Merkezi: Şifre, güvenlik ve kişisel detaylar')">
             <div class="settings-menu-item-left"><i class="fa-regular fa-user"></i> Hesap Merkezi</div>
             <span>Şifre, güvenlik...</span>
         </div>
         <div class="settings-menu-item" onclick="openRegisterModalFromMenu()">
             <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-user-plus"></i> Yeni Hesap Ekle / Kaydol</div>
+        </div>
+
+        <div class="settings-section-title">ZP Medya'yı nasıl kullanıyorsun?</div>
+        <div class="settings-menu-item" onclick="openSavedPostsSection()">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-bookmark"></i> Kaydedildi</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Arşiv Paneli')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-clock-rotate-left"></i> Arşiv</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Hareketlerin Paneli')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-chart-line"></i> Hareketlerin</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Bildirim Ayarları')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-bell"></i> Bildirimler</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">İçeriklerini kimler görebilir?</div>
+        <div class="settings-menu-item" onclick="alert('Hesap Gizliliği')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-lock"></i> Hesap gizliliği</div>
+            <span>Herkese açık</span>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Engellenenler')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-ban"></i> Engellenenler</div>
+            <span>0</span>
+        </div>
+
+        <div class="settings-section-title">Daha fazla bilgi ve destek</div>
+        <div class="settings-menu-item" onclick="alert('Yardım Merkezi')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-life-ring"></i> Yardım</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Hesap Durumu')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-circle-user"></i> Hesap Durumu</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
 
         <div class="settings-section-title">Oturum</div>
@@ -678,10 +716,10 @@
                 username: "kuzeyfe",
                 email: SUPER_ADMIN_EMAIL,
                 fullName: "Kuzeyfe Kalafat",
-                category: "Müzisyen",
+                category: "Kullanıcı",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
                 isVerified: true,
-                bio: "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı",
+                bio: "ZP Medya Ailesine katıldı.",
                 password: ADMIN_PASS
             }
         };
@@ -777,10 +815,10 @@
                 phone: phone,
                 gender: selectedGender,
                 fullName: fullName,
-                category: isSuperAdmin ? "Müzisyen" : "Kullanıcı",
+                category: isSuperAdmin ? "Kullanıcı" : "Kullanıcı",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
                 isVerified: isSuperAdmin,
-                bio: isSuperAdmin ? "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı" : "ZP Medya Ailesine katıldı.",
+                bio: "ZP Medya Ailesine katıldı.",
                 password: password,
                 birthdate: birthdate
             };
@@ -888,7 +926,6 @@
                 actionsHtml = `<button class="profile-btn" onclick="openShareProfileModal()">Profili paylaş</button>`;
             }
 
-            // Eğer Admin giriş yapmışsa ve başkasının profilindeyse Mavi Tik ve Hesabı Sil butonları görünür
             if (checkAdminStatus(currentUser) && username !== currentUser) {
                 let verifyBtnText = u.isVerified ? "Mavi Tik Kaldır" : "Mavi Tik Ver";
                 let verifyBtnClass = u.isVerified ? "admin-unverify-btn" : "admin-verify-btn";
@@ -1005,7 +1042,6 @@
             }
         }
 
-        // Admin olarak kullanıcı hesabını tamamen silme fonksiyonu
         function deleteUserAccount(username) {
             if (username === 'kuzeyfe') {
                 alert("Ana admin hesabı silinemez!");
@@ -1029,6 +1065,12 @@
             document.getElementById('tab-repost').classList.toggle('active', tab === 'repost');
             document.getElementById('tab-tagged').classList.toggle('active', tab === 'tagged');
             renderProfileGrid();
+        }
+
+        function openSavedPostsSection() {
+            closeSettingsMenu();
+            openProfile(currentUser);
+            switchProfileTab('saved');
         }
 
         function renderProfileGrid() {
