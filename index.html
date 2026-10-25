@@ -3,77 +3,827 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZPMedya - Sosyal Medya Platformu</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>ZP Medya - Sosyal Medya Platformu</title>
+    <!-- FontAwesome Icon Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #121212;
+            --border-color: #262626;
+            --text-main: #f5f5f5;
+            --text-muted: #a8a8a8;
+            --accent-blue: #0095f6;
+            --verified-color: #0095f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 470px;
+            background-color: #000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            padding-bottom: 60px;
+        }
+
+        .verified-badge {
+            color: var(--verified-color);
+            font-size: 13px;
+            margin-left: 4px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .header {
+            height: 50px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-icons i {
+            font-size: 20px;
+            margin-left: 18px;
+            cursor: pointer;
+        }
+
+        .admin-banner {
+            background: #1a1a1a;
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 16px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+        }
+
+        .admin-toggle-btn {
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .stories-container {
+            display: flex;
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .stories-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 8px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .story-ring {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            padding: 2px;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+
+        .story-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid #000;
+            object-fit: cover;
+        }
+
+        .story-username {
+            font-size: 11px;
+            margin-top: 4px;
+            color: var(--text-main);
+            max-width: 65px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .post {
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 10px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+        }
+
+        .post-user-info {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .post-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        .post-username {
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-image-container {
+            width: 100%;
+            position: relative;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 12px;
+            font-size: 20px;
+        }
+
+        .post-actions-left i {
+            margin-right: 16px;
+            cursor: pointer;
+        }
+
+        .post-actions-right i {
+            cursor: pointer;
+        }
+
+        .liked-heart {
+            color: #ed4956 !important;
+        }
+
+        .saved-bookmark {
+            color: var(--text-main);
+        }
+
+        .post-likes {
+            padding: 0 12px;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .post-caption {
+            padding: 0 12px;
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .post-caption .username {
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .post-comments-link {
+            padding: 0 12px;
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .post-time {
+            padding: 0 12px 12px;
+            color: var(--text-muted);
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .profile-container {
+            display: none;
+            padding: 16px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 24px;
+        }
+
+        .profile-stats {
+            display: flex;
+            flex: 1;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .profile-bio {
+            margin-bottom: 16px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .profile-name {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-actions-btns {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .profile-btn {
+            flex: 1;
+            background: #262626;
+            color: #fff;
+            border: none;
+            padding: 8px 0;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .admin-verify-btn {
+            background: #0095f6 !important;
+            color: #fff !important;
+        }
+
+        .admin-unverify-btn {
+            background: #ed4956 !important;
+            color: #fff !important;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+
+        .profile-grid-item {
+            aspect-ratio: 1;
+            position: relative;
+            background: #1e1e1e;
+        }
+
+        .profile-grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 470px;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.95);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-item {
+            color: var(--text-main);
+            font-size: 22px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid var(--text-main);
+            object-fit: cover;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 400px;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .input-group input[type="text"], .input-group textarea {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .input-group input[type="file"] {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
         }
     </style>
 </head>
-<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-4">
+<body>
 
-    <div class="max-w-md w-full bg-slate-800/90 backdrop-blur-md p-8 rounded-2xl border border-slate-700/50 shadow-2xl text-center">
-        <!-- Rozet -->
-        <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/30 px-4 py-1.5 rounded-full text-purple-400 text-xs font-semibold tracking-wide mb-6">
-            <span>🚀</span> Yeni Nesil Sosyal Medya
+    <div class="app-container">
+        <div class="admin-banner">
+            <span><i class="fa-solid fa-user-shield"></i> Yönetici Modu: <strong id="admin-status-text">Aktif</strong></span>
+            <button class="admin-toggle-btn" onclick="toggleAdminMode()">Mod Değiştir</button>
         </div>
 
-        <!-- Ana Logo -->
-        <h1 class="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent mb-4 tracking-tight">
-            zpmedya.com.tr
-        </h1>
-
-        <!-- Açıklama -->
-        <p class="text-slate-400 text-sm sm:text-base leading-relaxed mb-8">
-            Özgürce paylaşım yapabileceğin, yeni insanlarla tanışabileceğin yeni sosyal medya platformumuz çok yakında yayında!
-        </p>
-
-        <!-- E-posta Formu -->
-        <form onsubmit="handleSubscribe(event)" class="space-y-3">
-            <div class="relative">
-                <input 
-                    type="email" 
-                    id="emailInput"
-                    placeholder="E-posta adresinizi girin..." 
-                    required 
-                    class="w-full px-4 py-3.5 rounded-xl bg-slate-900/80 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-200"
-                />
+        <div class="header">
+            <div class="logo">ZP Medya</div>
+            <div class="header-icons">
+                <i class="fa-regular fa-heart"></i>
+                <i class="fa-regular fa-paper-plane" onclick="alert('DM Yakında Yayında!')"></i>
             </div>
-            <button 
-                type="submit" 
-                class="w-full py-3.5 px-6 rounded-xl font-semibold text-sm bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-lg shadow-purple-500/25 active:scale-[0.98] transition-all duration-200"
-            >
-                Aramıza Katıl
-            </button>
-        </form>
-
-        <!-- Bildirim Mesajı Kutusu -->
-        <div id="statusMessage" class="hidden mt-4 p-3 rounded-lg text-xs font-medium bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-            ✨ Erken erişim kaydınız başarıyla alındı!
         </div>
 
-        <!-- Alt Bilgi -->
-        <div class="mt-8 pt-6 border-t border-slate-700/50 text-xs text-slate-500">
-            &copy; 2026 ZPMedya. Tüm hakları saklıdır.
+        <div id="feed-view">
+            <div class="stories-container" id="stories-wrapper"></div>
+            <div id="posts-wrapper"></div>
+        </div>
+
+        <div id="profile-view" class="profile-container">
+            <div class="profile-header">
+                <img id="prof-avatar" class="profile-avatar" src="" alt="Avatar">
+                <div class="profile-stats">
+                    <div>
+                        <div class="stat-number" id="prof-posts-count">0</div>
+                        <div class="stat-label">Gönderi</div>
+                    </div>
+                    <div>
+                        <div class="stat-number">1.2B</div>
+                        <div class="stat-label">Takipçi</div>
+                    </div>
+                    <div>
+                        <div class="stat-number">340</div>
+                        <div class="stat-label">Takip</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-bio">
+                <div class="profile-name" id="prof-fullname">Yükleniyor...</div>
+                <p id="prof-biotext" style="color: var(--text-muted); margin-top: 4px;"></p>
+            </div>
+
+            <div class="profile-actions-btns">
+                <button class="profile-btn" onclick="openEditProfileModal()">Profili Düzenle</button>
+                <div id="admin-action-area" style="flex: 1; display: flex;"></div>
+            </div>
+
+            <div class="profile-grid" id="prof-grid"></div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="showView('feed')"><i class="fa-solid fa-house"></i></div>
+            <div class="nav-item" onclick="alert('Keşfet Yakında!')"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div class="nav-item" onclick="openCreatePostModal()"><i class="fa-regular fa-square-plus"></i></div>
+            <div class="nav-item" onclick="alert('Reels Yakında!')"><i class="fa-solid fa-clapperboard"></i></div>
+            <div class="nav-item" onclick="openProfile('kuzeyfe')">
+                <img class="nav-avatar" id="nav-user-avatar" src="https://picsum.photos/id/64/150/150" alt="Me">
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Post Modal (Dosya Seç Özellikli) -->
+    <div class="modal" id="create-post-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Yeni Gönderi Paylaş</span>
+                <i class="fa-solid fa-xmark modal-close" onclick="closeCreatePostModal()"></i>
+            </div>
+            <div class="input-group">
+                <label>Fotoğraf Seç (Cihazdan)</label>
+                <input type="file" id="post-file-input" accept="image/*">
+            </div>
+            <div class="input-group">
+                <label>Açıklama</label>
+                <textarea id="post-caption-input" rows="3" placeholder="Bir şeyler yazın..."></textarea>
+            </div>
+            <button class="btn-submit" onclick="submitPost()">Paylaş</button>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal (İsim, Bio ve Profil Fotoğrafı Değiştirme) -->
+    <div class="modal" id="edit-profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Profili Düzenle</span>
+                <i class="fa-solid fa-xmark modal-close" onclick="closeEditProfileModal()"></i>
+            </div>
+            <div class="input-group">
+                <label>Ad Soyad</label>
+                <input type="text" id="edit-fullname-input">
+            </div>
+            <div class="input-group">
+                <label>Biyografi</label>
+                <textarea id="edit-bio-input" rows="2"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Yeni Profil Fotoğrafı Seç</label>
+                <input type="file" id="edit-avatar-file" accept="image/*">
+            </div>
+            <button class="btn-submit" onclick="saveProfileChanges()">Kaydet</button>
         </div>
     </div>
 
     <script>
-        function handleSubscribe(e) {
-            e.preventDefault();
-            const input = document.getElementById('emailInput');
-            const message = document.getElementById('statusMessage');
-            
-            if (input.value) {
-                message.classList.remove('hidden');
-                input.value = '';
-                setTimeout(() => {
-                    message.classList.add('hidden');
-                }, 4000);
+        let isAdmin = true;
+        let activeProfileUser = null;
+
+        const users = {
+            "kuzeyfe": {
+                username: "kuzeyfe",
+                fullName: "Kuzey Efe Kalafat",
+                avatar: "https://picsum.photos/id/64/150/150",
+                isVerified: true,
+                bio: "ZP Medya Kurucusu & Prodüktör 🚀",
+                postsCount: 1
+            },
+            "zpmedya": {
+                username: "zpmedya",
+                fullName: "ZP Medya Resmi",
+                avatar: "https://picsum.photos/id/1062/150/150",
+                isVerified: true,
+                bio: "Geleceğin Dijital Sosyal Platformu 🌐",
+                postsCount: 1
+            }
+        };
+
+        let posts = [
+            {
+                id: 1,
+                username: "kuzeyfe",
+                image: "https://picsum.photos/id/1059/600/600",
+                caption: "zpmedya.com.tr altyapımız tamamlandı! Artık dosya seçerek fotoğraf yükleyebiliyoruz. 🔥",
+                likes: 124,
+                liked: false,
+                saved: false,
+                time: "2 saat önce"
+            }
+        ];
+
+        function getVerifiedBadgeHTML(username) {
+            if (users[username] && users[username].isVerified) {
+                return `<i class="fa-solid fa-circle-check verified-badge" title="Onaylanmış Hesap"></i>`;
+            }
+            return '';
+        }
+
+        function toggleAdminMode() {
+            isAdmin = !isAdmin;
+            document.getElementById('admin-status-text').innerText = isAdmin ? 'Aktif' : 'Pasif';
+            renderFeed();
+            if (activeProfileUser) openProfile(activeProfileUser);
+        }
+
+        function toggleUserVerification(username) {
+            if (!isAdmin) {
+                alert("Yönetici yetkiniz yok!");
+                return;
+            }
+            if (users[username]) {
+                users[username].isVerified = !users[username].isVerified;
+                renderFeed();
+                openProfile(username);
             }
         }
+
+        function renderStories() {
+            const wrapper = document.getElementById('stories-wrapper');
+            let html = `
+                <div class="story-item" onclick="openCreatePostModal()">
+                    <div class="story-ring" style="background: #333;">
+                        <img class="story-img" src="${users['kuzeyfe'].avatar}" alt="Sen">
+                    </div>
+                    <span class="story-username">Hikaye Ekle</span>
+                </div>
+            `;
+
+            Object.keys(users).forEach(key => {
+                const u = users[key];
+                html += `
+                    <div class="story-item" onclick="openProfile('${u.username}')">
+                        <div class="story-ring">
+                            <img class="story-img" src="${u.avatar}" alt="${u.username}">
+                        </div>
+                        <span class="story-username">${u.username}</span>
+                    </div>
+                `;
+            });
+            wrapper.innerHTML = html;
+        }
+
+        function renderFeed() {
+            const wrapper = document.getElementById('posts-wrapper');
+            let html = '';
+
+            posts.forEach(post => {
+                const u = users[post.username] || { avatar: 'https://picsum.photos/150', isVerified: false };
+                html += `
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="post-user-info" onclick="openProfile('${post.username}')">
+                                <img class="post-avatar" src="${u.avatar}" alt="${post.username}">
+                                <span class="post-username">${post.username} ${getVerifiedBadgeHTML(post.username)}</span>
+                            </div>
+                            <i class="fa-solid fa-ellipsis" style="color: var(--text-muted); cursor:pointer;"></i>
+                        </div>
+                        <div class="post-image-container" ondblclick="toggleLike(${post.id})">
+                            <img class="post-image" src="${post.image}" alt="Post">
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-actions-left">
+                                <i class="${post.liked ? 'fa-solid fa-heart liked-heart' : 'fa-regular fa-heart'}" onclick="toggleLike(${post.id})"></i>
+                                <i class="fa-regular fa-comment" onclick="alert('Yorumlar yakında!')"></i>
+                                <i class="fa-regular fa-paper-plane" onclick="alert('Paylaşılıyor...')"></i>
+                            </div>
+                            <div class="post-actions-right">
+                                <i class="${post.saved ? 'fa-solid fa-bookmark saved-bookmark' : 'fa-regular fa-bookmark'}" onclick="toggleSave(${post.id})"></i>
+                            </div>
+                        </div>
+                        <div class="post-likes">${post.likes} beğenme</div>
+                        <div class="post-caption">
+                            <span class="username" onclick="openProfile('${post.username}')">${post.username} ${getVerifiedBadgeHTML(post.username)}</span>
+                            ${post.caption}
+                        </div>
+                        <div class="post-comments-link">Tüm yorumları gör...</div>
+                        <div class="post-time">${post.time}</div>
+                    </div>
+                `;
+            });
+            wrapper.innerHTML = html;
+        }
+
+        function toggleLike(id) {
+            const post = posts.find(p => p.id === id);
+            if (post) {
+                post.liked = !post.liked;
+                post.likes += post.liked ? 1 : -1;
+                renderFeed();
+            }
+        }
+
+        function toggleSave(id) {
+            const post = posts.find(p => p.id === id);
+            if (post) {
+                post.saved = !post.saved;
+                renderFeed();
+            }
+        }
+
+        function showView(view) {
+            document.getElementById('feed-view').style.display = view === 'feed' ? 'block' : 'none';
+            document.getElementById('profile-view').style.display = view === 'profile' ? 'block' : 'none';
+        }
+
+        function openProfile(username) {
+            activeProfileUser = username;
+            const u = users[username];
+            if (!u) return;
+
+            document.getElementById('prof-avatar').src = u.avatar;
+            document.getElementById('prof-fullname').innerHTML = `${u.fullName} ${getVerifiedBadgeHTML(username)}`;
+            document.getElementById('prof-biotext').innerText = u.bio;
+
+            const adminArea = document.getElementById('admin-action-area');
+            if (isAdmin && username !== 'kuzeyfe') {
+                if (u.isVerified) {
+                    adminArea.innerHTML = `<button class="profile-btn admin-unverify-btn" onclick="toggleUserVerification('${username}')">Mavi Tik Kaldır</button>`;
+                } else {
+                    adminArea.innerHTML = `<button class="profile-btn admin-verify-btn" onclick="toggleUserVerification('${username}')">Mavi Tik Ver</button>`;
+                }
+            } else {
+                adminArea.innerHTML = `<button class="profile-btn" onclick="alert('Takip Edildi')">Takip Et</button>`;
+            }
+
+            const userPosts = posts.filter(p => p.username === username);
+            document.getElementById('prof-posts-count').innerText = userPosts.length;
+
+            const grid = document.getElementById('prof-grid');
+            let gridHtml = '';
+            userPosts.forEach(p => {
+                gridHtml += `<div class="profile-grid-item"><img src="${p.image}" alt="Grid Post"></div>`;
+            });
+            grid.innerHTML = gridHtml || '<p style="grid-column: 1/-1; color: var(--text-muted); text-align: center; padding: 20px;">Henüz gönderi yok.</p>';
+
+            showView('profile');
+        }
+
+        function openCreatePostModal() {
+            document.getElementById('create-post-modal').style.display = 'flex';
+        }
+
+        function closeCreatePostModal() {
+            document.getElementById('create-post-modal').style.display = 'none';
+        }
+
+        function submitPost() {
+            const fileInput = document.getElementById('post-file-input');
+            const caption = document.getElementById('post-caption-input').value || 'ZP Medya Paylaşımı';
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newPost = {
+                        id: Date.now(),
+                        username: "kuzeyfe",
+                        image: e.target.result,
+                        caption: caption,
+                        likes: 0,
+                        liked: false,
+                        saved: false,
+                        time: "Şimdi"
+                    };
+                    posts.unshift(newPost);
+                    users["kuzeyfe"].postsCount += 1;
+
+                    fileInput.value = '';
+                    document.getElementById('post-caption-input').value = '';
+                    closeCreatePostModal();
+                    renderStories();
+                    renderFeed();
+                    showView('feed');
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                alert("Lütfen bir görsel seçin!");
+            }
+        }
+
+        function openEditProfileModal() {
+            document.getElementById('edit-fullname-input').value = users['kuzeyfe'].fullName;
+            document.getElementById('edit-bio-input').value = users['kuzeyfe'].bio;
+            document.getElementById('edit-profile-modal').style.display = 'flex';
+        }
+
+        function closeEditProfileModal() {
+            document.getElementById('edit-profile-modal').style.display = 'none';
+        }
+
+        function saveProfileChanges() {
+            const newName = document.getElementById('edit-fullname-input').value;
+            const newBio = document.getElementById('edit-bio-input').value;
+            const avatarFile = document.getElementById('edit-avatar-file');
+
+            users['kuzeyfe'].fullName = newName;
+            users['kuzeyfe'].bio = newBio;
+
+            if (avatarFile.files && avatarFile.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    users['kuzeyfe'].avatar = e.target.result;
+                    document.getElementById('nav-user-avatar').src = e.target.result;
+                    finalizeProfileUpdate();
+                }
+                reader.readAsDataURL(avatarFile.files[0]);
+            } else {
+                finalizeProfileUpdate();
+            }
+        }
+
+        function finalizeProfileUpdate() {
+            closeEditProfileModal();
+            openProfile('kuzeyfe');
+            renderStories();
+            renderFeed();
+            alert("Profil başarıyla güncellendi!");
+        }
+
+        // Init
+        renderStories();
+        renderFeed();
     </script>
 </body>
 </html>
