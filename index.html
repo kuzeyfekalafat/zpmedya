@@ -34,7 +34,7 @@
             min-height: 100vh;
         }
 
-        /* --- INSTAGRAM ORİJİNAL TAM EKRAN GİRİŞ / KAYIT DUVARI --- */
+        /* --- İNSTAGRAM ORİJİNAL GİRİŞ / KAYIT DUVARI --- */
         .auth-overlay {
             position: fixed;
             top: 0;
@@ -138,7 +138,7 @@
             max-width: 470px;
             background-color: #000;
             min-height: 100vh;
-            display: none; /* Başlangıçta gizli, giriş yapılınca açılacak */
+            display: none;
             flex-direction: column;
             position: relative;
             border-left: 1px solid var(--border-color);
@@ -530,7 +530,7 @@
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
         <div class="settings-menu-item" onclick="alert('Bildirim Ayarları')">
-            <div class="settings-menu-item-left"><i class="regular fa-bell"></i> Bildirimler</div>
+            <div class="settings-menu-item-left"><i class="fa-regular fa-bell"></i> Bildirimler</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
 
@@ -614,6 +614,8 @@
     <script>
         const ADMIN_PASS = "Kuzeyfe1986404040";
 
+        // DİKKAT: Artık varsayılan olarak oturum açık BAŞLAMAYACAK. 
+        // Kullanıcı giriş yapana kadar currentUser null olacak ve giriş ekranı çıkacak!
         let currentUser = localStorage.getItem('zp_current_user') || null;
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
@@ -640,7 +642,7 @@
             localStorage.setItem('zp_admin', isAdminLoggedIn);
         }
 
-        // Sayfa açıldığında oturum kontrolü: Oturum yoksa KESİNLİKLE kayıt/giriş ekranı görünür!
+        // Sayfa açıldığında KESİN KONTROL: Eğer kayıtlı geçerli bir oturum yoksa direkt Giriş/Kayıt ekranını göster!
         window.onload = function() {
             if (currentUser && users[currentUser]) {
                 document.getElementById('auth-screen').style.display = 'none';
@@ -649,6 +651,8 @@
                 renderFeed();
                 openProfile(currentUser);
             } else {
+                currentUser = null;
+                localStorage.removeItem('zp_current_user');
                 document.getElementById('auth-screen').style.display = 'flex';
                 document.getElementById('app-container').style.display = 'none';
             }
