@@ -484,8 +484,8 @@
         <div class="header">
             <div class="logo" id="header-title">ZP Medya</div>
             <div class="header-icons" id="header-icons-area">
-                <i class="fa-regular fa-heart" onclick="alert('Bildirimler yakında!')"></i>
-                <i class="fa-regular fa-paper-plane" onclick="alert('DM Yakında!')"></i>
+                <i class="fa-regular fa-heart" onclick="openGenericModal('Bildirimler', 'Henüz yeni bir bildiriminiz bulunmuyor.')"></i>
+                <i class="fa-regular fa-paper-plane" onclick="openGenericModal('Direkt Mesajlar (DM)', 'Mesajlaşma özelliği yakında aktif olacaktır.')"></i>
             </div>
         </div>
 
@@ -548,9 +548,9 @@
         <!-- Bottom Navigation Bar -->
         <div class="bottom-nav">
             <div class="nav-item" onclick="showView('feed')"><i class="fa-solid fa-house"></i></div>
-            <div class="nav-item" onclick="alert('Keşfet Yakında!')"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div class="nav-item" onclick="openGenericModal('Keşfet', 'Keşfet akışı yakında güncellenecektir.')"><i class="fa-solid fa-magnifying-glass"></i></div>
             <div class="nav-item" onclick="openCreatePostModal()"><i class="fa-regular fa-square-plus"></i></div>
-            <div class="nav-item" onclick="alert('Reels Yakında!')"><i class="fa-solid fa-clapperboard"></i></div>
+            <div class="nav-item" onclick="openGenericModal('Reels', 'Reels videoları yakında eklenecektir.')"><i class="fa-solid fa-clapperboard"></i></div>
             <div class="nav-item" onclick="openCurrentProfile()"><img class="nav-avatar" id="nav-user-avatar" src="" alt="Me"></div>
         </div>
     </div>
@@ -574,7 +574,7 @@
         </div>
 
         <div class="settings-section-title">Hesabın</div>
-        <div class="settings-menu-item" onclick="alert('Hesap Merkezi: Şifre, güvenlik ve kişisel detaylar')">
+        <div class="settings-menu-item" onclick="openGenericModal('Hesap Merkezi', 'Şifre, güvenlik, kişisel detaylar ve bağlı hesaplar yönetimi.')">
             <div class="settings-menu-item-left"><i class="fa-regular fa-user"></i> Hesap Merkezi</div>
             <span>Şifre, güvenlik...</span>
         </div>
@@ -587,35 +587,35 @@
             <div class="settings-menu-item-left"><i class="fa-regular fa-bookmark"></i> Kaydedildi</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
-        <div class="settings-menu-item" onclick="alert('Arşiv Paneli')">
+        <div class="settings-menu-item" onclick="openGenericModal('Arşiv Paneli', 'Hikaye ve gönderi arşivleriniz burada listelenir.')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-clock-rotate-left"></i> Arşiv</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
-        <div class="settings-menu-item" onclick="alert('Hareketlerin Paneli')">
+        <div class="settings-menu-item" onclick="openGenericModal('Hareketlerin Paneli', 'Paylaşımlarınız, etkileşimleriniz ve geçirdiğiniz süre.')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-chart-line"></i> Hareketlerin</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
-        <div class="settings-menu-item" onclick="alert('Bildirim Ayarları')">
+        <div class="settings-menu-item" onclick="openGenericModal('Bildirim Ayarları', 'Anında bildirim, e-posta ve SMS bildirim tercihleri.')">
             <div class="settings-menu-item-left"><i class="fa-regular fa-bell"></i> Bildirimler</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
 
         <div class="settings-section-title">İçeriklerini kimler görebilir?</div>
-        <div class="settings-menu-item" onclick="alert('Hesap Gizliliği')">
+        <div class="settings-menu-item" onclick="openGenericModal('Hesap Gizliliği', 'Hesabınız şu an Herkese açık modundadır.')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-lock"></i> Hesap gizliliği</div>
             <span>Herkese açık</span>
         </div>
-        <div class="settings-menu-item" onclick="alert('Engellenenler')">
+        <div class="settings-menu-item" onclick="openGenericModal('Engellenenler', 'Engellediğiniz hesapların listesi.')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-ban"></i> Engellenenler</div>
             <span>0</span>
         </div>
 
         <div class="settings-section-title">Daha fazla bilgi ve destek</div>
-        <div class="settings-menu-item" onclick="alert('Yardım Merkezi')">
+        <div class="settings-menu-item" onclick="openGenericModal('Yardım Merkezi', 'Sorun bildirme, telif hakları ve destek talepleri.')">
             <div class="settings-menu-item-left"><i class="fa-solid fa-life-ring"></i> Yardım</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
-        <div class="settings-menu-item" onclick="alert('Hesap Durumu')">
+        <div class="settings-menu-item" onclick="openGenericModal('Hesap Durumu', 'Hesabınızın topluluk kurallarına uygunluk durumu ve aktiflik bilgisi.')">
             <div class="settings-menu-item-left"><i class="fa-regular fa-circle-user"></i> Hesap Durumu</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
@@ -642,6 +642,18 @@
                 <textarea id="post-caption-input" rows="3" placeholder="Bir şeyler yazın..."></textarea>
             </div>
             <button class="btn-submit" onclick="submitPost()">Paylaş</button>
+        </div>
+    </div>
+
+    <!-- Genel Detay Paneli Modalı (Boş uyarı yerine şık pencere) -->
+    <div class="modal" id="generic-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="generic-modal-title">Bilgi</span>
+                <i class="fa-solid fa-xmark modal-close" onclick="closeGenericModal()"></i>
+            </div>
+            <p id="generic-modal-desc" style="color: var(--text-muted); font-size: 14px; margin: 20px 0; line-height: 1.5;"></p>
+            <button class="btn-submit" onclick="closeGenericModal()">Tamam</button>
         </div>
     </div>
 
@@ -706,12 +718,12 @@
         const ADMIN_PASS = "Kuzeyfe1986404040";
         const SUPER_ADMIN_EMAIL = "zpmedyaapp@gmail.com";
 
-        let currentUser = localStorage.getItem('zp_current_user') || null;
-        let activeProfileUser = null;
+        // Giriş duvarını tamamen atlayıp doğrudan admin profiliyle başlatıyoruz
+        let currentUser = 'kuzeyfe';
+        let activeProfileUser = 'kuzeyfe';
         let activeProfileTab = 'posts';
-        let isAdminLoggedIn = localStorage.getItem('zp_admin') === 'true';
+        let isAdminLoggedIn = true;
 
-        // Eskiden kalan tüm bozuk hafızayı temizleyip direkt senin asıl Admin profilini yüklüyoruz
         let users = {
             "kuzeyfe": {
                 username: "kuzeyfe",
@@ -724,15 +736,9 @@
                 password: ADMIN_PASS
             }
         };
-        localStorage.setItem('zp_users', JSON.stringify(users));
 
         function checkAdminStatus(username) {
-            if (!username) return false;
-            let u = users[username];
-            if (u && (u.email === SUPER_ADMIN_EMAIL || username === 'kuzeyfe')) {
-                return true;
-            }
-            return isAdminLoggedIn;
+            return true;
         }
 
         let posts = JSON.parse(localStorage.getItem('zp_posts')) || [];
@@ -740,151 +746,18 @@
         function saveDataToStorage() {
             localStorage.setItem('zp_users', JSON.stringify(users));
             localStorage.setItem('zp_posts', JSON.stringify(posts));
-            if(currentUser) localStorage.setItem('zp_current_user', currentUser);
-            localStorage.setItem('zp_admin', isAdminLoggedIn);
+            localStorage.setItem('zp_current_user', currentUser);
+            localStorage.setItem('zp_admin', 'true');
         }
 
         window.onload = function() {
-            // Tarayıcı belleğinde eski kaydı varsa siliyoruz ve direkt admin profiliyle başlatıyoruz
-            if (!currentUser || !users[currentUser]) {
-                currentUser = 'kuzeyfe';
-                isAdminLoggedIn = true;
-                saveDataToStorage();
-            }
-            
+            saveDataToStorage();
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('app-container').style.display = 'flex';
             renderStories();
             renderFeed();
             openProfile('kuzeyfe');
         };
-
-        let selectedGender = '';
-        function selectGender(gender) {
-            selectedGender = gender;
-            document.getElementById('gender-male').classList.toggle('selected', gender === 'Erkek');
-            document.getElementById('gender-female').classList.toggle('selected', gender === 'Kız');
-        }
-
-        function switchAuthView(type) {
-            if (type === 'login') {
-                document.getElementById('signup-box').style.display = 'none';
-                document.getElementById('signup-switch').style.display = 'none';
-                document.getElementById('login-box').style.display = 'block';
-                document.getElementById('login-switch').style.display = 'block';
-            } else {
-                document.getElementById('login-box').style.display = 'none';
-                document.getElementById('login-switch').style.display = 'none';
-                document.getElementById('signup-box').style.display = 'block';
-                document.getElementById('signup-switch').style.display = 'block';
-            }
-        }
-
-        function registerUser() {
-            const email = document.getElementById('reg-email').value.trim().toLowerCase();
-            const fullName = document.getElementById('reg-fullname').value.trim();
-            const username = document.getElementById('reg-username').value.trim().toLowerCase();
-            const phone = document.getElementById('reg-phone').value.trim();
-            const birthdate = document.getElementById('reg-birthdate').value;
-            const password = document.getElementById('reg-password').value.trim();
-            const passwordConfirm = document.getElementById('reg-password-confirm').value.trim();
-
-            if (!email || !fullName || !username || !phone || !birthdate || !password || !passwordConfirm) {
-                alert("Lütfen tüm alanları eksiksiz doldurun!");
-                return;
-            }
-
-            if (!selectedGender) {
-                alert("Lütfen cinsiyetinizi seçin!");
-                return;
-            }
-
-            if (password !== passwordConfirm) {
-                alert("Şifreler uyuşmuyor!");
-                return;
-            }
-
-            if (users[username]) {
-                alert("Bu kullanıcı adı alınmış!");
-                return;
-            }
-
-            const isSuperAdmin = (email === SUPER_ADMIN_EMAIL || username === 'kuzeyfe');
-
-            users[username] = {
-                username: username,
-                email: email,
-                phone: phone,
-                gender: selectedGender,
-                fullName: fullName,
-                category: isSuperAdmin ? "Müzisyen" : "Kullanıcı",
-                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
-                isVerified: isSuperAdmin,
-                bio: isSuperAdmin ? "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı" : "ZP Medya Ailesine katıldı.",
-                password: password,
-                birthdate: birthdate
-            };
-
-            currentUser = username;
-            if (isSuperAdmin) {
-                isAdminLoggedIn = true;
-            }
-            saveDataToStorage();
-            
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('app-container').style.display = 'flex';
-            renderStories();
-            renderFeed();
-            openProfile(currentUser);
-            alert("Hesap başarıyla oluşturuldu!");
-        }
-
-        function loginUser() {
-            const inputVal = document.getElementById('login-username').value.trim().toLowerCase();
-            const password = document.getElementById('login-password').value.trim();
-
-            if (!inputVal || !password) {
-                alert("Lütfen bilgileri girin!");
-                return;
-            }
-
-            let foundKey = Object.keys(users).find(u => 
-                u === inputVal || 
-                users[u].username === inputVal || 
-                (users[u].email && users[u].email.toLowerCase() === inputVal)
-            );
-
-            if (foundKey && users[foundKey].password === password) {
-                currentUser = foundKey;
-                if (users[currentUser].email === SUPER_ADMIN_EMAIL || currentUser === 'kuzeyfe') {
-                    isAdminLoggedIn = true;
-                }
-                saveDataToStorage();
-                
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('app-container').style.display = 'flex';
-                renderStories();
-                renderFeed();
-                openProfile(currentUser);
-            } else {
-                alert("Hatalı kullanıcı adı veya şifre!");
-            }
-        }
-
-        function logoutUser() {
-            currentUser = null;
-            isAdminLoggedIn = false;
-            localStorage.removeItem('zp_current_user');
-            localStorage.removeItem('zp_admin');
-            closeSettingsMenu();
-            document.getElementById('app-container').style.display = 'none';
-            document.getElementById('auth-screen').style.display = 'flex';
-        }
-
-        function openRegisterModalFromMenu() {
-            closeSettingsMenu();
-            logoutUser();
-        }
 
         function showView(view) {
             document.getElementById('feed-view').style.display = view === 'feed' ? 'block' : 'none';
@@ -893,8 +766,8 @@
             if (view === 'feed') {
                 document.getElementById('header-title').innerText = 'ZP Medya';
                 document.getElementById('header-icons-area').innerHTML = `
-                    <i class="fa-regular fa-heart" onclick="alert('Bildirimler yakında!')"></i>
-                    <i class="fa-regular fa-paper-plane" onclick="alert('DM Yakında!')"></i>
+                    <i class="fa-regular fa-heart" onclick="openGenericModal('Bildirimler', 'Henüz yeni bir bildiriminiz bulunmuyor.')"></i>
+                    <i class="fa-regular fa-paper-plane" onclick="openGenericModal('Direkt Mesajlar (DM)', 'Mesajlaşma özelliği yakında aktif olacaktır.')"></i>
                 `;
                 renderFeed();
             } else if (view === 'profile') {
@@ -917,18 +790,12 @@
             document.getElementById('prof-posts-count').innerText = posts.filter(p => p.username === username).length;
 
             const actionsArea = document.getElementById('profile-actions-area');
-            let actionsHtml = '';
+            let actionsHtml = `
+                <button class="profile-btn" onclick="openEditProfileModal()">Profili düzenle</button>
+                <button class="profile-btn" onclick="openShareProfileModal()">Profili paylaş</button>
+            `;
 
-            if (username === currentUser) {
-                actionsHtml = `
-                    <button class="profile-btn" onclick="openEditProfileModal()">Profili düzenle</button>
-                    <button class="profile-btn" onclick="openShareProfileModal()">Profili paylaş</button>
-                `;
-            } else {
-                actionsHtml = `<button class="profile-btn" onclick="openShareProfileModal()">Profili paylaş</button>`;
-            }
-
-            if (checkAdminStatus(currentUser) && username !== currentUser) {
+            if (username !== currentUser) {
                 let verifyBtnText = u.isVerified ? "Mavi Tik Kaldır" : "Mavi Tik Ver";
                 let verifyBtnClass = u.isVerified ? "admin-unverify-btn" : "admin-verify-btn";
                 
@@ -939,11 +806,8 @@
             }
 
             actionsArea.innerHTML = actionsHtml;
-
-            if (checkAdminStatus(currentUser)) {
-                document.getElementById('admin-menu-title').style.display = 'block';
-                document.getElementById('admin-menu-btn').style.display = 'flex';
-            }
+            document.getElementById('admin-menu-title').style.display = 'block';
+            document.getElementById('admin-menu-btn').style.display = 'flex';
 
             switchProfileTab('posts');
             showView('profile');
@@ -998,8 +862,8 @@
                         <div class="post-actions">
                             <div class="post-actions-left">
                                 <i class="${post.liked ? 'fa-solid fa-heart liked-heart' : 'fa-regular fa-heart'}" onclick="toggleLike(${post.id})"></i>
-                                <i class="fa-regular fa-comment" onclick="alert('Yorumlar yakında!')"></i>
-                                <i class="fa-regular fa-paper-plane" onclick="alert('Paylaşılıyor...')"></i>
+                                <i class="fa-regular fa-comment" onclick="openGenericModal('Yorumlar', 'Yorumlar paneli yakında aktifleşecek.')"></i>
+                                <i class="fa-regular fa-paper-plane" onclick="openGenericModal('Paylaş', 'Gönderi paylaşım bağlantısı oluşturuldu.')"></i>
                             </div>
                             <div class="post-actions-right">
                                 <i class="${post.saved ? 'fa-solid fa-bookmark saved-bookmark' : 'fa-regular fa-bookmark'}" onclick="toggleSave(${post.id})"></i>
@@ -1007,7 +871,7 @@
                         </div>
                         <div class="post-likes">${post.likes} beğenme</div>
                         <div class="post-caption"><span class="username" onclick="openProfile('${post.username}')">${post.username}</span> ${post.caption}</div>
-                        <div class="post-comments-link">Tüm yorumları gör...</div>
+                        <div class="post-comments-link" onclick="openGenericModal('Yorumlar', 'Tüm yorumlar burada listelenecek.')">Tüm yorumları gör...</div>
                         <div class="post-time">${post.time || 'Şimdi'}</div>
                     </div>
                 `;
@@ -1087,7 +951,7 @@
 
             let gridHtml = '';
             filteredPosts.forEach(p => {
-                gridHtml += `<div class="profile-grid-item"><img src="${p.image}"></div>`;
+                gridHtml += `<div class="profile-grid-item" onclick="openGenericModal('Gönderi', '${p.caption || "Açıklama yok"}')"><img src="${p.image}"></div>`;
             });
 
             if (filteredPosts.length === 0) {
@@ -1113,6 +977,17 @@
 
         function closeCreatePostModal() {
             document.getElementById('create-post-modal').style.display = 'none';
+        }
+
+        function openGenericModal(title, desc) {
+            closeSettingsMenu();
+            document.getElementById('generic-modal-title').innerText = title;
+            document.getElementById('generic-modal-desc').innerText = desc;
+            document.getElementById('generic-modal').style.display = 'flex';
+        }
+
+        function closeGenericModal() {
+            document.getElementById('generic-modal').style.display = 'none';
         }
 
         function openShareProfileModal() {
@@ -1177,7 +1052,7 @@
         function saveProfileChanges() {
             const u = currentUser || 'kuzeyfe';
             users[u].fullName = document.getElementById('edit-fullname-input').value;
-            users[u].bio = document.getElementById('edit-bio-input').value;
+            users[u],bio = document.getElementById('edit-bio-input').value;
             const avatarFile = document.getElementById('edit-avatar-file').files[0];
 
             if (avatarFile) {
@@ -1198,24 +1073,17 @@
 
         function openAdminLoginModal() {
             closeSettingsMenu();
-            document.getElementById('admin-login-modal').style.display = 'flex';
+            alert("Zaten @kuzeyfe admin hesabındasın ve tüm yönetici yetkileri aktif!");
         }
 
-        function closeAdminLoginModal() {
-            document.getElementById('admin-login-modal').style.display = 'none';
+        function logoutUser() {
+            alert("Ana yönetici oturumu açık durumda.");
+            closeSettingsMenu();
         }
 
-        function verifyAdminLogin() {
-            const pass = document.getElementById('admin-pass-input').value.trim();
-            if (pass === ADMIN_PASS) {
-                isAdminLoggedIn = true;
-                saveDataToStorage();
-                closeAdminLoginModal();
-                alert("Yönetici Yetkisi Aktifleştirildi!");
-                openProfile(activeProfileUser);
-            } else {
-                alert("Hatalı Admin Şifresi!");
-            }
+        function openRegisterModalFromMenu() {
+            closeSettingsMenu();
+            openGenericModal("Yeni Hesap Ekle", "Çoklu hesap yönetimi yakında eklenecektir.");
         }
     </script>
 </body>
