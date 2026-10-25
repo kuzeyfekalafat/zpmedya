@@ -15,6 +15,7 @@
             --text-muted: #a8a8a8;
             --accent-blue: #0095f6;
             --verified-color: #0095f6;
+            --danger-color: #ed4956;
         }
 
         * {
@@ -81,28 +82,6 @@
             font-size: 20px;
             margin-left: 18px;
             cursor: pointer;
-        }
-
-        .admin-banner {
-            background: #1a1a1a;
-            border-bottom: 1px solid var(--border-color);
-            padding: 8px 16px;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-muted);
-        }
-
-        .admin-toggle-btn {
-            background: var(--accent-blue);
-            color: #fff;
-            border: none;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 11px;
         }
 
         .stories-container {
@@ -176,6 +155,7 @@
             border-radius: 50%;
             margin-right: 10px;
             object-fit: cover;
+            background: #262626;
         }
 
         .post-username {
@@ -188,6 +168,11 @@
         .post-image-container {
             width: 100%;
             position: relative;
+            background: #111;
+            min-height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .post-image {
@@ -255,23 +240,45 @@
             text-transform: uppercase;
         }
 
+        /* Profile Styles */
         .profile-container {
             display: none;
             padding: 16px;
         }
 
-        .profile-header {
+        .profile-top-row {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
+        }
+
+        .profile-avatar-wrap {
+            position: relative;
+            margin-right: 24px;
         }
 
         .profile-avatar {
-            width: 80px;
-            height: 80px;
+            width: 82px;
+            height: 82px;
             border-radius: 50%;
             object-fit: cover;
-            margin-right: 24px;
+            background: #262626;
+        }
+
+        .profile-avatar-add {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: var(--accent-blue);
+            color: #fff;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border: 2px solid #000;
         }
 
         .profile-stats {
@@ -291,7 +298,7 @@
             color: var(--text-muted);
         }
 
-        .profile-bio {
+        .profile-bio-section {
             margin-bottom: 16px;
             font-size: 13px;
             line-height: 1.4;
@@ -301,12 +308,35 @@
             font-weight: 700;
             display: flex;
             align-items: center;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .profile-category {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .profile-bio-text {
+            color: var(--text-main);
+            white-space: pre-line;
+            margin-bottom: 6px;
+        }
+
+        .profile-link {
+            color: #e0f1ff;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .profile-actions-btns {
             display: flex;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .profile-btn {
@@ -323,13 +353,102 @@
         }
 
         .admin-verify-btn {
-            background: #0095f6 !important;
+            background: var(--accent-blue) !important;
             color: #fff !important;
         }
 
         .admin-unverify-btn {
-            background: #ed4956 !important;
+            background: var(--danger-color) !important;
             color: #fff !important;
+        }
+
+        /* Panon Box */
+        .profile-panon {
+            background: #181818;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+        }
+
+        .panon-title {
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .panon-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Highlights (Öne Çıkanlar) */
+        .highlights-container {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+            scrollbar-width: none;
+        }
+
+        .highlights-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .highlight-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .highlight-ring {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            border: 1px solid #333;
+            padding: 2px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .highlight-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .highlight-name {
+            font-size: 11px;
+            margin-top: 4px;
+            color: var(--text-muted);
+        }
+
+        /* Profile 4-Column Tabs (Tam Instagram Düzeni) */
+        .profile-tabs {
+            display: flex;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2px;
+        }
+
+        .profile-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .profile-tab.active {
+            color: var(--text-main);
+            border-bottom: 2px solid var(--text-main);
         }
 
         .profile-grid {
@@ -377,6 +496,126 @@
             border-radius: 50%;
             border: 1px solid var(--text-main);
             object-fit: cover;
+        }
+
+        /* Settings Sheet */
+        .settings-menu {
+            position: fixed;
+            bottom: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 470px;
+            height: 90vh;
+            background: #121212;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            border-top: 1px solid var(--border-color);
+            padding: 16px;
+            z-index: 300;
+            transition: bottom 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .settings-menu.active {
+            bottom: 0;
+        }
+
+        .settings-header {
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .settings-header i {
+            position: absolute;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+        }
+
+        .settings-search {
+            width: 100%;
+            background: #262626;
+            border: none;
+            padding: 8px 12px 8px 36px;
+            border-radius: 10px;
+            color: #fff;
+            margin-bottom: 16px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 10px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .settings-section-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin: 16px 0 8px 0;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .settings-menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            color: var(--text-main);
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 1px solid #1c1c1c;
+        }
+
+        .settings-menu-item-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .settings-menu-item-left i {
+            font-size: 18px;
+            margin-right: 16px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .settings-menu-item span {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .text-blue {
+            color: var(--accent-blue) !important;
+            font-weight: 600;
+        }
+
+        .text-red {
+            color: var(--danger-color) !important;
+            font-weight: 600;
+        }
+
+        .menu-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 250;
         }
 
         .modal {
@@ -455,16 +694,12 @@
 <body>
 
     <div class="app-container">
-        <div class="admin-banner">
-            <span><i class="fa-solid fa-user-shield"></i> Yönetici Modu: <strong id="admin-status-text">Aktif</strong></span>
-            <button class="admin-toggle-btn" onclick="toggleAdminMode()">Mod Değiştir</button>
-        </div>
-
+        <!-- Header -->
         <div class="header">
-            <div class="logo">ZP Medya</div>
-            <div class="header-icons">
+            <div class="logo" id="header-title">ZP Medya</div>
+            <div class="header-icons" id="header-icons-area">
                 <i class="fa-regular fa-heart"></i>
-                <i class="fa-regular fa-paper-plane" onclick="alert('DM Yakında Yayında!')"></i>
+                <i class="fa-regular fa-paper-plane" onclick="alert('DM Yakında!')"></i>
             </div>
         </div>
 
@@ -474,32 +709,83 @@
         </div>
 
         <div id="profile-view" class="profile-container">
-            <div class="profile-header">
-                <img id="prof-avatar" class="profile-avatar" src="" alt="Avatar">
+            <div class="profile-top-row">
+                <div class="profile-avatar-wrap">
+                    <img id="prof-avatar" class="profile-avatar" src="" alt="Avatar">
+                    <div class="profile-avatar-add" onclick="openCreatePostModal()"><i class="fa-solid fa-plus"></i></div>
+                </div>
                 <div class="profile-stats">
                     <div>
                         <div class="stat-number" id="prof-posts-count">0</div>
-                        <div class="stat-label">Gönderi</div>
+                        <div class="stat-label">gönderi</div>
                     </div>
                     <div>
-                        <div class="stat-number">1.2B</div>
-                        <div class="stat-label">Takipçi</div>
+                        <div class="stat-number">212</div>
+                        <div class="stat-label">takipçi</div>
                     </div>
                     <div>
-                        <div class="stat-number">340</div>
-                        <div class="stat-label">Takip</div>
+                        <div class="stat-number">3.483</div>
+                        <div class="stat-label">takip</div>
                     </div>
                 </div>
             </div>
 
-            <div class="profile-bio">
+            <div class="profile-bio-section">
                 <div class="profile-name" id="prof-fullname">Yükleniyor...</div>
-                <p id="prof-biotext" style="color: var(--text-muted); margin-top: 4px;"></p>
+                <div class="profile-category" id="prof-category">Müzisyen</div>
+                <div class="profile-bio-text" id="prof-biotext"></div>
+                <a href="#" class="profile-link" id="prof-link" onclick="return false;"><i class="fa-solid fa-link"></i> linktr.ee/kuzeyfe_kalafat</a>
             </div>
 
+            <!-- Panon Box -->
+            <div class="profile-panon">
+                <div class="panon-title">Panon</div>
+                <div class="panon-desc">Son 30 günde 122 görüntüleme.</div>
+            </div>
+
+            <!-- Profile Buttons -->
             <div class="profile-actions-btns">
-                <button class="profile-btn" onclick="openEditProfileModal()">Profili Düzenle</button>
-                <div id="admin-action-area" style="flex: 1; display: flex;"></div>
+                <button class="profile-btn" onclick="openEditProfileModal()">Profili düzenle</button>
+                <button class="profile-btn" onclick="alert('Profil bağlantısı kopyalandı!')">Profili paylaş</button>
+                <div id="admin-action-area" style="display: none;"></div>
+            </div>
+
+            <!-- Highlights -->
+            <div class="highlights-container">
+                <div class="highlight-item" onclick="openCreatePostModal()">
+                    <div class="highlight-ring">
+                        <i class="fa-solid fa-plus" style="font-size: 20px; color: var(--text-main);"></i>
+                    </div>
+                    <span class="highlight-name">Yeni</span>
+                </div>
+                <div class="highlight-item" onclick="alert('Öne çıkan hikaye açılıyor')">
+                    <div class="highlight-ring">
+                        <img class="highlight-img" src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=200&auto=format&fit=crop&q=80" alt="Öne Çıkan">
+                    </div>
+                    <span class="highlight-name">Öne Çıkanlar</span>
+                </div>
+                <div class="highlight-item" onclick="alert('Öne çıkan hikaye açılıyor')">
+                    <div class="highlight-ring">
+                        <img class="highlight-img" src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=200&auto=format&fit=crop&q=80" alt="Öne Çıkan">
+                    </div>
+                    <span class="highlight-name">Öne Çıkanlar</span>
+                </div>
+            </div>
+
+            <!-- Instagram Birebir 4 Sütunlu Profil Sekmeleri -->
+            <div class="profile-tabs">
+                <div class="profile-tab active" id="tab-posts" onclick="switchProfileTab('posts')" title="Gönderiler">
+                    <i class="fa-solid fa-table-cells"></i>
+                </div>
+                <div class="profile-tab" id="tab-reels" onclick="switchProfileTab('reels')" title="Reels">
+                    <i class="fa-solid fa-clapperboard"></i>
+                </div>
+                <div class="profile-tab" id="tab-repost" onclick="switchProfileTab('repost')" title="Yeniden Paylaşılanlar">
+                    <i class="fa-solid fa-retweet"></i>
+                </div>
+                <div class="profile-tab" id="tab-tagged" onclick="switchProfileTab('tagged')" title="Etiketlendiğin Gönderiler">
+                    <i class="fa-regular fa-id-badge"></i>
+                </div>
             </div>
 
             <div class="profile-grid" id="prof-grid"></div>
@@ -511,12 +797,178 @@
             <div class="nav-item" onclick="openCreatePostModal()"><i class="fa-regular fa-square-plus"></i></div>
             <div class="nav-item" onclick="alert('Reels Yakında!')"><i class="fa-solid fa-clapperboard"></i></div>
             <div class="nav-item" onclick="openProfile('kuzeyfe')">
-                <img class="nav-avatar" id="nav-user-avatar" src="https://picsum.photos/id/64/150/150" alt="Me">
+                <img class="nav-avatar" id="nav-user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80" alt="Me">
             </div>
         </div>
     </div>
 
-    <!-- Create Post Modal (Dosya Seç Özellikli) -->
+    <!-- Instagram Ayarlar ve Hareketler Menüsü -->
+    <div class="menu-backdrop" id="menu-backdrop" onclick="closeSettingsMenu()"></div>
+    <div class="settings-menu" id="settings-menu">
+        <div class="settings-header">
+            Ayarlar ve hareketler
+            <i class="fa-solid fa-xmark" onclick="closeSettingsMenu()"></i>
+        </div>
+
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" class="settings-search" placeholder="Ara">
+        </div>
+
+        <div class="settings-section-title">Hesabın</div>
+        <div class="settings-menu-item" onclick="alert('Hesap Merkezi: Şifre ve kişisel detaylar')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-user"></i> Hesap Merkezi</div>
+            <span>Şifre, güvenlik...</span>
+        </div>
+
+        <div class="settings-section-title">ZP Medya'yı nasıl kullanıyorsun?</div>
+        <div class="settings-menu-item" onclick="closeSettingsMenu(); switchProfileTab('saved');">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-bookmark"></i> Kaydedildi</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Arşiv Paneli')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-clock-rotate-left"></i> Arşiv</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Hareketlerin Paneli')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-chart-line"></i> Hareketlerin</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Bildirim Ayarları')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-bell"></i> Bildirimler</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Zaman Yönetimi')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-hourglass-half"></i> Zaman yönetimi</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">İstatistiklerin ve araçların</div>
+        <div class="settings-menu-item" onclick="alert('Profesyonel Pano')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-chart-pie"></i> Profesyonel pano</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Hesap Türü ve Araçları')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-user-gear"></i> Hesap türü ve araçları</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Reklam Ödemeleri')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-credit-card"></i> Reklam ödemeleri</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">İçeriklerini kimler görebilir?</div>
+        <div class="settings-menu-item" onclick="alert('Hesap Gizliliği')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-lock"></i> Hesap gizliliği</div>
+            <span>Herkese açık</span>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Yakın Arkadaşlar')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-star"></i> Yakın Arkadaşlar</div>
+            <span>0</span>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Çapraz Paylaşım')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-border-all"></i> Çapraz paylaşım</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Engellenenler')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-ban"></i> Engellenenler</div>
+            <span>3</span>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Hikaye ve Canlı Yayın')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-circle-notch"></i> Hikaye, canlı yayın ve konum</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">Başkalarının seninle etkileşimleri</div>
+        <div class="settings-menu-item" onclick="alert('Mesajlar ve Hikaye Yanıtları')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-paper-plane"></i> Mesajlar ve hikaye yanıtları</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Etiketler ve Bahsetmeler')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-at"></i> Etiketler ve bahsetmeler</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Yorumlar')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-comment"></i> Yorumlar</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">Neler görüyorsun?</div>
+        <div class="settings-menu-item" onclick="alert('Favoriler')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-star"></i> Favoriler</div>
+            <span>0</span>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Sessize Alınanlar')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-bell-slash"></i> Sessize alınan hesaplar</div>
+            <span>0</span>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Beğenme ve Paylaşım Sayıları')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-heart"></i> Beğenme ve paylaşım sayıları</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">Uygulaman ve medya</div>
+        <div class="settings-menu-item" onclick="alert('Cihaz İzinleri')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-mobile-screen"></i> Cihaz izinleri</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Arşivleme ve İndirme')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-download"></i> Arşivleme ve indirme</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Dil ve Çeviriler')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-language"></i> Dil ve çeviriler</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Veri Kullanımı')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-signal"></i> Veri kullanımı ve medya kalitesi</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">Aile Merkezi</div>
+        <div class="settings-menu-item" onclick="alert('Genç Hesapları')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-users"></i> Genç Hesapları için gözetim</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">Siparişlerin ve bağış kampanyaların</div>
+        <div class="settings-menu-item" onclick="alert('Siparişler ve Ödemeler')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-receipt"></i> Siparişler ve ödemeler</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">Daha fazla bilgi ve destek</div>
+        <div class="settings-menu-item" onclick="alert('Yardım Merkezi')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-life-ring"></i> Yardım</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('ZP AI Destek Asistanı')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-robot"></i> ZP AI destek asistanı</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Gizlilik Merkezi')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-shield-halved"></i> Gizlilik Merkezi</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Hesap Durumu')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-circle-user"></i> Hesap Durumu</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Hakkında')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-circle-info"></i> Hakkında</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">Giriş yap</div>
+        <div class="settings-menu-item" onclick="alert('Hesap Ekleme Sayfası')">
+            <div class="settings-menu-item-left text-blue">Hesap ekle</div>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Çıkış yapıldı')">
+            <div class="settings-menu-item-left text-red">Çıkış yap</div>
+        </div>
+    </div>
+
+    <!-- Modals -->
     <div class="modal" id="create-post-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -535,7 +987,6 @@
         </div>
     </div>
 
-    <!-- Edit Profile Modal (İsim, Bio ve Profil Fotoğrafı Değiştirme) -->
     <div class="modal" id="edit-profile-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -547,8 +998,12 @@
                 <input type="text" id="edit-fullname-input">
             </div>
             <div class="input-group">
+                <label>Kategori (Örn: Müzisyen)</label>
+                <input type="text" id="edit-category-input">
+            </div>
+            <div class="input-group">
                 <label>Biyografi</label>
-                <textarea id="edit-bio-input" rows="2"></textarea>
+                <textarea id="edit-bio-input" rows="3"></textarea>
             </div>
             <div class="input-group">
                 <label>Yeni Profil Fotoğrafı Seç</label>
@@ -559,22 +1014,24 @@
     </div>
 
     <script>
-        let isAdmin = true;
         let activeProfileUser = null;
+        let activeProfileTab = 'posts';
 
         const users = {
             "kuzeyfe": {
                 username: "kuzeyfe",
                 fullName: "Kuzey Efe Kalafat",
-                avatar: "https://picsum.photos/id/64/150/150",
+                category: "Müzisyen",
+                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
                 isVerified: true,
-                bio: "ZP Medya Kurucusu & Prodüktör 🚀",
-                postsCount: 1
+                bio: "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı\n👇 Resm... devamı",
+                postsCount: 17
             },
             "zpmedya": {
                 username: "zpmedya",
                 fullName: "ZP Medya Resmi",
-                avatar: "https://picsum.photos/id/1062/150/150",
+                category: "Dijital İçerik Üreticisi",
+                avatar: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
                 isVerified: true,
                 bio: "Geleceğin Dijital Sosyal Platformu 🌐",
                 postsCount: 1
@@ -585,11 +1042,11 @@
             {
                 id: 1,
                 username: "kuzeyfe",
-                image: "https://picsum.photos/id/1059/600/600",
-                caption: "zpmedya.com.tr altyapımız tamamlandı! Artık dosya seçerek fotoğraf yükleyebiliyoruz. 🔥",
+                image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
+                caption: "zpmedya.com.tr tam Instagram profil düzeniyle yayında! 🔥",
                 likes: 124,
                 liked: false,
-                saved: false,
+                saved: true,
                 time: "2 saat önce"
             }
         ];
@@ -601,18 +1058,7 @@
             return '';
         }
 
-        function toggleAdminMode() {
-            isAdmin = !isAdmin;
-            document.getElementById('admin-status-text').innerText = isAdmin ? 'Aktif' : 'Pasif';
-            renderFeed();
-            if (activeProfileUser) openProfile(activeProfileUser);
-        }
-
         function toggleUserVerification(username) {
-            if (!isAdmin) {
-                alert("Yönetici yetkiniz yok!");
-                return;
-            }
             if (users[username]) {
                 users[username].isVerified = !users[username].isVerified;
                 renderFeed();
@@ -650,7 +1096,7 @@
             let html = '';
 
             posts.forEach(post => {
-                const u = users[post.username] || { avatar: 'https://picsum.photos/150', isVerified: false };
+                const u = users[post.username] || { avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80', isVerified: false };
                 html += `
                     <div class="post">
                         <div class="post-header">
@@ -700,45 +1146,102 @@
             if (post) {
                 post.saved = !post.saved;
                 renderFeed();
+                if (activeProfileUser) renderProfileGrid();
             }
         }
 
         function showView(view) {
             document.getElementById('feed-view').style.display = view === 'feed' ? 'block' : 'none';
             document.getElementById('profile-view').style.display = view === 'profile' ? 'block' : 'none';
+
+            if (view === 'feed') {
+                document.getElementById('header-title').innerText = 'ZP Medya';
+                document.getElementById('header-icons-area').innerHTML = `
+                    <i class="fa-regular fa-heart"></i>
+                    <i class="fa-regular fa-paper-plane" onclick="alert('DM Yakında!')"></i>
+                `;
+            } else if (view === 'profile' && activeProfileUser) {
+                document.getElementById('header-title').innerText = activeProfileUser;
+                document.getElementById('header-icons-area').innerHTML = `
+                    <i class="fa-solid fa-bars" onclick="openSettingsMenu()" style="cursor:pointer;"></i>
+                `;
+            }
         }
 
         function openProfile(username) {
             activeProfileUser = username;
+            activeProfileTab = 'posts';
             const u = users[username];
             if (!u) return;
 
             document.getElementById('prof-avatar').src = u.avatar;
             document.getElementById('prof-fullname').innerHTML = `${u.fullName} ${getVerifiedBadgeHTML(username)}`;
-            document.getElementById('prof-biotext').innerText = u.bio;
+            document.getElementById('prof-category').innerText = u.category || '';
+            document.getElementById('prof-biotext').innerText = u.bio || '';
 
             const adminArea = document.getElementById('admin-action-area');
-            if (isAdmin && username !== 'kuzeyfe') {
+            if (username !== 'kuzeyfe') {
+                adminArea.style.display = 'block';
                 if (u.isVerified) {
                     adminArea.innerHTML = `<button class="profile-btn admin-unverify-btn" onclick="toggleUserVerification('${username}')">Mavi Tik Kaldır</button>`;
                 } else {
                     adminArea.innerHTML = `<button class="profile-btn admin-verify-btn" onclick="toggleUserVerification('${username}')">Mavi Tik Ver</button>`;
                 }
             } else {
-                adminArea.innerHTML = `<button class="profile-btn" onclick="alert('Takip Edildi')">Takip Et</button>`;
+                adminArea.style.display = 'none';
             }
 
-            const userPosts = posts.filter(p => p.username === username);
-            document.getElementById('prof-posts-count').innerText = userPosts.length;
+            switchProfileTab('posts');
+            showView('profile');
+        }
 
+        function switchProfileTab(tab) {
+            activeProfileTab = tab;
+            document.getElementById('tab-posts').classList.toggle('active', tab === 'posts');
+            document.getElementById('tab-reels').classList.toggle('active', tab === 'reels');
+            document.getElementById('tab-repost').classList.toggle('active', tab === 'repost');
+            document.getElementById('tab-tagged').classList.toggle('active', tab === 'tagged');
+            renderProfileGrid();
+        }
+
+        function renderProfileGrid() {
             const grid = document.getElementById('prof-grid');
+            let filteredPosts = [];
+
+            if (activeProfileTab === 'posts') {
+                filteredPosts = posts.filter(p => p.username === activeProfileUser);
+            } else if (activeProfileTab === 'saved') {
+                filteredPosts = posts.filter(p => p.saved);
+            }
+
+            document.getElementById('prof-posts-count').innerText = users[activeProfileUser].postsCount || posts.filter(p => p.username === activeProfileUser).length;
+
             let gridHtml = '';
-            userPosts.forEach(p => {
+            filteredPosts.forEach(p => {
                 gridHtml += `<div class="profile-grid-item"><img src="${p.image}" alt="Grid Post"></div>`;
             });
-            grid.innerHTML = gridHtml || '<p style="grid-column: 1/-1; color: var(--text-muted); text-align: center; padding: 20px;">Henüz gönderi yok.</p>';
 
-            showView('profile');
+            if (filteredPosts.length === 0) {
+                let msg = 'Henüz gönderi yok.';
+                if (activeProfileTab === 'saved') msg = 'Henüz kaydedilen gönderi yok.';
+                if (activeProfileTab === 'reels') msg = 'Henüz Reels videosu yok.';
+                if (activeProfileTab === 'repost') msg = 'Henüz yeniden paylaşılan gönderi yok.';
+                if (activeProfileTab === 'tagged') msg = 'Henüz etiketlendiğin bir gönderi yok.';
+
+                gridHtml = `<p style="grid-column: 1/-1; color: var(--text-muted); text-align: center; padding: 30px;">${msg}</p>`;
+            }
+
+            grid.innerHTML = gridHtml;
+        }
+
+        function openSettingsMenu() {
+            document.getElementById('menu-backdrop').style.display = 'block';
+            document.getElementById('settings-menu').classList.add('active');
+        }
+
+        function closeSettingsMenu() {
+            document.getElementById('menu-backdrop').style.display = 'none';
+            document.getElementById('settings-menu').classList.remove('active');
         }
 
         function openCreatePostModal() {
@@ -784,6 +1287,7 @@
 
         function openEditProfileModal() {
             document.getElementById('edit-fullname-input').value = users['kuzeyfe'].fullName;
+            document.getElementById('edit-category-input').value = users['kuzeyfe'].category;
             document.getElementById('edit-bio-input').value = users['kuzeyfe'].bio;
             document.getElementById('edit-profile-modal').style.display = 'flex';
         }
@@ -794,10 +1298,12 @@
 
         function saveProfileChanges() {
             const newName = document.getElementById('edit-fullname-input').value;
+            const newCategory = document.getElementById('edit-category-input').value;
             const newBio = document.getElementById('edit-bio-input').value;
             const avatarFile = document.getElementById('edit-avatar-file');
 
             users['kuzeyfe'].fullName = newName;
+            users['kuzeyfe'].category = newCategory;
             users['kuzeyfe'].bio = newBio;
 
             if (avatarFile.files && avatarFile.files[0]) {
@@ -821,7 +1327,6 @@
             alert("Profil başarıyla güncellendi!");
         }
 
-        // Init
         renderStories();
         renderFeed();
     </script>
