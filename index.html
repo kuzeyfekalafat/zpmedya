@@ -345,12 +345,13 @@
         .profile-category { color: var(--text-muted); font-size: 12px; margin-bottom: 6px; }
         .profile-bio-text { color: var(--text-main); white-space: pre-line; margin-bottom: 6px; }
 
-        .profile-actions-btns { display: flex; gap: 8px; margin-bottom: 16px; }
+        .profile-actions-btns { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
         .profile-btn {
-            flex: 1; background: #262626; color: #fff; border: none; padding: 8px 0; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; text-align: center;
+            flex: 1; background: #262626; color: #fff; border: none; padding: 8px 0; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; text-align: center; min-width: 120px;
         }
         .admin-verify-btn { background: var(--accent-blue) !important; color: #fff !important; }
-        .admin-unverify-btn { background: var(--danger-color) !important; color: #fff !important; }
+        .admin-unverify-btn { background: #555 !important; color: #fff !important; }
+        .admin-delete-btn { background: var(--danger-color) !important; color: #fff !important; }
 
         .profile-panon { background: #181818; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; }
         .panon-title { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
@@ -436,13 +437,13 @@
 </head>
 <body>
 
-    <!-- İLK AÇILIŞTA ÇIKAN İNSTAGRAM GİRİŞ / KAYIT DUVARI -->
+    <!-- İNSTAGRAM GİRİŞ / KAYIT DUVARI -->
     <div class="auth-overlay" id="auth-screen">
         <!-- KAYIT OL PANELİ -->
         <div class="auth-card" id="signup-box">
             <div class="auth-logo">ZP Medya</div>
             <div class="auth-desc">Arkadaşlarının fotoğraf ve videolarını görmek için kaydol.</div>
-            <input type="text" id="reg-email" class="auth-input" placeholder="E-posta adresi (örn: zpmedyaapp@gmail.com)">
+            <input type="text" id="reg-email" class="auth-input" placeholder="E-posta adresi">
             <input type="text" id="reg-fullname" class="auth-input" placeholder="Adı Soyadı">
             <input type="text" id="reg-username" class="auth-input" placeholder="Kullanıcı adı">
             <input type="text" id="reg-phone" class="auth-input" placeholder="Telefon numarası">
@@ -468,7 +469,7 @@
         <!-- GİRİŞ YAP PANELİ -->
         <div class="auth-card" id="login-box" style="display: none;">
             <div class="auth-logo">ZP Medya</div>
-            <input type="text" id="login-username" class="auth-input" placeholder="E-posta, kullanıcı adı veya telefon">
+            <input type="text" id="login-username" class="auth-input" placeholder="Kullanıcı adı, telefon veya e-posta">
             <input type="password" id="login-password" class="auth-input" placeholder="Şifre">
             <button class="auth-btn" onclick="loginUser()">Giriş Yap</button>
         </div>
@@ -477,7 +478,7 @@
         </div>
     </div>
 
-    <!-- ASIL UYGULAMA (Giriş yapınca açılır) -->
+    <!-- ASIL UYGULAMA -->
     <div class="app-container" id="app-container">
         <!-- Sticky Header -->
         <div class="header">
@@ -528,10 +529,9 @@
                 <div class="panon-desc">Son 30 günde 0 görüntüleme.</div>
             </div>
 
-            <div class="profile-actions-btns">
+            <div class="profile-actions-btns" id="profile-actions-area">
                 <button class="profile-btn" onclick="openEditProfileModal()">Profili düzenle</button>
                 <button class="profile-btn" onclick="openShareProfileModal()">Profili paylaş</button>
-                <div id="admin-action-area" style="display: none;"></div>
             </div>
 
             <div class="profile-tabs">
@@ -555,7 +555,7 @@
         </div>
     </div>
 
-    <!-- Instagram Orijinal Ayarlar ve Hareketler Menüsü -->
+    <!-- Ayarlar Menüsü -->
     <div class="menu-backdrop" id="menu-backdrop" onclick="closeSettingsMenu()"></div>
     <div class="settings-menu" id="settings-menu">
         <div class="settings-header">
@@ -568,56 +568,18 @@
             <input type="text" class="settings-search" placeholder="Ara">
         </div>
 
-        <div class="settings-section-title">Yönetici Paneli (Admin)</div>
-        <div class="settings-menu-item" onclick="openAdminLoginModal()">
-            <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Admin Yetkisi Al</div>
+        <div class="settings-section-title" id="admin-menu-title" style="display:none;">Yönetici Paneli (Admin)</div>
+        <div class="settings-menu-item" id="admin-menu-btn" style="display:none;" onclick="openAdminLoginModal()">
+            <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Admin Şifresi Gir</div>
         </div>
 
         <div class="settings-section-title">Hesabın</div>
-        <div class="settings-menu-item" onclick="alert('Hesap Merkezi: Şifre, güvenlik ve kişisel detaylar')">
+        <div class="settings-menu-item" onclick="alert('Hesap Merkezi')">
             <div class="settings-menu-item-left"><i class="fa-regular fa-user"></i> Hesap Merkezi</div>
             <span>Şifre, güvenlik...</span>
         </div>
         <div class="settings-menu-item" onclick="openRegisterModalFromMenu()">
             <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-user-plus"></i> Yeni Hesap Ekle / Kaydol</div>
-        </div>
-
-        <div class="settings-section-title">ZP Medya'yı nasıl kullanıyorsun?</div>
-        <div class="settings-menu-item" onclick="openSavedPostsSection()">
-            <div class="settings-menu-item-left"><i class="fa-regular fa-bookmark"></i> Kaydedildi</div>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
-        </div>
-        <div class="settings-menu-item" onclick="alert('Arşiv Paneli')">
-            <div class="settings-menu-item-left"><i class="fa-solid fa-clock-rotate-left"></i> Arşiv</div>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
-        </div>
-        <div class="settings-menu-item" onclick="alert('Hareketlerin Paneli')">
-            <div class="settings-menu-item-left"><i class="fa-solid fa-chart-line"></i> Hareketlerin</div>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
-        </div>
-        <div class="settings-menu-item" onclick="alert('Bildirim Ayarları')">
-            <div class="settings-menu-item-left"><i class="fa-regular fa-bell"></i> Bildirimler</div>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
-        </div>
-
-        <div class="settings-section-title">İçeriklerini kimler görebilir?</div>
-        <div class="settings-menu-item" onclick="alert('Hesap Gizliliği')">
-            <div class="settings-menu-item-left"><i class="fa-solid fa-lock"></i> Hesap gizliliği</div>
-            <span>Herkese açık</span>
-        </div>
-        <div class="settings-menu-item" onclick="alert('Engellenenler')">
-            <div class="settings-menu-item-left"><i class="fa-solid fa-ban"></i> Engellenenler</div>
-            <span>0</span>
-        </div>
-
-        <div class="settings-section-title">Daha fazla bilgi ve destek</div>
-        <div class="settings-menu-item" onclick="alert('Yardım Merkezi')">
-            <div class="settings-menu-item-left"><i class="fa-solid fa-life-ring"></i> Yardım</div>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
-        </div>
-        <div class="settings-menu-item" onclick="alert('Hesap Durumu')">
-            <div class="settings-menu-item-left"><i class="fa-regular fa-circle-user"></i> Hesap Durumu</div>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
 
         <div class="settings-section-title">Oturum</div>
@@ -645,7 +607,6 @@
         </div>
     </div>
 
-    <!-- PROFİL PAYLAŞ / QR KOD MODALI -->
     <div class="modal" id="share-profile-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -658,7 +619,6 @@
             <div class="qr-box">
                 <div class="qr-inner">
                     <div class="qr-placeholder-img">
-                        <!-- Otomatik QR Kod Üreteci -->
                         <img id="qr-code-img" src="" alt="QR Kod" style="width:100%; height:100%; object-fit:contain;">
                     </div>
                 </div>
@@ -711,19 +671,18 @@
         let currentUser = localStorage.getItem('zp_current_user') || null;
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
+        let isAdminLoggedIn = localStorage.getItem('zp_admin') === 'true';
 
         let users = JSON.parse(localStorage.getItem('zp_users')) || {
             "kuzeyfe": {
                 username: "kuzeyfe",
-                email: "zpmedyaapp@gmail.com",
-                phone: "05000000000",
-                gender: "Erkek",
+                email: SUPER_ADMIN_EMAIL,
                 fullName: "Kuzeyfe Kalafat",
                 category: "Müzisyen",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
                 isVerified: true,
                 bio: "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı",
-                password: "Kuzeyfe1986404040"
+                password: ADMIN_PASS
             }
         };
 
@@ -733,7 +692,7 @@
             if (u && (u.email === SUPER_ADMIN_EMAIL || username === 'kuzeyfe')) {
                 return true;
             }
-            return localStorage.getItem('zp_admin') === 'true';
+            return isAdminLoggedIn;
         }
 
         let posts = JSON.parse(localStorage.getItem('zp_posts')) || [];
@@ -742,6 +701,7 @@
             localStorage.setItem('zp_users', JSON.stringify(users));
             localStorage.setItem('zp_posts', JSON.stringify(posts));
             if(currentUser) localStorage.setItem('zp_current_user', currentUser);
+            localStorage.setItem('zp_admin', isAdminLoggedIn);
         }
 
         window.onload = function() {
@@ -795,17 +755,17 @@
             }
 
             if (!selectedGender) {
-                alert("Lütfen cinsiyetinizi seçin (Erkek veya Kız)!");
+                alert("Lütfen cinsiyetinizi seçin!");
                 return;
             }
 
             if (password !== passwordConfirm) {
-                alert("Girdiğiniz şifreler birbiriyle uyuşmuyor!");
+                alert("Şifreler uyuşmuyor!");
                 return;
             }
 
             if (users[username]) {
-                alert("Bu kullanıcı adı zaten alınmış!");
+                alert("Bu kullanıcı adı alınmış!");
                 return;
             }
 
@@ -817,7 +777,7 @@
                 phone: phone,
                 gender: selectedGender,
                 fullName: fullName,
-                category: isSuperAdmin ? "Müzisyen / Kurucu" : "Kullanıcı",
+                category: isSuperAdmin ? "Müzisyen" : "Kullanıcı",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
                 isVerified: isSuperAdmin,
                 bio: isSuperAdmin ? "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı" : "ZP Medya Ailesine katıldı.",
@@ -827,7 +787,7 @@
 
             currentUser = username;
             if (isSuperAdmin) {
-                localStorage.setItem('zp_admin', 'true');
+                isAdminLoggedIn = true;
             }
             saveDataToStorage();
             
@@ -836,7 +796,7 @@
             renderStories();
             renderFeed();
             openProfile(currentUser);
-            alert("Hesabınız başarıyla oluşturuldu!");
+            alert("Hesap başarıyla oluşturuldu!");
         }
 
         function loginUser() {
@@ -844,21 +804,20 @@
             const password = document.getElementById('login-password').value.trim();
 
             if (!inputVal || !password) {
-                alert("Lütfen e-posta/kullanıcı adı ve şifrenizi girin!");
+                alert("Lütfen bilgileri girin!");
                 return;
             }
 
             let foundKey = Object.keys(users).find(u => 
                 u === inputVal || 
                 users[u].username === inputVal || 
-                (users[u].email && users[u].email.toLowerCase() === inputVal) ||
-                (users[u].phone && users[u].phone === inputVal)
+                (users[u].email && users[u].email.toLowerCase() === inputVal)
             );
 
             if (foundKey && users[foundKey].password === password) {
                 currentUser = foundKey;
                 if (users[currentUser].email === SUPER_ADMIN_EMAIL || currentUser === 'kuzeyfe') {
-                    localStorage.setItem('zp_admin', 'true');
+                    isAdminLoggedIn = true;
                 }
                 saveDataToStorage();
                 
@@ -868,12 +827,13 @@
                 renderFeed();
                 openProfile(currentUser);
             } else {
-                alert("Kullanıcı adı, e-posta, telefon veya şifre hatalı!");
+                alert("Hatalı kullanıcı adı veya şifre!");
             }
         }
 
         function logoutUser() {
             currentUser = null;
+            isAdminLoggedIn = false;
             localStorage.removeItem('zp_current_user');
             localStorage.removeItem('zp_admin');
             closeSettingsMenu();
@@ -916,14 +876,34 @@
             document.getElementById('prof-biotext').innerText = u.bio || '';
             document.getElementById('prof-posts-count').innerText = posts.filter(p => p.username === username).length;
 
-            const adminArea = document.getElementById('admin-action-area');
-            if (checkAdminStatus(currentUser) && username !== currentUser) {
-                adminArea.style.display = 'block';
-                adminArea.innerHTML = u.isVerified ? 
-                    `<button class="profile-btn admin-unverify-btn" onclick="toggleUserVerification('${username}')">Mavi Tik Kaldır</button>` :
-                    `<button class="profile-btn admin-verify-btn" onclick="toggleUserVerification('${username}')">Mavi Tik Ver</button>`;
+            const actionsArea = document.getElementById('profile-actions-area');
+            let actionsHtml = '';
+
+            if (username === currentUser) {
+                actionsHtml = `
+                    <button class="profile-btn" onclick="openEditProfileModal()">Profili düzenle</button>
+                    <button class="profile-btn" onclick="openShareProfileModal()">Profili paylaş</button>
+                `;
             } else {
-                adminArea.style.display = 'none';
+                actionsHtml = `<button class="profile-btn" onclick="openShareProfileModal()">Profili paylaş</button>`;
+            }
+
+            // Eğer Admin giriş yapmışsa ve başkasının profilindeyse Mavi Tik ve Hesabı Sil butonları görünür
+            if (checkAdminStatus(currentUser) && username !== currentUser) {
+                let verifyBtnText = u.isVerified ? "Mavi Tik Kaldır" : "Mavi Tik Ver";
+                let verifyBtnClass = u.isVerified ? "admin-unverify-btn" : "admin-verify-btn";
+                
+                actionsHtml += `
+                    <button class="profile-btn ${verifyBtnClass}" onclick="toggleUserVerification('${username}')">${verifyBtnText}</button>
+                    <button class="profile-btn admin-delete-btn" onclick="deleteUserAccount('${username}')">Hesabı Sil</button>
+                `;
+            }
+
+            actionsArea.innerHTML = actionsHtml;
+
+            if (checkAdminStatus(currentUser)) {
+                document.getElementById('admin-menu-title').style.display = 'block';
+                document.getElementById('admin-menu-btn').style.display = 'flex';
             }
 
             switchProfileTab('posts');
@@ -1012,7 +992,7 @@
                 post.saved = !post.saved;
                 saveDataToStorage();
                 renderFeed();
-                if (activeProfileUser) renderProfileGrid();
+                if (activeProfileTab === 'saved') renderProfileGrid();
             }
         }
 
@@ -1025,6 +1005,22 @@
             }
         }
 
+        // Admin olarak kullanıcı hesabını tamamen silme fonksiyonu
+        function deleteUserAccount(username) {
+            if (username === 'kuzeyfe') {
+                alert("Ana admin hesabı silinemez!");
+                return;
+            }
+            if (confirm(`@${username} kullanıcısını ve tüm verilerini silmek istediğine emin misin?`)) {
+                delete users[username];
+                posts = posts.filter(p => p.username !== username);
+                saveDataToStorage();
+                alert("Kullanıcı hesabı başarıyla silindi!");
+                openProfile(currentUser);
+                renderFeed();
+            }
+        }
+
         function switchProfileTab(tab) {
             activeProfileTab = tab;
             document.getElementById('tab-posts').classList.toggle('active', tab === 'posts');
@@ -1033,12 +1029,6 @@
             document.getElementById('tab-repost').classList.toggle('active', tab === 'repost');
             document.getElementById('tab-tagged').classList.toggle('active', tab === 'tagged');
             renderProfileGrid();
-        }
-
-        function openSavedPostsSection() {
-            closeSettingsMenu();
-            openProfile(currentUser);
-            switchProfileTab('saved');
         }
 
         function renderProfileGrid() {
@@ -1081,14 +1071,10 @@
             document.getElementById('create-post-modal').style.display = 'none';
         }
 
-        // PROFİLİ PAYLAŞ VE QR KOD FONKSİYONLARI
         function openShareProfileModal() {
             const profileUrl = window.location.href.split('?')[0] + "?user=" + (activeProfileUser || currentUser);
             document.getElementById('share-modal-username').innerText = "@" + (activeProfileUser || currentUser);
-            
-            // Ücretsiz harici QR API kullanarak QR kod görselini otomatik oluşturur
             document.getElementById('qr-code-img').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(profileUrl);
-            
             document.getElementById('share-profile-modal').style.display = 'flex';
         }
 
@@ -1146,12 +1132,9 @@
 
         function saveProfileChanges() {
             const u = currentUser || 'kuzeyfe';
-            const fullName = document.getElementById('edit-fullname-input').value;
-            const bio = document.getElementById('edit-bio-input').value;
+            users[u].fullName = document.getElementById('edit-fullname-input').value;
+            users[u].bio = document.getElementById('edit-bio-input').value;
             const avatarFile = document.getElementById('edit-avatar-file').files[0];
-
-            users[u].fullName = fullName;
-            users[u].bio = bio;
 
             if (avatarFile) {
                 const reader = new FileReader();
@@ -1181,9 +1164,10 @@
         function verifyAdminLogin() {
             const pass = document.getElementById('admin-pass-input').value.trim();
             if (pass === ADMIN_PASS) {
-                localStorage.setItem('zp_admin', 'true');
+                isAdminLoggedIn = true;
+                saveDataToStorage();
                 closeAdminLoginModal();
-                alert("Yönetici Yetkisi Başarıyla Aktifleştirildi!");
+                alert("Yönetici Yetkisi Aktifleştirildi!");
                 openProfile(activeProfileUser);
             } else {
                 alert("Hatalı Admin Şifresi!");
