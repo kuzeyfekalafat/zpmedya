@@ -252,10 +252,17 @@
         .settings-menu.active { bottom: 0; }
         .settings-header { text-align: center; font-weight: 700; font-size: 16px; margin-bottom: 20px; position: relative; }
         .settings-header i { position: absolute; right: 0; top: 0; cursor: pointer; }
+        .settings-search {
+            width: 100%; background: #262626; border: none; padding: 8px 12px 8px 36px; border-radius: 10px; color: #fff; margin-bottom: 16px; outline: none; font-size: 14px;
+        }
+        .search-container { position: relative; margin-bottom: 16px; }
+        .search-container i { position: absolute; left: 12px; top: 10px; color: var(--text-muted); font-size: 14px; }
+
         .settings-section-title { font-size: 12px; color: var(--text-muted); margin: 16px 0 8px 0; text-transform: uppercase; font-weight: 600; }
         .settings-menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; color: var(--text-main); font-size: 14px; cursor: pointer; border-bottom: 1px solid #1c1c1c; }
         .settings-menu-item-left { display: flex; align-items: center; }
         .settings-menu-item-left i { font-size: 18px; margin-right: 16px; width: 24px; text-align: center; }
+        .settings-menu-item span { color: var(--text-muted); font-size: 12px; }
         .text-blue { color: var(--accent-blue) !important; font-weight: 600; }
         .text-red { color: var(--danger-color) !important; font-weight: 600; }
 
@@ -352,7 +359,7 @@
         </div>
     </div>
 
-    <!-- Settings Menu Sheet -->
+    <!-- Instagram Orijinal Ayarlar ve Hareketler Menüsü -->
     <div class="menu-backdrop" id="menu-backdrop" onclick="closeSettingsMenu()"></div>
     <div class="settings-menu" id="settings-menu">
         <div class="settings-header">
@@ -360,19 +367,66 @@
             <i class="fa-solid fa-xmark" onclick="closeSettingsMenu()"></i>
         </div>
 
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" class="settings-search" placeholder="Ara">
+        </div>
+
         <div class="settings-section-title">Yönetici Paneli (Admin)</div>
         <div class="settings-menu-item" onclick="openAdminLoginModal()">
             <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Admin Yetkisi Al</div>
         </div>
 
-        <div class="settings-section-title">Hesap İşlemleri</div>
+        <div class="settings-section-title">Hesabın</div>
+        <div class="settings-menu-item" onclick="alert('Hesap Merkezi: Şifre, güvenlik ve kişisel detaylar')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-user"></i> Hesap Merkezi</div>
+            <span>Şifre, güvenlik...</span>
+        </div>
         <div class="settings-menu-item" onclick="openRegisterModal()">
             <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-user-plus"></i> Yeni Hesap Ekle / Kaydol</div>
         </div>
 
-        <div class="settings-section-title">ZP Medya Kullanımı</div>
+        <div class="settings-section-title">ZP Medya'yı nasıl kullanıyorsun?</div>
         <div class="settings-menu-item" onclick="openSavedPostsSection()">
             <div class="settings-menu-item-left"><i class="fa-regular fa-bookmark"></i> Kaydedildi</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Arşiv Paneli')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-clock-rotate-left"></i> Arşiv</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Hareketlerin Paneli')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-chart-line"></i> Hareketlerin</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Bildirim Ayarları')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-bell"></i> Bildirimler</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">İçeriklerini kimler görebilir?</div>
+        <div class="settings-menu-item" onclick="alert('Hesap Gizliliği')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-lock"></i> Hesap gizliliği</div>
+            <span>Herkese açık</span>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Engellenenler')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-ban"></i> Engellenenler</div>
+            <span>0</span>
+        </div>
+
+        <div class="settings-section-title">Daha fazla bilgi ve destek</div>
+        <div class="settings-menu-item" onclick="alert('Yardım Merkezi')">
+            <div class="settings-menu-item-left"><i class="fa-solid fa-life-ring"></i> Yardım</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+        <div class="settings-menu-item" onclick="alert('Hesap Durumu')">
+            <div class="settings-menu-item-left"><i class="fa-regular fa-circle-user"></i> Hesap Durumu</div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
+        </div>
+
+        <div class="settings-section-title">Oturum</div>
+        <div class="settings-menu-item" onclick="logoutUser()">
+            <div class="settings-menu-item-left text-red"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</div>
         </div>
     </div>
 
@@ -489,7 +543,6 @@
             document.getElementById('feed-view').style.display = view === 'feed' ? 'block' : 'none';
             document.getElementById('profile-view').style.display = view === 'profile' ? 'block' : 'none';
 
-            // Üst Bar İkon Güncellemesi (Profildeyken Üç Çizgi Menü İkonu Çıkar)
             if (view === 'feed') {
                 document.getElementById('header-title').innerText = 'ZP Medya';
                 document.getElementById('header-icons-area').innerHTML = `
