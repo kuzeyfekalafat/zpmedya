@@ -6,10 +6,6 @@
     <title>ZP Medya - Sosyal Medya Platformu</title>
     <!-- FontAwesome Icon Library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <style>
         :root {
             --bg-color: #000000;
@@ -38,7 +34,7 @@
             min-height: 100vh;
         }
 
-        /* --- AUTH SCREEN (GİRİŞ / KAYIT) --- */
+        /* --- AUTH SCREEN (GİRİŞ & KAYIT) --- */
         .auth-overlay {
             position: fixed;
             top: 0;
@@ -130,7 +126,7 @@
             max-width: 470px;
             background-color: #000;
             min-height: 100vh;
-            display: none; /* Giriş yapınca açılacak */
+            display: none;
             flex-direction: column;
             position: relative;
             border-left: 1px solid var(--border-color);
@@ -183,9 +179,7 @@
             scrollbar-width: none;
         }
 
-        .stories-container::-webkit-scrollbar {
-            display: none;
-        }
+        .stories-container::-webkit-scrollbar { display: none; }
 
         .story-item {
             display: flex;
@@ -280,372 +274,84 @@
             font-size: 20px;
         }
 
-        .post-actions-left i {
-            margin-right: 16px;
-            cursor: pointer;
-        }
+        .post-actions-left i { margin-right: 16px; cursor: pointer; }
+        .post-actions-right i { cursor: pointer; }
 
-        .post-actions-right i {
-            cursor: pointer;
-        }
+        .liked-heart { color: #ed4956 !important; }
+        .saved-bookmark { color: var(--text-main) !important; }
 
-        .liked-heart {
-            color: #ed4956 !important;
-        }
-
-        .saved-bookmark {
-            color: var(--text-main) !important;
-        }
-
-        .post-likes {
-            padding: 0 12px;
-            font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 6px;
-        }
-
-        .post-caption {
-            padding: 0 12px;
-            font-size: 13px;
-            line-height: 1.4;
-            margin-bottom: 8px;
-        }
-
-        .post-caption .username {
-            font-weight: 600;
-            margin-right: 6px;
-        }
-
-        .post-comments-link {
-            padding: 0 12px;
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-bottom: 8px;
-            cursor: pointer;
-        }
-
-        .post-time {
-            padding: 0 12px 12px;
-            color: var(--text-muted);
-            font-size: 10px;
-            text-transform: uppercase;
-        }
+        .post-likes { padding: 0 12px; font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+        .post-caption { padding: 0 12px; font-size: 13px; line-height: 1.4; margin-bottom: 8px; }
+        .post-caption .username { font-weight: 600; margin-right: 6px; }
+        .post-comments-link { padding: 0 12px; color: var(--text-muted); font-size: 12px; margin-bottom: 8px; cursor: pointer; }
+        .post-time { padding: 0 12px 12px; color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
 
         /* Profile Styles */
-        .profile-container {
-            display: none;
-            padding: 16px;
-        }
-
-        .profile-top-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .profile-avatar-wrap {
-            position: relative;
-            margin-right: 24px;
-        }
-
-        .profile-avatar {
-            width: 82px;
-            height: 82px;
-            border-radius: 50%;
-            object-fit: cover;
-            background: #262626;
-        }
-
+        .profile-container { display: none; padding: 16px; }
+        .profile-top-row { display: flex; align-items: center; margin-bottom: 12px; }
+        .profile-avatar-wrap { position: relative; margin-right: 24px; }
+        .profile-avatar { width: 82px; height: 82px; border-radius: 50%; object-fit: cover; background: #262626; }
         .profile-avatar-add {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            background: var(--accent-blue);
-            color: #fff;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            border: 2px solid #000;
+            position: absolute; bottom: 2px; right: 2px; background: var(--accent-blue); color: #fff;
+            width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid #000;
         }
 
-        .profile-stats {
-            display: flex;
-            flex: 1;
-            justify-content: space-around;
-            text-align: center;
-        }
+        .profile-stats { display: flex; flex: 1; justify-content: space-around; text-align: center; }
+        .stat-number { font-weight: 700; font-size: 16px; }
+        .stat-label { font-size: 12px; color: var(--text-muted); }
 
-        .stat-number {
-            font-weight: 700;
-            font-size: 16px;
-        }
+        .profile-bio-section { margin-bottom: 16px; font-size: 13px; line-height: 1.4; }
+        .profile-name { font-weight: 700; display: flex; align-items: center; font-size: 14px; margin-bottom: 2px; }
+        .profile-category { color: var(--text-muted); font-size: 12px; margin-bottom: 6px; }
+        .profile-bio-text { color: var(--text-main); white-space: pre-line; margin-bottom: 6px; }
 
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .profile-bio-section {
-            margin-bottom: 16px;
-            font-size: 13px;
-            line-height: 1.4;
-        }
-
-        .profile-name {
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            margin-bottom: 2px;
-        }
-
-        .profile-category {
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
-
-        .profile-bio-text {
-            color: var(--text-main);
-            white-space: pre-line;
-            margin-bottom: 6px;
-        }
-
-        .profile-actions-btns {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
+        .profile-actions-btns { display: flex; gap: 8px; margin-bottom: 16px; }
         .profile-btn {
-            flex: 1;
-            background: #262626;
-            color: #fff;
-            border: none;
-            padding: 8px 0;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            text-align: center;
+            flex: 1; background: #262626; color: #fff; border: none; padding: 8px 0; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; text-align: center;
         }
+        .admin-verify-btn { background: var(--accent-blue) !important; color: #fff !important; }
+        .admin-unverify-btn { background: var(--danger-color) !important; color: #fff !important; }
 
-        .admin-verify-btn {
-            background: var(--accent-blue) !important;
-            color: #fff !important;
-        }
+        .profile-panon { background: #181818; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; }
+        .panon-title { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+        .panon-desc { font-size: 11px; color: var(--text-muted); }
 
-        .admin-unverify-btn {
-            background: var(--danger-color) !important;
-            color: #fff !important;
-        }
+        .profile-tabs { display: flex; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); margin-bottom: 2px; }
+        .profile-tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-muted); font-size: 18px; cursor: pointer; }
+        .profile-tab.active { color: var(--text-main); border-bottom: 2px solid var(--text-main); }
 
-        .profile-panon {
-            background: #181818;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin-bottom: 16px;
-        }
-
-        .panon-title {
-            font-weight: 700;
-            font-size: 13px;
-            margin-bottom: 2px;
-        }
-
-        .panon-desc {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .profile-tabs {
-            display: flex;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 2px;
-        }
-
-        .profile-tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px 0;
-            color: var(--text-muted);
-            font-size: 18px;
-            cursor: pointer;
-        }
-
-        .profile-tab.active {
-            color: var(--text-main);
-            border-bottom: 2px solid var(--text-main);
-        }
-
-        .profile-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2px;
-        }
-
-        .profile-grid-item {
-            aspect-ratio: 1;
-            position: relative;
-            background: #1e1e1e;
-        }
-
-        .profile-grid-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .profile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+        .profile-grid-item { aspect-ratio: 1; position: relative; background: #1e1e1e; }
+        .profile-grid-item img { width: 100%; height: 100%; object-fit: cover; }
 
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 470px;
-            height: 50px;
-            background-color: rgba(0, 0, 0, 0.95);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 100;
+            position: fixed; bottom: 0; width: 100%; max-width: 470px; height: 50px; background-color: rgba(0, 0, 0, 0.95);
+            border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 100;
         }
-
-        .nav-item {
-            color: var(--text-main);
-            font-size: 22px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .nav-avatar {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 1px solid var(--text-main);
-            object-fit: cover;
-        }
+        .nav-item { color: var(--text-main); font-size: 22px; cursor: pointer; text-decoration: none; }
+        .nav-avatar { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--text-main); object-fit: cover; }
 
         /* Settings Sheet */
         .settings-menu {
-            position: fixed;
-            bottom: -100%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 470px;
-            height: 90vh;
-            background: #121212;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            border-top: 1px solid var(--border-color);
-            padding: 16px;
-            z-index: 300;
-            transition: bottom 0.3s ease;
-            overflow-y: auto;
+            position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%); width: 100%; max-width: 470px; height: 90vh;
+            background: #121212; border-top-left-radius: 20px; border-top-right-radius: 20px; border-top: 1px solid var(--border-color); padding: 16px; z-index: 300; transition: bottom 0.3s ease; overflow-y: auto;
         }
-
-        .settings-menu.active {
-            bottom: 0;
-        }
-
-        .settings-header {
-            text-align: center;
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .settings-header i {
-            position: absolute;
-            right: 0;
-            top: 0;
-            cursor: pointer;
-        }
-
-        .settings-section-title {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin: 16px 0 8px 0;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .settings-menu-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            color: var(--text-main);
-            font-size: 14px;
-            cursor: pointer;
-            border-bottom: 1px solid #1c1c1c;
-        }
-
-        .settings-menu-item-left {
-            display: flex;
-            align-items: center;
-        }
-
-        .settings-menu-item-left i {
-            font-size: 18px;
-            margin-right: 16px;
-            width: 24px;
-            text-align: center;
-        }
-
+        .settings-menu.active { bottom: 0; }
+        .settings-header { text-align: center; font-weight: 700; font-size: 16px; margin-bottom: 20px; position: relative; }
+        .settings-header i { position: absolute; right: 0; top: 0; cursor: pointer; }
+        .settings-section-title { font-size: 12px; color: var(--text-muted); margin: 16px 0 8px 0; text-transform: uppercase; font-weight: 600; }
+        .settings-menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; color: var(--text-main); font-size: 14px; cursor: pointer; border-bottom: 1px solid #1c1c1c; }
+        .settings-menu-item-left { display: flex; align-items: center; }
+        .settings-menu-item-left i { font-size: 18px; margin-right: 16px; width: 24px; text-align: center; }
         .text-blue { color: var(--accent-blue) !important; font-weight: 600; }
         .text-red { color: var(--danger-color) !important; font-weight: 600; }
 
-        .menu-backdrop {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 250;
-        }
+        .menu-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 250; }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: var(--card-bg);
-            width: 90%;
-            max-width: 400px;
-            border-radius: 12px;
-            padding: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
-
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; }
+        .modal-content { background: var(--card-bg); width: 90%; max-width: 400px; border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 700; }
         .modal-close { cursor: pointer; font-size: 18px; }
-
         .input-group { margin-bottom: 12px; }
         .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
         .input-group input[type="text"], .input-group textarea, .input-group input[type="password"] {
@@ -661,7 +367,6 @@
         <div class="auth-box" id="signup-box">
             <div class="auth-logo">ZP Medya</div>
             <div class="auth-subtext">Arkadaşlarının fotoğraf ve videolarını görmek için kaydol.</div>
-            <input type="text" id="reg-email" class="auth-input" placeholder="E-posta adresi">
             <input type="text" id="reg-fullname" class="auth-input" placeholder="Adı Soyadı">
             <input type="text" id="reg-username" class="auth-input" placeholder="Kullanıcı adı">
             <input type="password" id="reg-password" class="auth-input" placeholder="Şifre">
@@ -673,7 +378,7 @@
 
         <div class="auth-box" id="login-box" style="display: none;">
             <div class="auth-logo">ZP Medya</div>
-            <input type="text" id="login-email" class="auth-input" placeholder="E-posta veya kullanıcı adı">
+            <input type="text" id="login-username" class="auth-input" placeholder="Kullanıcı adı">
             <input type="password" id="login-password" class="auth-input" placeholder="Şifre">
             <button class="auth-btn" onclick="loginUser()">Giriş Yap</button>
         </div>
@@ -721,7 +426,7 @@
 
             <div class="profile-bio-section">
                 <div class="profile-name" id="prof-fullname">Yükleniyor...</div>
-                <div class="profile-category" id="prof-category">Müzisyen</div>
+                <div class="profile-category" id="prof-category">Kullanıcı</div>
                 <div class="profile-bio-text" id="prof-biotext"></div>
             </div>
 
@@ -764,9 +469,9 @@
             <i class="fa-solid fa-xmark" onclick="closeSettingsMenu()"></i>
         </div>
 
-        <div class="settings-section-title">Firebase Yönetici Paneli</div>
+        <div class="settings-section-title">Yönetici Paneli (Admin)</div>
         <div class="settings-menu-item" onclick="openAdminLoginModal()">
-            <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Firebase Admin Girişi</div>
+            <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Admin Yetkisi Al</div>
         </div>
 
         <div class="settings-section-title">ZP Medya Kullanımı</div>
@@ -820,43 +525,24 @@
     <div class="modal" id="admin-login-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span>Firebase Admin Girişi</span>
+                <span>Admin Şifre Paneli</span>
                 <i class="fa-solid fa-xmark modal-close" onclick="closeAdminLoginModal()"></i>
             </div>
             <div class="input-group">
-                <label>Admin E-posta</label>
-                <input type="text" id="admin-email-input" value="zpmedyaapp@gmail.com">
-            </div>
-            <div class="input-group">
-                <label>Admin Şifre</label>
+                <label>Yönetici Şifresi</label>
                 <input type="password" id="admin-pass-input" placeholder="Şifrenizi girin">
             </div>
-            <button class="btn-submit" onclick="verifyFirebaseAdminLogin()">Giriş Yap</button>
+            <button class="btn-submit" onclick="verifyAdminLogin()">Yetkiyi Aktifleştir</button>
         </div>
     </div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAa6_TcbrxKnFtQjzrr...",
-            authDomain: "zpmedya-1047f.firebaseapp.com",
-            projectId: "zpmedya-1047f",
-            storageBucket: "zpmedya-1047f.appspot.com",
-            messagingSenderId: "211465370194",
-            appId: "1:211465370194:web:b25b3..."
-        };
-
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const auth = firebase.auth();
-
-        const ADMIN_EMAIL = "zpmedyaapp@gmail.com";
         const ADMIN_PASS = "Kuzeyfe1986404040";
 
         let currentUser = localStorage.getItem('zp_current_user') || null;
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
-        let isAdminLoggedIn = false;
+        let isAdminLoggedIn = localStorage.getItem('zp_admin') === 'true';
 
         let users = JSON.parse(localStorage.getItem('zp_users')) || {
             "kuzeyfe": {
@@ -865,7 +551,8 @@
                 category: "Müzisyen",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
                 isVerified: true,
-                bio: "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı"
+                bio: "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı",
+                password: "123"
             }
         };
 
@@ -875,9 +562,9 @@
             localStorage.setItem('zp_users', JSON.stringify(users));
             localStorage.setItem('zp_posts', JSON.stringify(posts));
             if(currentUser) localStorage.setItem('zp_current_user', currentUser);
+            localStorage.setItem('zp_admin', isAdminLoggedIn);
         }
 
-        // Oturum kontrolü
         window.onload = function() {
             if (currentUser && users[currentUser]) {
                 document.getElementById('auth-screen').style.display = 'none';
@@ -903,85 +590,68 @@
         }
 
         function registerUser() {
-            const email = document.getElementById('reg-email').value.trim();
             const fullName = document.getElementById('reg-fullname').value.trim();
             const username = document.getElementById('reg-username').value.trim().toLowerCase();
             const password = document.getElementById('reg-password').value.trim();
 
-            if (!email || !fullName || !username || !password) {
+            if (!fullName || !username || !password) {
                 alert("Lütfen tüm alanları doldurun!");
                 return;
             }
 
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    users[username] = {
-                        username: username,
-                        fullName: fullName,
-                        category: "Kullanıcı",
-                        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
-                        isVerified: username === 'kuzeyfe',
-                        bio: "ZP Medya Üyesi"
-                    };
-                    currentUser = username;
-                    saveDataToStorage();
-                    document.getElementById('auth-screen').style.display = 'none';
-                    document.getElementById('app-container').style.display = 'flex';
-                    renderStories();
-                    renderFeed();
-                    openProfile(currentUser);
-                    alert("Kayıt başarılı!");
-                })
-                .catch(err => alert("Kayıt Hatası: " + err.message));
-        }
-
-        function loginUser() {
-            const identifier = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value.trim();
-
-            if (!identifier || !password) {
-                alert("Lütfen alanları doldurun!");
+            if (users[username]) {
+                alert("Bu kullanıcı adı zaten alınmış!");
                 return;
             }
 
-            let loginEmail = identifier.includes('@') ? identifier : identifier + "@zpmedya.com";
+            users[username] = {
+                username: username,
+                fullName: fullName,
+                category: "Kullanıcı",
+                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
+                isVerified: username === 'kuzeyfe',
+                bio: "ZP Medya Ailesine katıldı.",
+                password: password
+            };
 
-            auth.signInWithEmailAndPassword(loginEmail, password)
-                .then(res => {
-                    let found = Object.keys(users).find(u => users[u].username === identifier || identifier === 'kuzeyfe');
-                    currentUser = found || Object.keys(users)[0] || 'kuzeyfe';
-                    saveDataToStorage();
-                    document.getElementById('auth-screen').style.display = 'none';
-                    document.getElementById('app-container').style.display = 'flex';
-                    renderStories();
-                    renderFeed();
-                    openProfile(currentUser);
-                })
-                .catch(err => {
-                    if (identifier === ADMIN_EMAIL && password === ADMIN_PASS) {
-                        currentUser = "kuzeyfe";
-                        isAdminLoggedIn = true;
-                        saveDataToStorage();
-                        document.getElementById('auth-screen').style.display = 'none';
-                        document.getElementById('app-container').style.display = 'flex';
-                        renderStories();
-                        renderFeed();
-                        openProfile(currentUser);
-                        alert("Admin Girişi Başarılı!");
-                    } else {
-                        alert("Giriş Hatası: " + err.message);
-                    }
-                });
+            currentUser = username;
+            saveDataToStorage();
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('app-container').style.display = 'flex';
+            renderStories();
+            renderFeed();
+            openProfile(currentUser);
+            alert("Hesabınız başarıyla oluşturuldu!");
+        }
+
+        function loginUser() {
+            const username = document.getElementById('login-username').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!username || !password) {
+                alert("Lütfen kullanıcı adı ve şifrenizi girin!");
+                return;
+            }
+
+            if (users[username] && users[username].password === password) {
+                currentUser = username;
+                saveDataToStorage();
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+                renderStories();
+                renderFeed();
+                openProfile(currentUser);
+            } else {
+                alert("Kullanıcı adı veya şifre hatalı!");
+            }
         }
 
         function logoutUser() {
-            auth.signOut().then(() => {
-                currentUser = null;
-                localStorage.removeItem('zp_current_user');
-                closeSettingsMenu();
-                document.getElementById('app-container').style.display = 'none';
-                document.getElementById('auth-screen').style.display = 'flex';
-            });
+            currentUser = null;
+            localStorage.removeItem('zp_current_user');
+            closeSettingsMenu();
+            document.getElementById('app-container').style.display = 'none';
+            document.getElementById('auth-screen').style.display = 'flex';
         }
 
         function openCurrentProfile() {
@@ -1081,7 +751,7 @@
             const u = users[username] || users['kuzeyfe'];
 
             document.getElementById('prof-avatar').src = u.avatar;
-            document.getElementById('nav-user-avatar').src = u.avatar;
+            document.getElementById('nav-user-avatar').src = users[currentUser] ? users[currentUser].avatar : u.avatar;
             document.getElementById('prof-fullname').innerHTML = `${u.fullName} ${getVerifiedBadgeHTML(username)}`;
             document.getElementById('prof-category').innerText = u.category || '';
             document.getElementById('prof-biotext').innerText = u.bio || '';
@@ -1211,7 +881,7 @@
         function saveProfileChanges() {
             const u = currentUser || 'kuzeyfe';
             users[u].fullName = document.getElementById('edit-fullname-input').value;
-            users[u].bio = document.getElementById('edit-bio-input').value;
+            users[u].bio = document.getElementById('edit-bio-input-value') ? document.getElementById('edit-bio-input-value').value : document.getElementById('edit-bio-input').value;
             saveDataToStorage();
             closeEditProfileModal();
             openProfile(u);
@@ -1226,27 +896,17 @@
             document.getElementById('admin-login-modal').style.display = 'none';
         }
 
-        function verifyFirebaseAdminLogin() {
-            const email = document.getElementById('admin-email-input').value.trim();
+        function verifyAdminLogin() {
             const pass = document.getElementById('admin-pass-input').value.trim();
-
-            auth.signInWithEmailAndPassword(email, pass)
-                .then(() => {
-                    isAdminLoggedIn = true;
-                    closeAdminLoginModal();
-                    alert("Admin Girişi Başarılı!");
-                    openProfile(currentUser);
-                })
-                .catch(err => {
-                    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
-                        isAdminLoggedIn = true;
-                        closeAdminLoginModal();
-                        alert("Yönetici Girişi Başarılı!");
-                        openProfile(currentUser);
-                    } else {
-                        alert("Hata: " + err.message);
-                    }
-                });
+            if (pass === ADMIN_PASS) {
+                isAdminLoggedIn = true;
+                saveDataToStorage();
+                closeAdminLoginModal();
+                alert("Yönetici Yetkisi Başarıyla Aktifleştirildi!");
+                openProfile(activeProfileUser);
+            } else {
+                alert("Hatalı Admin Şifresi!");
+            }
         }
     </script>
 </body>
