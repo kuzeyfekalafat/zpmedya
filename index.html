@@ -333,6 +333,7 @@
         .profile-avatar-add {
             position: absolute; bottom: 2px; right: 2px; background: var(--accent-blue); color: #fff;
             width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid #000;
+            cursor: pointer;
         }
 
         .profile-stats { display: flex; flex: 1; justify-content: space-around; text-align: center; }
@@ -395,15 +396,42 @@
         .menu-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 250; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card-bg); width: 90%; max-width: 400px; border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 700; }
+        .modal-content { background: var(--card-bg); width: 90%; max-width: 400px; border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); text-align: center; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 700; text-align: left; }
         .modal-close { cursor: pointer; font-size: 18px; }
-        .input-group { margin-bottom: 12px; }
+        .input-group { margin-bottom: 12px; text-align: left; }
         .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
-        .input-group input[type="text"], .input-group textarea, .input-group input[type="password"] {
+        .input-group input[type="text"], .input-group textarea, .input-group input[type="password"], .input-group input[type="file"] {
             width: 100%; background: #000; border: 1px solid var(--border-color); color: #fff; padding: 8px 12px; border-radius: 6px; outline: none;
         }
         .btn-submit { width: 100%; background: var(--accent-blue); color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        
+        /* QR Kod Paylaşım Paneli Stilleri */
+        .qr-box {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            padding: 3px;
+            border-radius: 16px;
+            display: inline-block;
+            margin: 15px 0;
+        }
+        .qr-inner {
+            background: #121212;
+            padding: 20px;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .qr-placeholder-img {
+            width: 150px;
+            height: 150px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -414,7 +442,7 @@
         <div class="auth-card" id="signup-box">
             <div class="auth-logo">ZP Medya</div>
             <div class="auth-desc">Arkadaşlarının fotoğraf ve videolarını görmek için kaydol.</div>
-            <input type="text" id="reg-email" class="auth-input" placeholder="E-posta adresi">
+            <input type="text" id="reg-email" class="auth-input" placeholder="E-posta adresi (örn: zpmedyaapp@gmail.com)">
             <input type="text" id="reg-fullname" class="auth-input" placeholder="Adı Soyadı">
             <input type="text" id="reg-username" class="auth-input" placeholder="Kullanıcı adı">
             <input type="text" id="reg-phone" class="auth-input" placeholder="Telefon numarası">
@@ -440,7 +468,7 @@
         <!-- GİRİŞ YAP PANELİ -->
         <div class="auth-card" id="login-box" style="display: none;">
             <div class="auth-logo">ZP Medya</div>
-            <input type="text" id="login-username" class="auth-input" placeholder="Kullanıcı adı, telefon veya e-posta">
+            <input type="text" id="login-username" class="auth-input" placeholder="E-posta, kullanıcı adı veya telefon">
             <input type="password" id="login-password" class="auth-input" placeholder="Şifre">
             <button class="auth-btn" onclick="loginUser()">Giriş Yap</button>
         </div>
@@ -471,7 +499,7 @@
             <div class="profile-top-row">
                 <div class="profile-avatar-wrap">
                     <img id="prof-avatar" class="profile-avatar" src="" alt="Avatar">
-                    <div class="profile-avatar-add" onclick="openCreatePostModal()"><i class="fa-solid fa-plus"></i></div>
+                    <div class="profile-avatar-add" onclick="openEditProfileModal()"><i class="fa-solid fa-plus"></i></div>
                 </div>
                 <div class="profile-stats">
                     <div>
@@ -502,7 +530,7 @@
 
             <div class="profile-actions-btns">
                 <button class="profile-btn" onclick="openEditProfileModal()">Profili düzenle</button>
-                <button class="profile-btn" onclick="alert('Profil bağlantısı kopyalandı!')">Profili paylaş</button>
+                <button class="profile-btn" onclick="openShareProfileModal()">Profili paylaş</button>
                 <div id="admin-action-area" style="display: none;"></div>
             </div>
 
@@ -617,11 +645,38 @@
         </div>
     </div>
 
+    <!-- PROFİL PAYLAŞ / QR KOD MODALI -->
+    <div class="modal" id="share-profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Profili Paylaş</span>
+                <i class="fa-solid fa-xmark modal-close" onclick="closeShareProfileModal()"></i>
+            </div>
+            <div style="font-weight: 700; font-size: 15px; margin-bottom: 4px;" id="share-modal-username">@kuzeyfe</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">ZP Medya Profil QR Kodu</div>
+            
+            <div class="qr-box">
+                <div class="qr-inner">
+                    <div class="qr-placeholder-img">
+                        <!-- Otomatik QR Kod Üreteci -->
+                        <img id="qr-code-img" src="" alt="QR Kod" style="width:100%; height:100%; object-fit:contain;">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-submit" style="margin-top: 12px;" onclick="copyProfileLink()">Bağlantıyı Kopyala</button>
+        </div>
+    </div>
+
     <div class="modal" id="edit-profile-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <span>Profili Düzenle</span>
                 <i class="fa-solid fa-xmark modal-close" onclick="closeEditProfileModal()"></i>
+            </div>
+            <div class="input-group">
+                <label>Profil Fotoğrafı Seç</label>
+                <input type="file" id="edit-avatar-file" accept="image/*">
             </div>
             <div class="input-group">
                 <label>Ad Soyad</label>
@@ -651,12 +706,11 @@
 
     <script>
         const ADMIN_PASS = "Kuzeyfe1986404040";
+        const SUPER_ADMIN_EMAIL = "zpmedyaapp@gmail.com";
 
         let currentUser = localStorage.getItem('zp_current_user') || null;
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
-        let isAdminLoggedIn = localStorage.getItem('zp_admin') === 'true';
-        let selectedGender = '';
 
         let users = JSON.parse(localStorage.getItem('zp_users')) || {
             "kuzeyfe": {
@@ -673,9 +727,13 @@
             }
         };
 
-        if (users["kuzeyfe"]) {
-            users["kuzeyfe"].password = "Kuzeyfe1986404040";
-            if(!users["kuzeyfe"].email) users["kuzeyfe"].email = "zpmedyaapp@gmail.com";
+        function checkAdminStatus(username) {
+            if (!username) return false;
+            let u = users[username];
+            if (u && (u.email === SUPER_ADMIN_EMAIL || username === 'kuzeyfe')) {
+                return true;
+            }
+            return localStorage.getItem('zp_admin') === 'true';
         }
 
         let posts = JSON.parse(localStorage.getItem('zp_posts')) || [];
@@ -684,7 +742,6 @@
             localStorage.setItem('zp_users', JSON.stringify(users));
             localStorage.setItem('zp_posts', JSON.stringify(posts));
             if(currentUser) localStorage.setItem('zp_current_user', currentUser);
-            localStorage.setItem('zp_admin', isAdminLoggedIn);
         }
 
         window.onload = function() {
@@ -702,6 +759,7 @@
             }
         };
 
+        let selectedGender = '';
         function selectGender(gender) {
             selectedGender = gender;
             document.getElementById('gender-male').classList.toggle('selected', gender === 'Erkek');
@@ -742,7 +800,7 @@
             }
 
             if (password !== passwordConfirm) {
-                alert("Girdiğiniz şifreler birbiriyle uyuşmuyor! Lütfen kontrol edin.");
+                alert("Girdiğiniz şifreler birbiriyle uyuşmuyor!");
                 return;
             }
 
@@ -751,21 +809,26 @@
                 return;
             }
 
+            const isSuperAdmin = (email === SUPER_ADMIN_EMAIL || username === 'kuzeyfe');
+
             users[username] = {
                 username: username,
                 email: email,
                 phone: phone,
                 gender: selectedGender,
                 fullName: fullName,
-                category: "Kullanıcı",
+                category: isSuperAdmin ? "Müzisyen / Kurucu" : "Kullanıcı",
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
-                isVerified: username === 'kuzeyfe',
-                bio: "ZP Medya Ailesine katıldı.",
+                isVerified: isSuperAdmin,
+                bio: isSuperAdmin ? "🎵 Müzisyen\n🎬 Film Yapımcısı\n🎨 Tasarımcı" : "ZP Medya Ailesine katıldı.",
                 password: password,
                 birthdate: birthdate
             };
 
             currentUser = username;
+            if (isSuperAdmin) {
+                localStorage.setItem('zp_admin', 'true');
+            }
             saveDataToStorage();
             
             document.getElementById('auth-screen').style.display = 'none';
@@ -781,7 +844,7 @@
             const password = document.getElementById('login-password').value.trim();
 
             if (!inputVal || !password) {
-                alert("Lütfen kullanıcı adı/e-posta ve şifrenizi girin!");
+                alert("Lütfen e-posta/kullanıcı adı ve şifrenizi girin!");
                 return;
             }
 
@@ -794,6 +857,9 @@
 
             if (foundKey && users[foundKey].password === password) {
                 currentUser = foundKey;
+                if (users[currentUser].email === SUPER_ADMIN_EMAIL || currentUser === 'kuzeyfe') {
+                    localStorage.setItem('zp_admin', 'true');
+                }
                 saveDataToStorage();
                 
                 document.getElementById('auth-screen').style.display = 'none';
@@ -809,6 +875,7 @@
         function logoutUser() {
             currentUser = null;
             localStorage.removeItem('zp_current_user');
+            localStorage.removeItem('zp_admin');
             closeSettingsMenu();
             document.getElementById('app-container').style.display = 'none';
             document.getElementById('auth-screen').style.display = 'flex';
@@ -850,7 +917,7 @@
             document.getElementById('prof-posts-count').innerText = posts.filter(p => p.username === username).length;
 
             const adminArea = document.getElementById('admin-action-area');
-            if (username !== currentUser && (isAdminLoggedIn || currentUser === 'kuzeyfe')) {
+            if (checkAdminStatus(currentUser) && username !== currentUser) {
                 adminArea.style.display = 'block';
                 adminArea.innerHTML = u.isVerified ? 
                     `<button class="profile-btn admin-unverify-btn" onclick="toggleUserVerification('${username}')">Mavi Tik Kaldır</button>` :
@@ -1014,6 +1081,27 @@
             document.getElementById('create-post-modal').style.display = 'none';
         }
 
+        // PROFİLİ PAYLAŞ VE QR KOD FONKSİYONLARI
+        function openShareProfileModal() {
+            const profileUrl = window.location.href.split('?')[0] + "?user=" + (activeProfileUser || currentUser);
+            document.getElementById('share-modal-username').innerText = "@" + (activeProfileUser || currentUser);
+            
+            // Ücretsiz harici QR API kullanarak QR kod görselini otomatik oluşturur
+            document.getElementById('qr-code-img').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(profileUrl);
+            
+            document.getElementById('share-profile-modal').style.display = 'flex';
+        }
+
+        function closeShareProfileModal() {
+            document.getElementById('share-profile-modal').style.display = 'none';
+        }
+
+        function copyProfileLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Profil bağlantısı kopyalandı!");
+            closeShareProfileModal();
+        }
+
         function submitPost() {
             const fileInput = document.getElementById('post-file-input');
             const caption = document.getElementById('post-caption-input').value || '';
@@ -1058,11 +1146,27 @@
 
         function saveProfileChanges() {
             const u = currentUser || 'kuzeyfe';
-            users[u].fullName = document.getElementById('edit-fullname-input').value;
-            users[u].bio = document.getElementById('edit-bio-input').value;
-            saveDataToStorage();
-            closeEditProfileModal();
-            openProfile(u);
+            const fullName = document.getElementById('edit-fullname-input').value;
+            const bio = document.getElementById('edit-bio-input').value;
+            const avatarFile = document.getElementById('edit-avatar-file').files[0];
+
+            users[u].fullName = fullName;
+            users[u].bio = bio;
+
+            if (avatarFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    users[u].avatar = e.target.result;
+                    saveDataToStorage();
+                    closeEditProfileModal();
+                    openProfile(u);
+                }
+                reader.readAsDataURL(avatarFile);
+            } else {
+                saveDataToStorage();
+                closeEditProfileModal();
+                openProfile(u);
+            }
         }
 
         function openAdminLoginModal() {
@@ -1077,8 +1181,7 @@
         function verifyAdminLogin() {
             const pass = document.getElementById('admin-pass-input').value.trim();
             if (pass === ADMIN_PASS) {
-                isAdminLoggedIn = true;
-                saveDataToStorage();
+                localStorage.setItem('zp_admin', 'true');
                 closeAdminLoginModal();
                 alert("Yönetici Yetkisi Başarıyla Aktifleştirildi!");
                 openProfile(activeProfileUser);
