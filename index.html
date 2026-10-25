@@ -34,7 +34,6 @@
             min-height: 100vh;
         }
 
-        /* --- ASIL UYGULAMA İÇERİĞİ --- */
         .app-container {
             width: 100%;
             max-width: 470px;
@@ -164,6 +163,25 @@
             align-items: center;
         }
 
+        .post-menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 4px;
+        }
+
+        .post-menu-btn span {
+            display: block;
+            width: 16px;
+            height: 2px;
+            background-color: var(--text-main);
+            border-radius: 2px;
+        }
+
         .post-image-container {
             width: 100%;
             position: relative;
@@ -197,7 +215,6 @@
         .post-likes { padding: 0 12px; font-weight: 600; font-size: 13px; margin-bottom: 6px; }
         .post-caption { padding: 0 12px; font-size: 13px; line-height: 1.4; margin-bottom: 8px; }
         .post-caption .username { font-weight: 600; margin-right: 6px; }
-        .post-comments-link { padding: 0 12px; color: var(--text-muted); font-size: 12px; margin-bottom: 8px; cursor: pointer; }
         .post-time { padding: 0 12px 12px; color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
 
         /* Profile Styles */
@@ -268,6 +285,24 @@
 
         .menu-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 250; }
 
+        /* Instagram Gönderi İki Çizgi (=) Detay Menüsü */
+        .ig-post-sheet {
+            position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%); width: 100%; max-width: 470px;
+            background: #121212; border-top-left-radius: 20px; border-top-right-radius: 20px; border-top: 1px solid var(--border-color); padding: 16px; z-index: 350; transition: bottom 0.3s ease; max-height: 85vh; overflow-y: auto;
+        }
+        .ig-post-sheet.active { bottom: 0; }
+        
+        .ig-sheet-top-actions { display: flex; gap: 12px; margin-bottom: 16px; }
+        .ig-sheet-action-box {
+            flex: 1; background: #262626; border-radius: 12px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: #fff;
+        }
+        .ig-sheet-action-box i { font-size: 22px; }
+
+        .ig-sheet-item { display: flex; align-items: center; padding: 14px 4px; font-size: 14px; font-weight: 500; border-bottom: 1px solid #1c1c1c; cursor: pointer; color: #fff; gap: 14px; }
+        .ig-sheet-item i { font-size: 18px; width: 22px; text-align: center; color: var(--text-main); }
+        .ig-sheet-item.danger { color: var(--danger-color); }
+        .ig-sheet-item.danger i { color: var(--danger-color); }
+
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; }
         .modal-content { background: var(--card-bg); width: 90%; max-width: 400px; border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); text-align: center; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 700; text-align: left; }
@@ -290,7 +325,6 @@
         .sub-page-header i { cursor: pointer; font-size: 20px; }
         .sub-page-body { padding: 16px; flex: 1; }
 
-        /* QR Kod Paylaşım Paneli Stilleri */
         .qr-box {
             background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
             padding: 3px;
@@ -397,7 +431,7 @@
         </div>
     </div>
 
-    <!-- Instagram Orijinal Eksiksiz Ayarlar ve Hareketler Menüsü -->
+    <!-- Instagram Orijinal Eksiksiz Ayarlar Menüsü -->
     <div class="menu-backdrop" id="menu-backdrop" onclick="closeSettingsMenu()"></div>
     <div class="settings-menu" id="settings-menu">
         <div class="settings-header">
@@ -468,6 +502,33 @@
         </div>
     </div>
 
+    <!-- Gönderi İki Çizgi (=) Menüsü (Attığın İkinci Görselin Aynısı) -->
+    <div class="menu-backdrop" id="ig-sheet-backdrop" onclick="closeIgPostSheet()"></div>
+    <div class="ig-post-sheet" id="ig-post-sheet">
+        <div class="ig-sheet-top-actions">
+            <div class="ig-sheet-action-box" id="sheet-save-btn" onclick="toggleSaveFromSheet()">
+                <i class="fa-regular fa-bookmark" id="sheet-save-icon"></i>
+                <span id="sheet-save-text">Kaydet</span>
+            </div>
+            <div class="ig-sheet-action-box" onclick="openShareProfileModal()">
+                <i class="fa-solid fa-qrcode"></i>
+                <span>QR kodu</span>
+            </div>
+        </div>
+
+        <div class="ig-sheet-item" onclick="alert('Beğenme sayısı gizlendi.')"><i class="fa-regular fa-heart"></i> Beğenme sayısını gizle</div>
+        <div class="ig-sheet-item" onclick="alert('Paylaşım sayısı gizlendi.')"><i class="fa-regular fa-paper-plane"></i> Paylaşım sayısını gizle</div>
+        <div class="ig-sheet-item" onclick="alert('Bu gönderi için yorum yapma kapatıldı.')"><i class="fa-regular fa-comment-slash"></i> Yorum yapmayı kapat</div>
+        <div class="ig-sheet-item" onclick="alert('Önerilen ürünler aktif.')"><i class="fa-solid fa-bag-shopping"></i> Önerilen ürünler</div>
+        <div class="ig-sheet-item" onclick="alert('Bu gönderiden Reels videosu oluşturuluyor...')"><i class="fa-solid fa-clapperboard"></i> Bu gönderiden Reels videosu ol...</div>
+        <div class="ig-sheet-item" onclick="openEditPostCaption()"><i class="fa-solid fa-pen"></i> Düzenle</div>
+        <div class="ig-sheet-item" onclick="alert('Önizleme ayarlanıyor.')"><i class="fa-solid fa-expand"></i> Önizlemeyi ayarla</div>
+        <div class="ig-sheet-item" onclick="openSubPage('admin-panel-page')"><i class="fa-solid fa-chart-column"></i> İstatistikleri gör</div>
+        <div class="ig-sheet-item" onclick="alert('Yeniden kullanıma izin verildi.')"><i class="fa-solid fa-retweet"></i> Yeniden kullanıma izin ver</div>
+        <div class="ig-sheet-item" onclick="alert('Gönderi profilin başına sabitlendi!')"><i class="fa-solid fa-thumbtack"></i> Ana ızgaranın başına tuttur</div>
+        <div class="ig-sheet-item danger" onclick="deleteCurrentPostFromSheet()"><i class="fa-regular fa-trash-can"></i> Medyayı sil</div>
+    </div>
+
     <!-- TAM FONKSİYONEL ALT SAYFALAR -->
     <div class="sub-page" id="admin-panel-page">
         <div class="sub-page-header">
@@ -495,7 +556,7 @@
             <div style="background:var(--card-bg); padding:15px; border-radius:10px; margin-bottom:12px; border:1px solid var(--border-color);">
                 <div style="font-weight:700;">Kişisel Detaylar</div>
                 <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">E-posta: zpmedyaapp@gmail.com</div>
-                <div style="font-size:13px; color:var(--text-muted);">Telefon: +90 500 000 00 00</div>
+                <div style="font-size:13px; color:var(--text-muted);">Kullanıcı: @kuzeyfe</div>
             </div>
             <button class="btn-submit" onclick="alert('Şifre güncelleme bağlantısı e-posta adresinize gönderildi.')">Şifre Değiştir</button>
         </div>
@@ -523,10 +584,6 @@
             <div style="background:var(--card-bg); padding:15px; border-radius:10px; margin-bottom:12px; border:1px solid var(--border-color);">
                 <div style="font-weight:700; margin-bottom:5px;">Zaman Yönetimi</div>
                 <div style="font-size:13px; color:var(--text-muted);">Bugünkü Ortalama Süre: <strong>24 dakika</strong></div>
-            </div>
-            <div style="background:var(--card-bg); padding:15px; border-radius:10px; border:1px solid var(--border-color);">
-                <div style="font-weight:700; margin-bottom:5px;">Etkileşim Geçmişi</div>
-                <div style="font-size:13px; color:var(--text-muted);">Tüm beğenileriniz ve yorumlarınız güvenle kaydediliyor.</div>
             </div>
         </div>
     </div>
@@ -580,7 +637,7 @@
             <div style="width:20px;"></div>
         </div>
         <div class="sub-page-body">
-            <p style="color:var(--text-muted); font-size:14px; margin-bottom:15px;">ZP Medya platformuyla ilgili her türlü destek ve soru bildiriminiz için buradayız.</p>
+            <p style="color:var(--text-muted); font-size:14px; margin-bottom:15px;">ZP Medya destek ekibi her zaman yanınızda.</p>
             <button class="btn-submit" onclick="alert('Destek talebiniz başarıyla iletildi.')">Sorun Bildir</button>
         </div>
     </div>
@@ -594,7 +651,7 @@
         <div class="sub-page-body">
             <div style="background:var(--card-bg); padding:15px; border-radius:10px; border:1px solid var(--border-color); color:var(--text-main);">
                 <div style="font-weight:700; color:#4BB543; margin-bottom:5px;"><i class="fa-solid fa-circle-check"></i> Harika Durumda</div>
-                <div style="font-size:13px; color:var(--text-muted);">Hesabınız topluluk kurallarımızın tamamına uygundur. Herhangi bir kısıtlama yoktur.</div>
+                <div style="font-size:13px; color:var(--text-muted);">Hesabınız topluluk kurallarımızın tamamına uygundur.</div>
             </div>
         </div>
     </div>
@@ -606,7 +663,7 @@
             <div style="width:20px;"></div>
         </div>
         <div class="sub-page-body" style="text-align:center; color:var(--text-muted); padding-top:40px;">
-            <p>Popüler içerikler ve öneriler yakında burada listelenecek.</p>
+            <p>Popüler içerikler burada listelenecek.</p>
         </div>
     </div>
 
@@ -617,7 +674,7 @@
             <div style="width:20px;"></div>
         </div>
         <div class="sub-page-body" style="text-align:center; color:var(--text-muted); padding-top:40px;">
-            <p>Kısa video akışı yükleniyor...</p>
+            <p>Reels videoları yükleniyor...</p>
         </div>
     </div>
 
@@ -727,6 +784,7 @@
         let activeProfileUser = 'kuzeyfe';
         let activeProfileTab = 'posts';
         let isAdminLoggedIn = true;
+        let activePostId = null;
 
         let users = {
             "kuzeyfe": {
@@ -840,7 +898,10 @@
                                 <img class="post-avatar" src="${u.avatar}">
                                 <span class="post-username">${post.username} ${getVerifiedBadgeHTML(post.username)}</span>
                             </div>
-                            <i class="fa-solid fa-ellipsis" style="color:var(--text-muted); cursor:pointer;" onclick="openSettingsMenu()"></i>
+                            <button class="post-menu-btn" onclick="openIgPostSheet(${post.id})" title="Seçenekler">
+                                <span></span>
+                                <span></span>
+                            </button>
                         </div>
                         <div class="post-image-container" ondblclick="toggleLike(${post.id})">
                             <img class="post-image" src="${post.image}">
@@ -862,6 +923,64 @@
                 `;
             });
             wrapper.innerHTML = html;
+        }
+
+        function openIgPostSheet(id) {
+            activePostId = id;
+            const post = posts.find(p => p.id === id);
+            if (post) {
+                const saveIcon = document.getElementById('sheet-save-icon');
+                const saveText = document.getElementById('sheet-save-text');
+                if (post.saved) {
+                    saveIcon.className = "fa-solid fa-bookmark";
+                    saveText.innerText = "Kaydedildi";
+                } else {
+                    saveIcon.className = "fa-regular fa-bookmark";
+                    saveText.innerText = "Kaydet";
+                }
+            }
+            document.getElementById('ig-sheet-backdrop').style.display = 'block';
+            document.getElementById('ig-post-sheet').classList.add('active');
+        }
+
+        function closeIgPostSheet() {
+            document.getElementById('ig-sheet-backdrop').style.display = 'none';
+            document.getElementById('ig-post-sheet').classList.remove('active');
+        }
+
+        function toggleSaveFromSheet() {
+            if (activePostId) {
+                toggleSave(activePostId);
+                closeIgPostSheet();
+            }
+        }
+
+        function openEditPostCaption() {
+            closeIgPostSheet();
+            const post = posts.find(p => p.id === activePostId);
+            if (post) {
+                const newCaption = prompt("Gönderi açıklamasını düzenle:", post.caption);
+                if (newCaption !== null) {
+                    post.caption = newCaption;
+                    saveDataToStorage();
+                    renderFeed();
+                    alert("Gönderi güncellendi!");
+                }
+            }
+        }
+
+        function deleteCurrentPostFromSheet() {
+            if (activePostId && confirm("Bu medyayı silmek istediğine emin misin?")) {
+                posts = posts.filter(p => p.id !== activePostId);
+                saveDataToStorage();
+                closeIgPostSheet();
+                renderFeed();
+                document.getElementById('admin-post-count').innerText = posts.length;
+                if(document.getElementById('profile-view').style.display === 'block') {
+                    openProfile(currentUser);
+                }
+                alert("Medya silindi.");
+            }
         }
 
         function toggleLike(id) {
