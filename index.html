@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZP Medya - Sosyal Medya Platformu</title>
+    <title>ZP Medya</title>
     <!-- FontAwesome Icon Library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -34,12 +34,111 @@
             min-height: 100vh;
         }
 
+        /* --- INSTAGRAM ORİJİNAL TAM EKRAN GİRİŞ / KAYIT DUVARI --- */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 350px;
+            background: #000000;
+            border: 1px solid var(--border-color);
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .auth-logo {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .auth-desc {
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 20px;
+            margin-bottom: 20px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: #121212;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 13px;
+            margin-bottom: 8px;
+            outline: none;
+        }
+
+        .auth-input:focus {
+            border-color: #a8a8a8;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .auth-switch-card {
+            width: 100%;
+            max-width: 350px;
+            background: #000000;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .auth-switch-card span {
+            color: var(--accent-blue);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .date-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: left;
+            margin: 6px 0 2px 4px;
+        }
+
+        /* --- ASIL UYGULAMA İÇERİĞİ --- */
         .app-container {
             width: 100%;
             max-width: 470px;
             background-color: #000;
             min-height: 100vh;
-            display: flex;
+            display: none; /* Başlangıçta gizli, giriş yapılınca açılacak */
             flex-direction: column;
             position: relative;
             border-left: 1px solid var(--border-color);
@@ -282,6 +381,37 @@
 </head>
 <body>
 
+    <!-- İLK AÇILIŞTA ÇIKAN İNSTAGRAM GİRİŞ / KAYIT DUVARI -->
+    <div class="auth-overlay" id="auth-screen">
+        <!-- KAYIT OL PANELİ -->
+        <div class="auth-card" id="signup-box">
+            <div class="auth-logo">ZP Medya</div>
+            <div class="auth-desc">Arkadaşlarının fotoğraf ve videolarını görmek için kaydol.</div>
+            <input type="text" id="reg-email" class="auth-input" placeholder="E-posta adresi">
+            <input type="text" id="reg-fullname" class="auth-input" placeholder="Adı Soyadı">
+            <input type="text" id="reg-username" class="auth-input" placeholder="Kullanıcı adı">
+            <input type="password" id="reg-password" class="auth-input" placeholder="Şifre">
+            <div class="date-label">Doğum Tarihi</div>
+            <input type="date" id="reg-birthdate" class="auth-input">
+            <button class="auth-btn" onclick="registerUser()">Kaydol</button>
+        </div>
+        <div class="auth-switch-card" id="signup-switch">
+            Hesabın var mı? <span onclick="switchAuthView('login')">Giriş yap</span>
+        </div>
+
+        <!-- GİRİŞ YAP PANELİ -->
+        <div class="auth-card" id="login-box" style="display: none;">
+            <div class="auth-logo">ZP Medya</div>
+            <input type="text" id="login-username" class="auth-input" placeholder="Kullanıcı adı veya e-posta">
+            <input type="password" id="login-password" class="auth-input" placeholder="Şifre">
+            <button class="auth-btn" onclick="loginUser()">Giriş Yap</button>
+        </div>
+        <div class="auth-switch-card" id="login-switch" style="display: none;">
+            Hesabın yok mu? <span onclick="switchAuthView('signup')">Kaydol</span>
+        </div>
+    </div>
+
+    <!-- ASIL UYGULAMA (Giriş yapınca açılır) -->
     <div class="app-container" id="app-container">
         <!-- Sticky Header -->
         <div class="header">
@@ -382,7 +512,7 @@
             <div class="settings-menu-item-left"><i class="fa-regular fa-user"></i> Hesap Merkezi</div>
             <span>Şifre, güvenlik...</span>
         </div>
-        <div class="settings-menu-item" onclick="openRegisterModal()">
+        <div class="settings-menu-item" onclick="openRegisterModalFromMenu()">
             <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-user-plus"></i> Yeni Hesap Ekle / Kaydol</div>
         </div>
 
@@ -400,7 +530,7 @@
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
         <div class="settings-menu-item" onclick="alert('Bildirim Ayarları')">
-            <div class="settings-menu-item-left"><i class="fa-regular fa-bell"></i> Bildirimler</div>
+            <div class="settings-menu-item-left"><i class="regular fa-bell"></i> Bildirimler</div>
             <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-muted);"></i>
         </div>
 
@@ -481,32 +611,10 @@
         </div>
     </div>
 
-    <div class="modal" id="register-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span>Yeni Hesap Oluştur</span>
-                <i class="fa-solid fa-xmark modal-close" onclick="closeRegisterModal()"></i>
-            </div>
-            <div class="input-group">
-                <label>Ad Soyad</label>
-                <input type="text" id="reg-fullname" placeholder="Adınız Soyadınız">
-            </div>
-            <div class="input-group">
-                <label>Kullanıcı Adı</label>
-                <input type="text" id="reg-username" placeholder="kullaniciadi">
-            </div>
-            <div class="input-group">
-                <label>Şifre</label>
-                <input type="password" id="reg-password" placeholder="Şifreniz">
-            </div>
-            <button class="btn-submit" onclick="registerUserModal()">Kaydol ve Giriş Yap</button>
-        </div>
-    </div>
-
     <script>
         const ADMIN_PASS = "Kuzeyfe1986404040";
 
-        let currentUser = localStorage.getItem('zp_current_user') || 'kuzeyfe';
+        let currentUser = localStorage.getItem('zp_current_user') || null;
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
         let isAdminLoggedIn = localStorage.getItem('zp_admin') === 'true';
@@ -528,16 +636,114 @@
         function saveDataToStorage() {
             localStorage.setItem('zp_users', JSON.stringify(users));
             localStorage.setItem('zp_posts', JSON.stringify(posts));
-            localStorage.setItem('zp_current_user', currentUser);
+            if(currentUser) localStorage.setItem('zp_current_user', currentUser);
             localStorage.setItem('zp_admin', isAdminLoggedIn);
         }
 
+        // Sayfa açıldığında oturum kontrolü: Oturum yoksa KESİNLİKLE kayıt/giriş ekranı görünür!
         window.onload = function() {
-            if (!users[currentUser]) currentUser = 'kuzeyfe';
+            if (currentUser && users[currentUser]) {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+                renderStories();
+                renderFeed();
+                openProfile(currentUser);
+            } else {
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('app-container').style.display = 'none';
+            }
+        };
+
+        function switchAuthView(type) {
+            if (type === 'login') {
+                document.getElementById('signup-box').style.display = 'none';
+                document.getElementById('signup-switch').style.display = 'none';
+                document.getElementById('login-box').style.display = 'block';
+                document.getElementById('login-switch').style.display = 'block';
+            } else {
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('login-switch').style.display = 'none';
+                document.getElementById('signup-box').style.display = 'block';
+                document.getElementById('signup-switch').style.display = 'block';
+            }
+        }
+
+        function registerUser() {
+            const email = document.getElementById('reg-email').value.trim();
+            const fullName = document.getElementById('reg-fullname').value.trim();
+            const username = document.getElementById('reg-username').value.trim().toLowerCase();
+            const password = document.getElementById('reg-password').value.trim();
+            const birthdate = document.getElementById('reg-birthdate').value;
+
+            if (!email || !fullName || !username || !password) {
+                alert("Lütfen tüm alanları doldurun!");
+                return;
+            }
+
+            if (users[username]) {
+                alert("Bu kullanıcı adı zaten alınmış!");
+                return;
+            }
+
+            users[username] = {
+                username: username,
+                fullName: fullName,
+                category: "Kullanıcı",
+                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
+                isVerified: username === 'kuzeyfe',
+                bio: "ZP Medya Ailesine katıldı.",
+                password: password,
+                birthdate: birthdate
+            };
+
+            currentUser = username;
+            saveDataToStorage();
+            
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('app-container').style.display = 'flex';
             renderStories();
             renderFeed();
             openProfile(currentUser);
-        };
+            alert("Hesabınız başarıyla oluşturuldu!");
+        }
+
+        function loginUser() {
+            const identifier = document.getElementById('login-username').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!identifier || !password) {
+                alert("Lütfen kullanıcı adı ve şifrenizi girin!");
+                return;
+            }
+
+            let foundKey = Object.keys(users).find(u => u === identifier || users[u].username === identifier);
+
+            if (foundKey && users[foundKey].password === password) {
+                currentUser = foundKey;
+                saveDataToStorage();
+                
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+                renderStories();
+                renderFeed();
+                openProfile(currentUser);
+            } else {
+                alert("Kullanıcı adı veya şifre hatalı!");
+            }
+        }
+
+        function logoutUser() {
+            currentUser = null;
+            localStorage.removeItem('zp_current_user');
+            closeSettingsMenu();
+            document.getElementById('app-container').style.display = 'none';
+            document.getElementById('auth-screen').style.display = 'flex';
+        }
+
+        function openRegisterModalFromMenu() {
+            closeSettingsMenu();
+            logoutUser();
+        }
 
         function showView(view) {
             document.getElementById('feed-view').style.display = view === 'feed' ? 'block' : 'none';
@@ -581,44 +787,6 @@
 
             switchProfileTab('posts');
             showView('profile');
-        }
-
-        function openRegisterModal() {
-            closeSettingsMenu();
-            document.getElementById('register-modal').style.display = 'flex';
-        }
-
-        function closeRegisterModal() {
-            document.getElementById('register-modal').style.display = 'none';
-        }
-
-        function registerUserModal() {
-            const fullName = document.getElementById('reg-fullname').value.trim();
-            const username = document.getElementById('reg-username').value.trim().toLowerCase();
-            const password = document.getElementById('reg-password').value.trim();
-
-            if (!fullName || !username || !password) {
-                alert("Lütfen tüm alanları doldurun!");
-                return;
-            }
-
-            users[username] = {
-                username: username,
-                fullName: fullName,
-                category: "Kullanıcı",
-                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80",
-                isVerified: username === 'kuzeyfe',
-                bio: "ZP Medya Ailesine katıldı.",
-                password: password
-            };
-
-            currentUser = username;
-            saveDataToStorage();
-            closeRegisterModal();
-            renderStories();
-            renderFeed();
-            openProfile(currentUser);
-            alert("Hesap başarıyla oluşturuldu!");
         }
 
         function openCurrentProfile() {
