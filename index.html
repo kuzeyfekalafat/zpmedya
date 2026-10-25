@@ -34,99 +34,12 @@
             min-height: 100vh;
         }
 
-        /* --- AUTH SCREEN (GİRİŞ & KAYIT) --- */
-        .auth-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .auth-box {
-            width: 100%;
-            max-width: 350px;
-            background: #000;
-            border: 1px solid var(--border-color);
-            padding: 40px 30px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .auth-logo {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 24px;
-        }
-
-        .auth-subtext {
-            color: var(--text-muted);
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .auth-input {
-            width: 100%;
-            background: #121212;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 10px 12px;
-            color: #fff;
-            font-size: 13px;
-            margin-bottom: 8px;
-            outline: none;
-        }
-
-        .auth-btn {
-            width: 100%;
-            background: var(--accent-blue);
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-
-        .auth-switch-box {
-            width: 100%;
-            max-width: 350px;
-            background: #000;
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .auth-switch-box span {
-            color: var(--accent-blue);
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        /* --- APP CONTAINER --- */
         .app-container {
             width: 100%;
             max-width: 470px;
             background-color: #000;
             min-height: 100vh;
-            display: none;
+            display: flex;
             flex-direction: column;
             position: relative;
             border-left: 1px solid var(--border-color);
@@ -362,32 +275,6 @@
 </head>
 <body>
 
-    <!-- AUTH SCREEN -->
-    <div class="auth-overlay" id="auth-screen">
-        <div class="auth-box" id="signup-box">
-            <div class="auth-logo">ZP Medya</div>
-            <div class="auth-subtext">Arkadaşlarının fotoğraf ve videolarını görmek için kaydol.</div>
-            <input type="text" id="reg-fullname" class="auth-input" placeholder="Adı Soyadı">
-            <input type="text" id="reg-username" class="auth-input" placeholder="Kullanıcı adı">
-            <input type="password" id="reg-password" class="auth-input" placeholder="Şifre">
-            <button class="auth-btn" onclick="registerUser()">Kaydol</button>
-        </div>
-        <div class="auth-switch-box" id="signup-switch">
-            Hesabın var mı? <span onclick="switchAuthView('login')">Giriş yap</span>
-        </div>
-
-        <div class="auth-box" id="login-box" style="display: none;">
-            <div class="auth-logo">ZP Medya</div>
-            <input type="text" id="login-username" class="auth-input" placeholder="Kullanıcı adı">
-            <input type="password" id="login-password" class="auth-input" placeholder="Şifre">
-            <button class="auth-btn" onclick="loginUser()">Giriş Yap</button>
-        </div>
-        <div class="auth-switch-box" id="login-switch" style="display: none;">
-            Hesabın yok mu? <span onclick="switchAuthView('signup')">Kaydol</span>
-        </div>
-    </div>
-
-    <!-- APP CONTAINER -->
     <div class="app-container" id="app-container">
         <div class="header">
             <div class="logo" id="header-title">ZP Medya</div>
@@ -474,14 +361,14 @@
             <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-shield-halved"></i> Admin Yetkisi Al</div>
         </div>
 
+        <div class="settings-section-title">Hesap İşlemleri</div>
+        <div class="settings-menu-item" onclick="openRegisterModal()">
+            <div class="settings-menu-item-left text-blue"><i class="fa-solid fa-user-plus"></i> Yeni Hesap Ekle / Kaydol</div>
+        </div>
+
         <div class="settings-section-title">ZP Medya Kullanımı</div>
         <div class="settings-menu-item" onclick="openSavedPostsSection()">
             <div class="settings-menu-item-left"><i class="fa-regular fa-bookmark"></i> Kaydedildi</div>
-        </div>
-
-        <div class="settings-section-title">Oturum</div>
-        <div class="settings-menu-item" onclick="logoutUser()">
-            <div class="settings-menu-item-left text-red"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</div>
         </div>
     </div>
 
@@ -536,10 +423,32 @@
         </div>
     </div>
 
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Yeni Hesap Oluştur</span>
+                <i class="fa-solid fa-xmark modal-close" onclick="closeRegisterModal()"></i>
+            </div>
+            <div class="input-group">
+                <label>Ad Soyad</label>
+                <input type="text" id="reg-fullname" placeholder="Adınız Soyadınız">
+            </div>
+            <div class="input-group">
+                <label>Kullanıcı Adı</label>
+                <input type="text" id="reg-username" placeholder="kullaniciadi">
+            </div>
+            <div class="input-group">
+                <label>Şifre</label>
+                <input type="password" id="reg-password" placeholder="Şifreniz">
+            </div>
+            <button class="btn-submit" onclick="registerUserModal()">Kaydol ve Giriş Yap</button>
+        </div>
+    </div>
+
     <script>
         const ADMIN_PASS = "Kuzeyfe1986404040";
 
-        let currentUser = localStorage.getItem('zp_current_user') || null;
+        let currentUser = localStorage.getItem('zp_current_user') || 'kuzeyfe';
         let activeProfileUser = null;
         let activeProfileTab = 'posts';
         let isAdminLoggedIn = localStorage.getItem('zp_admin') === 'true';
@@ -561,46 +470,33 @@
         function saveDataToStorage() {
             localStorage.setItem('zp_users', JSON.stringify(users));
             localStorage.setItem('zp_posts', JSON.stringify(posts));
-            if(currentUser) localStorage.setItem('zp_current_user', currentUser);
+            localStorage.setItem('zp_current_user', currentUser);
             localStorage.setItem('zp_admin', isAdminLoggedIn);
         }
 
         window.onload = function() {
-            if (currentUser && users[currentUser]) {
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('app-container').style.display = 'flex';
-                renderStories();
-                renderFeed();
-                openProfile(currentUser);
-            }
+            if (!users[currentUser]) currentUser = 'kuzeyfe';
+            renderStories();
+            renderFeed();
+            openProfile(currentUser);
         };
 
-        function switchAuthView(type) {
-            if (type === 'login') {
-                document.getElementById('signup-box').style.display = 'none';
-                document.getElementById('signup-switch').style.display = 'none';
-                document.getElementById('login-box').style.display = 'block';
-                document.getElementById('login-switch').style.display = 'block';
-            } else {
-                document.getElementById('login-box').style.display = 'none';
-                document.getElementById('login-switch').style.display = 'none';
-                document.getElementById('signup-box').style.display = 'block';
-                document.getElementById('signup-switch').style.display = 'block';
-            }
+        function openRegisterModal() {
+            closeSettingsMenu();
+            document.getElementById('register-modal').style.display = 'flex';
         }
 
-        function registerUser() {
+        function closeRegisterModal() {
+            document.getElementById('register-modal').style.display = 'none';
+        }
+
+        function registerUserModal() {
             const fullName = document.getElementById('reg-fullname').value.trim();
             const username = document.getElementById('reg-username').value.trim().toLowerCase();
             const password = document.getElementById('reg-password').value.trim();
 
             if (!fullName || !username || !password) {
                 alert("Lütfen tüm alanları doldurun!");
-                return;
-            }
-
-            if (users[username]) {
-                alert("Bu kullanıcı adı zaten alınmış!");
                 return;
             }
 
@@ -616,42 +512,11 @@
 
             currentUser = username;
             saveDataToStorage();
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('app-container').style.display = 'flex';
+            closeRegisterModal();
             renderStories();
             renderFeed();
             openProfile(currentUser);
-            alert("Hesabınız başarıyla oluşturuldu!");
-        }
-
-        function loginUser() {
-            const username = document.getElementById('login-username').value.trim().toLowerCase();
-            const password = document.getElementById('login-password').value.trim();
-
-            if (!username || !password) {
-                alert("Lütfen kullanıcı adı ve şifrenizi girin!");
-                return;
-            }
-
-            if (users[username] && users[username].password === password) {
-                currentUser = username;
-                saveDataToStorage();
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('app-container').style.display = 'flex';
-                renderStories();
-                renderFeed();
-                openProfile(currentUser);
-            } else {
-                alert("Kullanıcı adı veya şifre hatalı!");
-            }
-        }
-
-        function logoutUser() {
-            currentUser = null;
-            localStorage.removeItem('zp_current_user');
-            closeSettingsMenu();
-            document.getElementById('app-container').style.display = 'none';
-            document.getElementById('auth-screen').style.display = 'flex';
+            alert("Hesap başarıyla oluşturuldu ve giriş yapıldı!");
         }
 
         function openCurrentProfile() {
@@ -881,7 +746,7 @@
         function saveProfileChanges() {
             const u = currentUser || 'kuzeyfe';
             users[u].fullName = document.getElementById('edit-fullname-input').value;
-            users[u].bio = document.getElementById('edit-bio-input-value') ? document.getElementById('edit-bio-input-value').value : document.getElementById('edit-bio-input').value;
+            users[u].bio = document.getElementById('edit-bio-input').value;
             saveDataToStorage();
             closeEditProfileModal();
             openProfile(u);
