@@ -54,9 +54,8 @@ main{padding:28px 0 60px}.hero{display:grid;grid-template-columns:1.05fr .95fr;g
   Service role/secret key'i kesinlikle buraya yazmayın.
 */
 const SUPABASE_URL = "https://nrmcekxsjibaitwleepb.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "PUBLISHABLE_KEY_BURAYA";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_7Dwtq45AOQgM6nuwuHe6qQ_ho_LDu7n";
 let db = null, isLogin = false, currentUser = null;
-
 const $ = id => document.getElementById(id);
 const status = (id, message, show=true) => { const el=$(id); el.textContent=message; el.classList.toggle("show",show); };
 function escapeHtml(value){return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
