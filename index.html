@@ -9,7 +9,7 @@
 :root{color-scheme:dark;--bg:#080b14;--panel:#101729;--panel2:#151f35;--line:#26334d;--text:#f5f7ff;--muted:#9eacc5;--cyan:#00e5ff;--blue:#397dff;--pink:#ff3eb5}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 8% 0%,#13264a 0,transparent 38%),radial-gradient(ellipse at 92% 12%,#35143b 0,transparent 30%),var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}button,input,textarea{font:inherit}button{cursor:pointer}.wrap{width:min(1120px,calc(100% - 28px));margin:auto}
 header{position:sticky;top:0;z-index:5;background:#080b14ed;border-bottom:1px solid var(--line);backdrop-filter:blur(16px)}.top{height:68px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px;font-size:1.2rem;font-weight:900;letter-spacing:.3px}.mark{width:39px;height:39px;border-radius:13px;display:grid;place-items:center;color:#06101b;font-weight:1000;background:linear-gradient(135deg,var(--cyan),var(--blue) 55%,var(--pink));box-shadow:0 0 26px #00e5ff2b}.gradient{background:linear-gradient(90deg,var(--cyan),#9b9bff,var(--pink));background-clip:text;color:transparent}
-main{padding:28px 0 60px}.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center;padding:22px 0 32px}.eyebrow{font-size:.76rem;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);font-weight:850}h1{font-size:clamp(2.4rem,6vw,4.6rem);line-height:1.02;letter-spacing:-2px;margin:12px 0 18px}.lead{max-width:560px;color:var(--muted);font-size:1.07rem}.panel,.post,.auth-card{background:linear-gradient(145deg,#121c30f5,#0d1220f5);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 50px #0003}.auth-card{padding:23px}.auth-card h2{margin:0 0 4px}.sub{color:var(--muted);margin:0 0 15px}.field{display:grid;gap:7px;margin:13px 0}.field label{font-size:.9rem;color:#d9e2f4}.field input,.composer textarea{width:100%;padding:12px 13px;background:#080e1b;border:1px solid #2b3852;border-radius:12px;color:var(--text);outline:none}.field input:focus,.composer textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #00e5ff1b}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:850}.primary{color:#06101b;background:linear-gradient(100deg,var(--cyan),#8ba0ff)}.secondary{color:var(--text);background:#202c43;border:1px solid #34425c}.status{display:none;margin-top:12px;padding:10px 12px;border-radius:12px;background:#101c30;color:#d8f6ff;overflow-wrap:anywhere}.status.show{display:block}.small{font-size:.83rem;color:var(--muted)}.hidden{display:none!important}
+main{padding:28px 0 60px}.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center;padding:22px 0 32px}.eyebrow{font-size:.76rem;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);font-weight:850}h1{font-size:clamp(2.4rem,6vw,4.6rem);line-height:1.02;letter-spacing:-2px;margin:12px 0 18px}.lead{max-width:560px;color:var(--muted);font-size:1.07rem}.panel,.post,.auth-card{background:linear-gradient(145deg,#121c30f5,#0d1220f5);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 50px #0003}.auth-card{padding:23px}.auth-card h2{margin:0 0 4px}.sub{color:var(--muted);margin:0 0 15px}.field{display:grid;gap:7px;margin:13px 0}.field label{font-size:.9rem;color:#d9e2f4}.field input,.field textarea,.composer textarea{width:100%;padding:12px 13px;background:#080e1b;border:1px solid #2b3852;border-radius:12px;color:var(--text);outline:none}.field textarea{min-height:100px;resize:vertical}.profile-card{padding:20px;margin-bottom:18px}.profile-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.profile-avatar{width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid var(--cyan);background:#18253c}.profile-top h3{margin:0}.profile-top p{margin:3px 0;color:var(--muted)}.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.profile-grid .wide{grid-column:1/-1}.nav-row{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}.nav-row .btn.active{outline:2px solid var(--cyan);outline-offset:1px}.field input:focus,.composer textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #00e5ff1b}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:850}.primary{color:#06101b;background:linear-gradient(100deg,var(--cyan),#8ba0ff)}.secondary{color:var(--text);background:#202c43;border:1px solid #34425c}.status{display:none;margin-top:12px;padding:10px 12px;border-radius:12px;background:#101c30;color:#d8f6ff;overflow-wrap:anywhere}.status.show{display:block}.small{font-size:.83rem;color:var(--muted)}.hidden{display:none!important}
 .section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:20px 0 14px}.section-title h2{margin:0;font-size:1.45rem}.section-title p{margin:3px 0 0;color:var(--muted);font-size:.9rem}.pill{border:1px solid #284a72;background:#10213b;color:#dffaff;border-radius:999px;padding:7px 12px;font-size:.85rem}
 .app-grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px}.post{padding:18px;margin-bottom:14px}.post-head{display:flex;align-items:center;gap:11px}.avatar{width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--cyan),var(--pink));color:#08101d;font-weight:950}.post-head strong{display:block}.post-head small{color:var(--muted)}.post p{white-space:pre-wrap;overflow-wrap:anywhere;color:#dbe3f5}.post-actions{display:flex;gap:10px;align-items:center;border-top:1px solid var(--line);padding-top:12px}.text-btn{background:transparent;border:0;color:#cbd7ec;padding:5px 0}.side{padding:18px;height:max-content}.side h3{margin:0 0 8px}.side li{margin:8px 0;color:var(--muted)}.composer{padding:18px;margin-bottom:15px}.composer textarea{min-height:95px;resize:vertical}.composer-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}.empty{border:1px dashed #35435d;border-radius:18px;padding:24px;color:var(--muted);text-align:center}.userbar{display:flex;align-items:center;gap:10px}.userbar span{color:var(--muted);font-size:.9rem}footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:.85rem}
 @media(max-width:780px){.hero{grid-template-columns:1fr;padding-top:8px}.app-grid{grid-template-columns:1fr}.side{order:2}.top{height:62px}.brand{font-size:1.05rem}main{padding-top:15px}h1{letter-spacing:-1px}.auth-card{padding:18px}.userbar span{display:none}}
@@ -38,11 +38,30 @@ main{padding:28px 0 60px}.hero{display:grid;grid-template-columns:1.05fr .95fr;g
     </section>
   </section>
   <section id="appArea" class="hidden">
+    <div class="nav-row"><button class="btn secondary active" id="feedTab" type="button">Akış</button><button class="btn secondary" id="profileTab" type="button">Profilim</button></div>
+    <section id="profileArea" class="panel profile-card hidden">
+      <div class="profile-top">
+        <img id="profileAvatar" class="profile-avatar" alt="Profil fotoğrafı" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' rx='50' fill='%2318253c'/%3E%3Ctext x='50%25' y='58%25' font-size='38' text-anchor='middle' fill='%2300e5ff' font-family='Arial'%3EZP%3C/text%3E%3C/svg%3E">
+        <div><h3 id="profileHeading">Profilim</h3><p id="profileUsername">@kullanici</p><label class="btn secondary" for="avatarFile">Fotoğraf seç</label><input class="hidden" id="avatarFile" type="file" accept="image/png,image/jpeg,image/webp"></div>
+      </div>
+      <form id="profileForm">
+        <div class="profile-grid">
+          <div class="field"><label for="profileDisplayName">Görünen ad</label><input id="profileDisplayName" maxlength="80" required></div>
+          <div class="field"><label for="profileUsernameInput">Kullanıcı adı</label><input id="profileUsernameInput" minlength="3" maxlength="24" pattern="[A-Za-z0-9_.]+" required></div>
+          <div class="field wide"><label for="profileBio">Biyografi</label><textarea id="profileBio" maxlength="300" placeholder="Kendinden kısaca bahset (en fazla 300 karakter)"></textarea></div>
+        </div>
+        <div class="actions"><button class="btn primary" type="submit" id="saveProfileBtn">Profili kaydet</button></div>
+        <div class="status" id="profileStatus" role="status" aria-live="polite"></div>
+        <p class="small">Profil fotoğrafı yükleme için Supabase Storage'da <strong>avatars</strong> adlı bir bucket ve uygun erişim politikaları gerekir. Henüz ayarlanmadıysa diğer profil alanlarını yine de kaydedebilirsin.</p>
+      </form>
+    </section>
+    <div id="feedArea">
     <section class="section-title"><div><h2>Akışın</h2><p>İlk sürüm: metin gönderileri</p></div><span class="pill">ZP Medya</span></section>
     <div class="app-grid"><div>
       <form class="panel composer" id="postForm"><label for="postText"><strong>Ne paylaşmak istiyorsun?</strong></label><textarea id="postText" maxlength="2000" placeholder="Aklından geçenleri yaz..." required></textarea><div class="composer-row"><span class="small">En fazla 2.000 karakter</span><button class="btn primary" type="submit">Paylaş</button></div><div class="status" id="postStatus" role="status"></div></form>
       <div id="feed"><div class="empty">Gönderiler yükleniyor…</div></div>
-    </div><aside class="panel side"><h3>Sonraki adımlar</h3><ul><li>Profil fotoğrafı ve biyografi</li><li>Takip etme sistemi</li><li>Beğeni ve yorumlar</li><li>Fotoğraf/video paylaşımı</li><li>Hikâyeler ve özel mesajlar</li></ul><p class="small">Bu özellikleri sırayla gerçek veritabanına bağlayacağız.</p></aside></div>
+    </div><aside class="panel side"><h3>Sonraki adımlar</h3><ul><li>Takip etme sistemi</li><li>Beğeni ve yorumlar</li><li>Fotoğraf/video paylaşımı</li><li>Hikâyeler ve özel mesajlar</li></ul><p class="small">Bu özellikleri sırayla gerçek veritabanına bağlayacağız.</p></aside></div>
+    </div>
   </section>
   <section id="welcomeFeed"><div class="section-title"><div><h2>Topluluk akışı</h2><p>Başlangıç ekranı</p></div><span class="pill">Önizleme</span></div><article class="post"><div class="post-head"><div class="avatar">ZP</div><div><strong>ZP Medya</strong><small>Platform duyurusu</small></div></div><p>Yeni ZP Medya deneyiminin temeli burada başlıyor. Hesap sistemi ve gönderi akışı hazırlandıktan sonra diğer özellikleri adım adım ekleyeceğiz.</p></article></section>
 </main>
@@ -55,7 +74,8 @@ main{padding:28px 0 60px}.hero{display:grid;grid-template-columns:1.05fr .95fr;g
 */
 const SUPABASE_URL = "https://nrmcekxsjibaitwleepb.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_7Dwtq45AOQgM6nuwuHe6qQ_ho_LDu7n";
-let db = null, isLogin = false, currentUser = null;
+let db = null, isLogin = false, currentUser = null, currentProfile = null, pendingAvatarFile = null;
+
 const $ = id => document.getElementById(id);
 const status = (id, message, show=true) => { const el=$(id); el.textContent=message; el.classList.toggle("show",show); };
 function escapeHtml(value){return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -79,10 +99,14 @@ function showSignedIn(user){
   $("authCard").classList.add("hidden");
   $("welcomeFeed").classList.add("hidden");
   $("appArea").classList.remove("hidden");
+  $("feedArea").classList.remove("hidden");
+  $("profileArea").classList.add("hidden");
+  $("feedTab").classList.add("active"); $("profileTab").classList.remove("active");
+  loadProfile();
   loadPosts();
 }
 function showSignedOut(){
-  currentUser=null;$("userLabel").textContent="Yeni bir başlangıç";
+  currentUser=null;currentProfile=null;pendingAvatarFile=null;$("userLabel").textContent="Yeni bir başlangıç";
   $("logoutBtn").classList.add("hidden");$("authCard").classList.remove("hidden");
   $("appArea").classList.add("hidden");$("welcomeFeed").classList.remove("hidden");
 }
@@ -127,13 +151,77 @@ $("logoutBtn").addEventListener("click",async()=>{
   if(db) {const {error}=await db.auth.signOut();if(error){alert("Çıkış yapılamadı: "+error.message);return;}}
   showSignedOut();setMode(true);
 });
+
+async function loadProfile(){
+  if(!db || !currentUser) return;
+  status("profileStatus","Profil bilgileri yükleniyor…");
+  const {data,error}=await db.from("profiles").select("id,username,display_name,bio,avatar_url,created_at").eq("id",currentUser.id).maybeSingle();
+  if(error){status("profileStatus","Profil okunamadı: "+error.message);return;}
+  if(!data){
+    status("profileStatus","Profil kaydı bulunamadı. Oturumu kapatıp tekrar giriş yapmayı dene.");return;
+  }
+  currentProfile=data;
+  $("profileHeading").textContent=data.display_name || "Profilim";
+  $("profileUsername").textContent="@"+(data.username || "kullanici");
+  $("profileDisplayName").value=data.display_name || currentUser.user_metadata?.full_name || "";
+  $("profileUsernameInput").value=data.username || currentUser.user_metadata?.username || "";
+  $("profileBio").value=data.bio || "";
+  $("profileAvatar").src=data.avatar_url || defaultAvatar();
+  status("profileStatus","Profil bilgileri yüklendi.",false);
+}
+function defaultAvatar(){
+  return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' rx='50' fill='%2318253c'/%3E%3Ctext x='50%25' y='58%25' font-size='38' text-anchor='middle' fill='%2300e5ff' font-family='Arial'%3EZP%3C/text%3E%3C/svg%3E";
+}
+$("feedTab").addEventListener("click",()=>{
+  $("feedArea").classList.remove("hidden");$("profileArea").classList.add("hidden");
+  $("feedTab").classList.add("active");$("profileTab").classList.remove("active");
+});
+$("profileTab").addEventListener("click",()=>{
+  $("feedArea").classList.add("hidden");$("profileArea").classList.remove("hidden");
+  $("feedTab").classList.remove("active");$("profileTab").classList.add("active");loadProfile();
+});
+$("avatarFile").addEventListener("change",e=>{
+  const file=e.target.files?.[0]; if(!file)return;
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){status("profileStatus","Lütfen JPG, PNG veya WEBP biçiminde bir fotoğraf seç.");return;}
+  if(file.size>3*1024*1024){status("profileStatus","Fotoğraf en fazla 3 MB olabilir.");return;}
+  pendingAvatarFile=file;
+  $("profileAvatar").src=URL.createObjectURL(file);
+  status("profileStatus","Fotoğraf seçildi. Kaydettiğinde yükleme denenecek.");
+});
+$("profileForm").addEventListener("submit",async e=>{
+  e.preventDefault();if(!db||!currentUser)return;
+  const username=$("profileUsernameInput").value.trim().toLowerCase();
+  const display_name=$("profileDisplayName").value.trim();
+  const bio=$("profileBio").value.trim();
+  if(!/^[a-z0-9_.]{3,24}$/.test(username)){status("profileStatus","Kullanıcı adı 3-24 karakter olmalı; harf, rakam, nokta ve alt çizgi kullan.");return;}
+  const btn=$("saveProfileBtn");btn.disabled=true;btn.textContent="Kaydediliyor…";
+  try{
+    let avatar_url=currentProfile?.avatar_url || null;
+    if(pendingAvatarFile){
+      const ext=pendingAvatarFile.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g,"") || "jpg";
+      const path=`${currentUser.id}/avatar-${Date.now()}.${ext}`;
+      const {data:uploadData,error:uploadError}=await db.storage.from("avatars").upload(path,pendingAvatarFile,{upsert:true,contentType:pendingAvatarFile.type});
+      if(uploadError) throw new Error("Profil alanları kaydedilmeden önce fotoğraf yüklenemedi. Supabase Storage'da 'avatars' bucket kurulmalı. Ayrıntı: "+uploadError.message);
+      const {data:urlData}=db.storage.from("avatars").getPublicUrl(uploadData.path);
+      avatar_url=urlData.publicUrl;
+    }
+    const {data,error}=await db.from("profiles").update({username,display_name,bio,avatar_url}).eq("id",currentUser.id).select("id,username,display_name,bio,avatar_url,created_at").single();
+    if(error)throw error;
+    currentProfile=data;pendingAvatarFile=null;$("avatarFile").value="";
+    $("profileHeading").textContent=data.display_name;$("profileUsername").textContent="@"+data.username;
+    $("profileAvatar").src=data.avatar_url || defaultAvatar();$("userLabel").textContent=data.display_name || currentUser.email || "Kullanıcı";
+    status("profileStatus","Profilin başarıyla kaydedildi. ❤️");
+  }catch(err){status("profileStatus",err.message || "Profil kaydedilemedi.");}
+  finally{btn.disabled=false;btn.textContent="Profili kaydet";}
+});
+
 async function loadPosts(){
   if(!db||!currentUser)return;
   $("feed").innerHTML='<div class="empty">Gönderiler yükleniyor…</div>';
   const {data,error}=await db.from("posts").select("id,user_id,content,created_at").order("created_at",{ascending:false}).limit(50);
   if(error){$("feed").innerHTML='<div class="empty">Gönderi tablosu henüz kurulmamış veya erişim politikası eksik. Önce üyelik sistemi çalıştırılabilir; akış için Supabase SQL kurulumu sonraki adım.</div>';return;}
   if(!data?.length){$("feed").innerHTML='<div class="empty">Henüz gönderi yok. İlk paylaşımını yapabilirsin.</div>';return;}
-  $("feed").innerHTML=data.map(p=>`<article class="post"><div class="post-head"><div class="avatar">ZP</div><div><strong>Topluluk üyesi</strong><small>${escapeHtml(new Date(p.created_at).toLocaleString("tr-TR"))}</small></div></div><p>${escapeHtml(p.content)}</p></article>`).join("");
+  $("feed").innerHTML=data.map(p=>`<article class="post"><div class="post-head"><div class="avatar">ZP</div><div><strong>${p.user_id===currentUser?.id ? escapeHtml(currentProfile?.display_name || currentUser?.user_metadata?.full_name || "Sen") : "Topluluk üyesi"}</strong><small>${escapeHtml(new Date(p.created_at).toLocaleString("tr-TR"))}</small></div></div><p>${escapeHtml(p.content)}</p></article>`).join("");
 }
 $("postForm").addEventListener("submit",async e=>{
   e.preventDefault();if(!db||!currentUser)return;
