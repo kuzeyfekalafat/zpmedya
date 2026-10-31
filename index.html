@@ -1,246 +1,63 @@
 <!doctype html>
-<html lang="tr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080b14">
-<title>ZP Medya</title>
+<html lang="tr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#eaf5ff"><title>ZP Medya</title>
 <style>
-:root{color-scheme:dark;--bg:#080b14;--panel:#101729;--panel2:#151f35;--line:#26334d;--text:#f5f7ff;--muted:#9eacc5;--cyan:#00e5ff;--blue:#397dff;--pink:#ff3eb5}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 8% 0%,#13264a 0,transparent 38%),radial-gradient(ellipse at 92% 12%,#35143b 0,transparent 30%),var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}button,input,textarea{font:inherit}button{cursor:pointer}.wrap{width:min(1120px,calc(100% - 28px));margin:auto}
-header{position:sticky;top:0;z-index:5;background:#080b14ed;border-bottom:1px solid var(--line);backdrop-filter:blur(16px)}.top{height:68px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px;font-size:1.2rem;font-weight:900;letter-spacing:.3px}.mark{width:39px;height:39px;border-radius:13px;display:grid;place-items:center;color:#06101b;font-weight:1000;background:linear-gradient(135deg,var(--cyan),var(--blue) 55%,var(--pink));box-shadow:0 0 26px #00e5ff2b}.gradient{background:linear-gradient(90deg,var(--cyan),#9b9bff,var(--pink));background-clip:text;color:transparent}
-main{padding:28px 0 60px}.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center;padding:22px 0 32px}.eyebrow{font-size:.76rem;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);font-weight:850}h1{font-size:clamp(2.4rem,6vw,4.6rem);line-height:1.02;letter-spacing:-2px;margin:12px 0 18px}.lead{max-width:560px;color:var(--muted);font-size:1.07rem}.panel,.post,.auth-card{background:linear-gradient(145deg,#121c30f5,#0d1220f5);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 50px #0003}.auth-card{padding:23px}.auth-card h2{margin:0 0 4px}.sub{color:var(--muted);margin:0 0 15px}.field{display:grid;gap:7px;margin:13px 0}.field label{font-size:.9rem;color:#d9e2f4}.field input,.field textarea,.composer textarea{width:100%;padding:12px 13px;background:#080e1b;border:1px solid #2b3852;border-radius:12px;color:var(--text);outline:none}.field textarea{min-height:100px;resize:vertical}.profile-card{padding:20px;margin-bottom:18px}.profile-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.profile-avatar{width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid var(--cyan);background:#18253c}.profile-top h3{margin:0}.profile-top p{margin:3px 0;color:var(--muted)}.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.profile-grid .wide{grid-column:1/-1}.nav-row{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}.nav-row .btn.active{outline:2px solid var(--cyan);outline-offset:1px}.field input:focus,.composer textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #00e5ff1b}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:850}.primary{color:#06101b;background:linear-gradient(100deg,var(--cyan),#8ba0ff)}.secondary{color:var(--text);background:#202c43;border:1px solid #34425c}.status{display:none;margin-top:12px;padding:10px 12px;border-radius:12px;background:#101c30;color:#d8f6ff;overflow-wrap:anywhere}.status.show{display:block}.small{font-size:.83rem;color:var(--muted)}.hidden{display:none!important}
-.section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:20px 0 14px}.section-title h2{margin:0;font-size:1.45rem}.section-title p{margin:3px 0 0;color:var(--muted);font-size:.9rem}.pill{border:1px solid #284a72;background:#10213b;color:#dffaff;border-radius:999px;padding:7px 12px;font-size:.85rem}
-.app-grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px}.post{padding:18px;margin-bottom:14px}.post-head{display:flex;align-items:center;gap:11px}.avatar{width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--cyan),var(--pink));color:#08101d;font-weight:950}.post-head strong{display:block}.post-head small{color:var(--muted)}.post p{white-space:pre-wrap;overflow-wrap:anywhere;color:#dbe3f5}.post-actions{display:flex;gap:10px;align-items:center;border-top:1px solid var(--line);padding-top:12px}.text-btn{background:transparent;border:0;color:#cbd7ec;padding:5px 0}.side{padding:18px;height:max-content}.side h3{margin:0 0 8px}.side li{margin:8px 0;color:var(--muted)}.composer{padding:18px;margin-bottom:15px}.composer textarea{min-height:95px;resize:vertical}.composer-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}.empty{border:1px dashed #35435d;border-radius:18px;padding:24px;color:var(--muted);text-align:center}.userbar{display:flex;align-items:center;gap:10px}.userbar span{color:var(--muted);font-size:.9rem}footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:.85rem}
-@media(max-width:780px){.hero{grid-template-columns:1fr;padding-top:8px}.app-grid{grid-template-columns:1fr}.side{order:2}.top{height:62px}.brand{font-size:1.05rem}main{padding-top:15px}h1{letter-spacing:-1px}.auth-card{padding:18px}.userbar span{display:none}}
-</style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
+:root{color-scheme:light;--bg:#eaf5ff;--surface:#fff;--line:#dce8f4;--text:#172536;--muted:#708197;--blue:#1687f8;--blue2:#0868d7;--shadow:0 5px 22px #25568712}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}button,input,textarea{font:inherit}button{cursor:pointer}.wrap{width:min(1100px,calc(100% - 28px));margin:auto}
+header{position:sticky;top:0;z-index:5;background:#ffffffef;border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.top{height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px;font-size:1.2rem;font-weight:900;white-space:nowrap}.mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:1000;background:linear-gradient(135deg,#39b7ff,#0878ed);box-shadow:0 5px 14px #1687f82e}.gradient{color:var(--blue)}.userbar{display:flex;align-items:center;gap:10px}.userbar span{color:var(--muted);font-size:.9rem;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+main{padding:20px 0 50px}.hero{display:grid;grid-template-columns:1fr 390px;gap:28px;align-items:center;padding:15px 0 25px}.intro{padding:18px 8px}.eyebrow{font-size:.76rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue2);font-weight:850}h1{font-size:clamp(2.3rem,5vw,4rem);line-height:1.04;letter-spacing:-2px;margin:12px 0 16px}.lead{max-width:540px;color:#60758c;font-size:1.05rem}
+.panel,.post,.auth-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.auth-card{padding:22px}.auth-card h2{margin:0 0 4px}.sub{color:var(--muted);margin:0 0 15px}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:.88rem;color:#42566d;font-weight:650}.field input,.field textarea,.composer textarea{width:100%;padding:12px 13px;background:#fbfdff;border:1px solid #d5e2ef;border-radius:11px;color:var(--text);outline:none}.field textarea{min-height:96px;resize:vertical}.field input:focus,.field textarea:focus,.composer textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1687f81c}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.btn{border:0;border-radius:10px;padding:10px 15px;font-weight:800}.primary{color:#fff;background:var(--blue)}.primary:hover{background:var(--blue2)}.secondary{color:#24435f;background:#f1f7fd;border:1px solid #d9e7f5}.status{display:none;margin-top:11px;padding:10px 12px;border-radius:10px;background:#edf7ff;color:#155a93;overflow-wrap:anywhere;border:1px solid #d5eaff}.status.show{display:block}.small{font-size:.82rem;color:var(--muted)}.hidden{display:none!important}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:18px 0 13px}.section-title h2{margin:0;font-size:1.3rem}.section-title p{margin:3px 0 0;color:var(--muted);font-size:.88rem}.pill{border:1px solid #cde5ff;background:#f5faff;color:#1767ad;border-radius:999px;padding:6px 11px;font-size:.82rem;font-weight:700}
+.nav-row{display:flex;gap:8px;margin:0 0 14px;padding:5px;background:#dfefff;border-radius:13px;width:max-content;max-width:100%}.nav-row .btn.active{background:#fff;color:var(--blue2);box-shadow:0 2px 7px #326aa312}
+.profile-card{padding:20px;margin-bottom:18px}.profile-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}.profile-avatar{width:82px;height:82px;border-radius:50%;object-fit:cover;border:3px solid #cce8ff;background:#edf7ff;padding:2px}.profile-top h3{margin:0}.profile-top p{margin:3px 0 8px;color:var(--muted)}.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.profile-grid .wide{grid-column:1/-1}
+.app-grid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:18px;align-items:start}.composer{padding:17px;margin-bottom:14px}.composer textarea{min-height:88px;resize:vertical;margin-top:8px}.composer-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}
+.post{padding:17px;margin-bottom:14px;overflow:hidden}.post-head{display:flex;align-items:center;gap:11px}.avatar{width:43px;height:43px;flex:none;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#39b7ff,#0878ed);color:#fff;font-weight:950;border:2px solid #d8edff}.post-head strong{display:block;font-size:.94rem}.post-head small{display:block;color:var(--muted);font-size:.78rem}.post p{white-space:pre-wrap;overflow-wrap:anywhere;color:#263d53;margin:15px 0 13px}.post-actions{display:flex;gap:18px;align-items:center;border-top:1px solid #edf2f8;padding-top:10px}.text-btn{background:transparent;border:0;color:#526b83;padding:4px 0;font-weight:700}.text-btn:hover{color:var(--blue)}.side{padding:17px;height:max-content}.side h3{margin:0 0 8px;font-size:1rem}.side li{margin:8px 0;color:var(--muted);font-size:.9rem}.empty{border:1px dashed #bfd7ed;border-radius:16px;padding:24px;color:var(--muted);text-align:center;background:#f8fcff}
+footer{border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-size:.83rem;background:#ffffff70}
+@media(max-width:820px){.hero{grid-template-columns:1fr;gap:12px;padding-top:4px}.intro{padding:8px 3px}.app-grid{grid-template-columns:1fr}.side{display:none}.top{height:60px}.brand{font-size:1.08rem}main{padding-top:14px}h1{letter-spacing:-1px}.userbar span{display:none}}
+@media(max-width:520px){.wrap{width:calc(100% - 18px)}h1{font-size:2.45rem}.lead{font-size:.98rem}.auth-card{padding:17px}.profile-card{padding:15px}.profile-grid{grid-template-columns:1fr}.profile-grid .wide{grid-column:auto}.post,.composer{padding:14px}.section-title h2{font-size:1.2rem}.nav-row{width:100%}.nav-row .btn{flex:1}}
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
 <body>
-<header><div class="wrap top">
-  <div class="brand"><div class="mark">ZP</div><span>ZP <span class="gradient">MEDYA</span></span></div>
-  <div class="userbar"><span id="userLabel">Yeni bir başlangıç</span><button id="logoutBtn" class="btn secondary hidden" type="button">Çıkış</button></div>
-</div></header>
+<header><div class="wrap top"><div class="brand"><div class="mark">ZP</div><span>ZP <span class="gradient">MEDYA</span></span></div><div class="userbar"><span id="userLabel">Yeni bir başlangıç</span><button id="logoutBtn" class="btn secondary hidden" type="button">Çıkış</button></div></div></header>
 <main class="wrap">
-  <section class="hero">
-    <div><div class="eyebrow">Yeni nesil sosyal platform</div><h1>Paylaş.<br>Keşfet.<br><span class="gradient">Bağlantı kur.</span></h1><p class="lead">ZP Medya'yı birlikte sıfırdan kuruyoruz. Önce güvenli hesap sistemi ve temel akış; ardından profiller, takip, hikâyeler ve mesajlaşma.</p></div>
-    <section class="auth-card" id="authCard">
-      <h2 id="authTitle">ZP Medya'ya katıl</h2><p class="sub" id="authSubtitle">E-posta adresinle hesap oluştur.</p>
-      <form id="authForm">
-        <div class="field" id="nameField"><label for="fullName">Adın</label><input id="fullName" autocomplete="name" maxlength="80" placeholder="Adın ve soyadın"></div>
-        <div class="field" id="usernameField"><label for="username">Kullanıcı adı</label><input id="username" autocomplete="username" minlength="3" maxlength="24" pattern="[A-Za-z0-9_.]+" placeholder="ornek_kullanici" title="Harf, rakam, nokta ve alt çizgi kullan"></div>
-        <div class="field"><label for="email">E-posta</label><input id="email" type="email" autocomplete="email" required placeholder="ornek@eposta.com"></div>
-        <div class="field"><label for="password">Şifre</label><input id="password" type="password" autocomplete="current-password" minlength="8" required placeholder="En az 8 karakter"></div>
-        <div class="actions"><button class="btn primary" id="submitBtn" type="submit">Hesap oluştur</button><button class="btn secondary" id="switchBtn" type="button">Giriş yap</button></div>
-      </form>
-      <div class="status" id="authStatus" role="status" aria-live="polite"></div>
-      <p class="small">Şifreler bu sayfada veya localStorage'da tutulmaz; kimlik doğrulama Supabase üzerinden yapılır.</p>
-    </section>
-  </section>
-  <section id="appArea" class="hidden">
-    <div class="nav-row"><button class="btn secondary active" id="feedTab" type="button">Akış</button><button class="btn secondary" id="profileTab" type="button">Profilim</button></div>
-    <section id="profileArea" class="panel profile-card hidden">
-      <div class="profile-top">
-        <img id="profileAvatar" class="profile-avatar" alt="Profil fotoğrafı" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' rx='50' fill='%2318253c'/%3E%3Ctext x='50%25' y='58%25' font-size='38' text-anchor='middle' fill='%2300e5ff' font-family='Arial'%3EZP%3C/text%3E%3C/svg%3E">
-        <div><h3 id="profileHeading">Profilim</h3><p id="profileUsername">@kullanici</p><label class="btn secondary" for="avatarFile">Fotoğraf seç</label><input class="hidden" id="avatarFile" type="file" accept="image/png,image/jpeg,image/webp"></div>
-      </div>
-      <form id="profileForm">
-        <div class="profile-grid">
-          <div class="field"><label for="profileDisplayName">Görünen ad</label><input id="profileDisplayName" maxlength="80" required></div>
-          <div class="field"><label for="profileUsernameInput">Kullanıcı adı</label><input id="profileUsernameInput" minlength="3" maxlength="24" pattern="[A-Za-z0-9_.]+" required></div>
-          <div class="field wide"><label for="profileBio">Biyografi</label><textarea id="profileBio" maxlength="300" placeholder="Kendinden kısaca bahset (en fazla 300 karakter)"></textarea></div>
-        </div>
-        <div class="actions"><button class="btn primary" type="submit" id="saveProfileBtn">Profili kaydet</button></div>
-        <div class="status" id="profileStatus" role="status" aria-live="polite"></div>
-        <p class="small">Profil fotoğrafı yükleme için Supabase Storage'da <strong>avatars</strong> adlı bir bucket ve uygun erişim politikaları gerekir. Henüz ayarlanmadıysa diğer profil alanlarını yine de kaydedebilirsin.</p>
-      </form>
-    </section>
-    <div id="feedArea">
-    <section class="section-title"><div><h2>Akışın</h2><p>İlk sürüm: metin gönderileri</p></div><span class="pill">ZP Medya</span></section>
-    <div class="app-grid"><div>
-      <form class="panel composer" id="postForm"><label for="postText"><strong>Ne paylaşmak istiyorsun?</strong></label><textarea id="postText" maxlength="2000" placeholder="Aklından geçenleri yaz..." required></textarea><div class="composer-row"><span class="small">En fazla 2.000 karakter</span><button class="btn primary" type="submit">Paylaş</button></div><div class="status" id="postStatus" role="status"></div></form>
-      <div id="feed"><div class="empty">Gönderiler yükleniyor…</div></div>
-    </div><aside class="panel side"><h3>Sonraki adımlar</h3><ul><li>Takip etme sistemi</li><li>Beğeni ve yorumlar</li><li>Fotoğraf/video paylaşımı</li><li>Hikâyeler ve özel mesajlar</li></ul><p class="small">Bu özellikleri sırayla gerçek veritabanına bağlayacağız.</p></aside></div>
-    </div>
-  </section>
-  <section id="welcomeFeed"><div class="section-title"><div><h2>Topluluk akışı</h2><p>Başlangıç ekranı</p></div><span class="pill">Önizleme</span></div><article class="post"><div class="post-head"><div class="avatar">ZP</div><div><strong>ZP Medya</strong><small>Platform duyurusu</small></div></div><p>Yeni ZP Medya deneyiminin temeli burada başlıyor. Hesap sistemi ve gönderi akışı hazırlandıktan sonra diğer özellikleri adım adım ekleyeceğiz.</p></article></section>
-</main>
-<footer><div class="wrap">© <span id="year"></span> ZP Medya · Yeni başlangıç, sağlam temel.</div></footer>
+<section class="hero" id="hero"><div class="intro"><div class="eyebrow">Yeni nesil sosyal platform</div><h1>Paylaş.<br>Keşfet.<br><span class="gradient">Bağlantı kur.</span></h1><p class="lead">ZP Medya'da insanlarla bağlantı kur, düşüncelerini paylaş ve topluluğu keşfet. Yeni özellikleri adım adım birlikte geliştiriyoruz.</p></div>
+<section class="auth-card" id="authCard"><h2 id="authTitle">ZP Medya'ya katıl</h2><p class="sub" id="authSubtitle">E-posta adresinle hesap oluştur.</p><form id="authForm">
+<div class="field" id="nameField"><label for="fullName">Adın</label><input id="fullName" autocomplete="name" maxlength="80" placeholder="Adın ve soyadın"></div>
+<div class="field" id="usernameField"><label for="username">Kullanıcı adı</label><input id="username" autocomplete="username" minlength="3" maxlength="24" pattern="[A-Za-z0-9_.]+" placeholder="ornek_kullanici"></div>
+<div class="field"><label for="email">E-posta</label><input id="email" type="email" autocomplete="email" required placeholder="ornek@eposta.com"></div>
+<div class="field"><label for="password">Şifre</label><input id="password" type="password" autocomplete="current-password" minlength="8" required placeholder="En az 8 karakter"></div>
+<div class="actions"><button class="btn primary" id="submitBtn" type="submit">Hesap oluştur</button><button class="btn secondary" id="switchBtn" type="button">Giriş yap</button></div></form><div class="status" id="authStatus" role="status" aria-live="polite"></div><p class="small">Şifreler bu sayfada veya localStorage'da tutulmaz; kimlik doğrulama Supabase üzerinden yapılır.</p></section></section>
+<section id="appArea" class="hidden"><div class="nav-row"><button class="btn secondary active" id="feedTab" type="button">Ana Sayfa</button><button class="btn secondary" id="profileTab" type="button">Profilim</button></div>
+<section id="profileArea" class="panel profile-card hidden"><div class="profile-top"><img id="profileAvatar" class="profile-avatar" alt="Profil fotoğrafı" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' rx='50' fill='%23eaf5ff'/%3E%3Ctext x='50%25' y='58%25' font-size='38' text-anchor='middle' fill='%231687f8' font-family='Arial'%3EZP%3C/text%3E%3C/svg%3E"><div><h3 id="profileHeading">Profilim</h3><p id="profileUsername">@kullanici</p><label class="btn secondary" for="avatarFile">Fotoğraf seç</label><input class="hidden" id="avatarFile" type="file" accept="image/png,image/jpeg,image/webp"></div></div>
+<form id="profileForm"><div class="profile-grid"><div class="field"><label for="profileDisplayName">Görünen ad</label><input id="profileDisplayName" maxlength="80" required></div><div class="field"><label for="profileUsernameInput">Kullanıcı adı</label><input id="profileUsernameInput" minlength="3" maxlength="24" pattern="[A-Za-z0-9_.]+" required></div><div class="field wide"><label for="profileBio">Biyografi</label><textarea id="profileBio" maxlength="300" placeholder="Kendinden kısaca bahset (en fazla 300 karakter)"></textarea></div></div><div class="actions"><button class="btn primary" type="submit" id="saveProfileBtn">Profili kaydet</button></div><div class="status" id="profileStatus" role="status" aria-live="polite"></div><p class="small">Profil fotoğrafı yüklemek için Supabase Storage'da <strong>avatars</strong> adlı bucket ve uygun erişim politikaları gerekir.</p></form></section>
+<div id="feedArea"><section class="section-title"><div><h2>Ana Sayfa</h2><p>Topluluktan en yeni paylaşımlar</p></div><span class="pill">ZP Medya</span></section><div class="app-grid"><div>
+<form class="panel composer" id="postForm"><label for="postText"><strong>Ne paylaşmak istiyorsun?</strong></label><textarea id="postText" maxlength="2000" placeholder="Aklından geçenleri yaz..." required></textarea><div class="composer-row"><span class="small">En fazla 2.000 karakter</span><button class="btn primary" type="submit">Paylaş</button></div><div class="status" id="postStatus" role="status"></div></form><div id="feed"><div class="empty">Gönderiler yükleniyor…</div></div>
+</div><aside class="panel side"><h3>ZP Medya</h3><p class="small">Bağlantı kurmak ve paylaşmak için yeni bir alan.</p><ul><li>Profilini tamamla</li><li>Gönderilerini paylaş</li><li>Yeni insanlarla tanış</li></ul><p class="small">Beğeni, yorum, takip ve fotoğraf/video özellikleri sonraki geliştirme aşamalarında eklenecek.</p></aside></div></div></section>
+<section id="welcomeFeed"><div class="section-title"><div><h2>Topluluk akışı</h2><p>ZP Medya'ya göz at</p></div><span class="pill">Önizleme</span></div><article class="post"><div class="post-head"><div class="avatar">ZP</div><div><strong>ZP Medya</strong><small>Platform duyurusu</small></div></div><p>ZP Medya'ya hoş geldin! Hesabını oluşturduğunda gönderi paylaşabilir ve profilini düzenleyebilirsin.</p></article></section>
+</main><footer><div class="wrap">© <span id="year"></span> ZP Medya · Birlikte paylaş, birlikte keşfet.</div></footer>
 <script>
-/*
-  ZP MEDYA - ilk sürüm
-  Supabase proje URL'si ve Publishable key aşağıya girilir.
-  Service role/secret key'i kesinlikle buraya yazmayın.
-*/
-const SUPABASE_URL = "https://nrmcekxsjibaitwleepb.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_7Dwtq45AOQgM6nuwuHe6qQ_ho_LDu7n";
-let db = null, isLogin = false, currentUser = null, currentProfile = null, pendingAvatarFile = null;
-
-const $ = id => document.getElementById(id);
-const status = (id, message, show=true) => { const el=$(id); el.textContent=message; el.classList.toggle("show",show); };
-function escapeHtml(value){return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function setMode(login){
-  isLogin=login;
-  $("authTitle").textContent=login?"Tekrar hoş geldin":"ZP Medya'ya katıl";
-  $("authSubtitle").textContent=login?"Hesabına giriş yap.":"E-posta adresinle hesap oluştur.";
-  $("submitBtn").textContent=login?"Giriş yap":"Hesap oluştur";
-  $("switchBtn").textContent=login?"Yeni hesap oluştur":"Zaten hesabım var";
-  $("nameField").classList.toggle("hidden",login);
-  $("usernameField").classList.toggle("hidden",login);
-  $("fullName").required=!login;$("username").required=!login;
-  $("password").autocomplete=login?"current-password":"new-password";
-  status("authStatus","",false);
-}
-function showSignedIn(user){
-  currentUser=user;
-  const name=user.user_metadata?.full_name || user.email || "Kullanıcı";
-  $("userLabel").textContent=name;
-  $("logoutBtn").classList.remove("hidden");
-  $("authCard").classList.add("hidden");
-  $("welcomeFeed").classList.add("hidden");
-  $("appArea").classList.remove("hidden");
-  $("feedArea").classList.remove("hidden");
-  $("profileArea").classList.add("hidden");
-  $("feedTab").classList.add("active"); $("profileTab").classList.remove("active");
-  loadProfile();
-  loadPosts();
-}
-function showSignedOut(){
-  currentUser=null;currentProfile=null;pendingAvatarFile=null;$("userLabel").textContent="Yeni bir başlangıç";
-  $("logoutBtn").classList.add("hidden");$("authCard").classList.remove("hidden");
-  $("appArea").classList.add("hidden");$("welcomeFeed").classList.remove("hidden");
-}
-function readyClient(){
-  if(!window.supabase){status("authStatus","Supabase kitaplığı yüklenemedi. İnternet bağlantısını kontrol et.");return false;}
-  if(!SUPABASE_PUBLISHABLE_KEY || SUPABASE_PUBLISHABLE_KEY==="PUBLISHABLE_KEY_BURAYA"){
-    status("authStatus","Kurulum gerekli: kodun altındaki SUPABASE_PUBLISHABLE_KEY alanına Supabase > API Keys bölümündeki sb_publishable_… anahtarını ekle.");
-    return false;
-  }
-  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-  return true;
-}
+const SUPABASE_URL="https://nrmcekxsjibaitwleepb.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_7Dwtq45AOQgM6nuwuHe6qQ_ho_LDu7n";
+let db=null,isLogin=false,currentUser=null,currentProfile=null,pendingAvatarFile=null;
+const $=id=>document.getElementById(id);
+const status=(id,message,show=true)=>{const el=$(id);el.textContent=message;el.classList.toggle("show",show)};
+function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function setMode(login){isLogin=login;$("authTitle").textContent=login?"Tekrar hoş geldin":"ZP Medya'ya katıl";$("authSubtitle").textContent=login?"Hesabına giriş yap.":"E-posta adresinle hesap oluştur.";$("submitBtn").textContent=login?"Giriş yap":"Hesap oluştur";$("switchBtn").textContent=login?"Yeni hesap oluştur":"Zaten hesabım var";$("nameField").classList.toggle("hidden",login);$("usernameField").classList.toggle("hidden",login);$("fullName").required=!login;$("username").required=!login;$("password").autocomplete=login?"current-password":"new-password";status("authStatus","",false)}
+function showSignedIn(user){currentUser=user;$("userLabel").textContent=user.user_metadata?.full_name||user.email||"Kullanıcı";$("logoutBtn").classList.remove("hidden");$("hero").classList.add("hidden");$("welcomeFeed").classList.add("hidden");$("appArea").classList.remove("hidden");$("feedArea").classList.remove("hidden");$("profileArea").classList.add("hidden");$("feedTab").classList.add("active");$("profileTab").classList.remove("active");loadProfile();loadPosts()}
+function showSignedOut(){currentUser=null;currentProfile=null;pendingAvatarFile=null;$("userLabel").textContent="Yeni bir başlangıç";$("logoutBtn").classList.add("hidden");$("hero").classList.remove("hidden");$("appArea").classList.add("hidden");$("welcomeFeed").classList.remove("hidden")}
+function readyClient(){if(!window.supabase){status("authStatus","Supabase kitaplığı yüklenemedi. İnternet bağlantısını kontrol et.");return false}if(!SUPABASE_PUBLISHABLE_KEY){status("authStatus","Supabase Publishable key alanını kontrol et.");return false}db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);return true}
 $("switchBtn").addEventListener("click",()=>setMode(!isLogin));
-$("authForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  if(!db && !readyClient())return;
-  const email=$("email").value.trim(),password=$("password").value;
-  const submit=$("submitBtn");submit.disabled=true;submit.textContent="İşleniyor…";
-  try{
-    let result;
-    if(isLogin){
-      result=await db.auth.signInWithPassword({email,password});
-    }else{
-      const username=$("username").value.trim().toLowerCase();
-      const fullName=$("fullName").value.trim();
-      if(!/^[a-z0-9_.]{3,24}$/.test(username))throw new Error("Kullanıcı adı 3-24 karakter olmalı; harf, rakam, nokta ve alt çizgi kullan.");
-      result=await db.auth.signUp({email,password,options:{data:{username,full_name:fullName}}});
-      if(!result.error && !result.data.session){
-        status("authStatus","Kayıt isteği alındı. E-posta doğrulaması açıksa gelen kutunu kontrol et. Doğrulamadan sonra giriş yapabilirsin.");
-        return;
-      }
-    }
-    if(result.error)throw result.error;
-    if(result.data.user && !result.data.session && !isLogin){
-      status("authStatus","Kayıt isteği alındı. E-posta doğrulaması için gelen kutunu kontrol et.");return;
-    }
-    if(result.data.user){showSignedIn(result.data.user);status("postStatus","Giriş başarılı.",true);}
-  }catch(err){status("authStatus",err.message||"İşlem tamamlanamadı.");}
-  finally{submit.disabled=false;submit.textContent=isLogin?"Giriş yap":"Hesap oluştur";}
-});
-$("logoutBtn").addEventListener("click",async()=>{
-  if(db) {const {error}=await db.auth.signOut();if(error){alert("Çıkış yapılamadı: "+error.message);return;}}
-  showSignedOut();setMode(true);
-});
-
-async function loadProfile(){
-  if(!db || !currentUser) return;
-  status("profileStatus","Profil bilgileri yükleniyor…");
-  const {data,error}=await db.from("profiles").select("id,username,display_name,bio,avatar_url,created_at").eq("id",currentUser.id).maybeSingle();
-  if(error){status("profileStatus","Profil okunamadı: "+error.message);return;}
-  if(!data){
-    status("profileStatus","Profil kaydı bulunamadı. Oturumu kapatıp tekrar giriş yapmayı dene.");return;
-  }
-  currentProfile=data;
-  $("profileHeading").textContent=data.display_name || "Profilim";
-  $("profileUsername").textContent="@"+(data.username || "kullanici");
-  $("profileDisplayName").value=data.display_name || currentUser.user_metadata?.full_name || "";
-  $("profileUsernameInput").value=data.username || currentUser.user_metadata?.username || "";
-  $("profileBio").value=data.bio || "";
-  $("profileAvatar").src=data.avatar_url || defaultAvatar();
-  status("profileStatus","Profil bilgileri yüklendi.",false);
-}
-function defaultAvatar(){
-  return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' rx='50' fill='%2318253c'/%3E%3Ctext x='50%25' y='58%25' font-size='38' text-anchor='middle' fill='%2300e5ff' font-family='Arial'%3EZP%3C/text%3E%3C/svg%3E";
-}
-$("feedTab").addEventListener("click",()=>{
-  $("feedArea").classList.remove("hidden");$("profileArea").classList.add("hidden");
-  $("feedTab").classList.add("active");$("profileTab").classList.remove("active");
-});
-$("profileTab").addEventListener("click",()=>{
-  $("feedArea").classList.add("hidden");$("profileArea").classList.remove("hidden");
-  $("feedTab").classList.remove("active");$("profileTab").classList.add("active");loadProfile();
-});
-$("avatarFile").addEventListener("change",e=>{
-  const file=e.target.files?.[0]; if(!file)return;
-  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){status("profileStatus","Lütfen JPG, PNG veya WEBP biçiminde bir fotoğraf seç.");return;}
-  if(file.size>3*1024*1024){status("profileStatus","Fotoğraf en fazla 3 MB olabilir.");return;}
-  pendingAvatarFile=file;
-  $("profileAvatar").src=URL.createObjectURL(file);
-  status("profileStatus","Fotoğraf seçildi. Kaydettiğinde yükleme denenecek.");
-});
-$("profileForm").addEventListener("submit",async e=>{
-  e.preventDefault();if(!db||!currentUser)return;
-  const username=$("profileUsernameInput").value.trim().toLowerCase();
-  const display_name=$("profileDisplayName").value.trim();
-  const bio=$("profileBio").value.trim();
-  if(!/^[a-z0-9_.]{3,24}$/.test(username)){status("profileStatus","Kullanıcı adı 3-24 karakter olmalı; harf, rakam, nokta ve alt çizgi kullan.");return;}
-  const btn=$("saveProfileBtn");btn.disabled=true;btn.textContent="Kaydediliyor…";
-  try{
-    let avatar_url=currentProfile?.avatar_url || null;
-    if(pendingAvatarFile){
-      const ext=pendingAvatarFile.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g,"") || "jpg";
-      const path=`${currentUser.id}/avatar-${Date.now()}.${ext}`;
-      const {data:uploadData,error:uploadError}=await db.storage.from("avatars").upload(path,pendingAvatarFile,{upsert:true,contentType:pendingAvatarFile.type});
-      if(uploadError) throw new Error("Profil alanları kaydedilmeden önce fotoğraf yüklenemedi. Supabase Storage'da 'avatars' bucket kurulmalı. Ayrıntı: "+uploadError.message);
-      const {data:urlData}=db.storage.from("avatars").getPublicUrl(uploadData.path);
-      avatar_url=urlData.publicUrl;
-    }
-    const {data,error}=await db.from("profiles").update({username,display_name,bio,avatar_url}).eq("id",currentUser.id).select("id,username,display_name,bio,avatar_url,created_at").single();
-    if(error)throw error;
-    currentProfile=data;pendingAvatarFile=null;$("avatarFile").value="";
-    $("profileHeading").textContent=data.display_name;$("profileUsername").textContent="@"+data.username;
-    $("profileAvatar").src=data.avatar_url || defaultAvatar();$("userLabel").textContent=data.display_name || currentUser.email || "Kullanıcı";
-    status("profileStatus","Profilin başarıyla kaydedildi. ❤️");
-  }catch(err){status("profileStatus",err.message || "Profil kaydedilemedi.");}
-  finally{btn.disabled=false;btn.textContent="Profili kaydet";}
-});
-
-async function loadPosts(){
-  if(!db||!currentUser)return;
-  $("feed").innerHTML='<div class="empty">Gönderiler yükleniyor…</div>';
-  const {data,error}=await db.from("posts").select("id,user_id,content,created_at").order("created_at",{ascending:false}).limit(50);
-  if(error){$("feed").innerHTML='<div class="empty">Gönderi tablosu henüz kurulmamış veya erişim politikası eksik. Önce üyelik sistemi çalıştırılabilir; akış için Supabase SQL kurulumu sonraki adım.</div>';return;}
-  if(!data?.length){$("feed").innerHTML='<div class="empty">Henüz gönderi yok. İlk paylaşımını yapabilirsin.</div>';return;}
-  $("feed").innerHTML=data.map(p=>`<article class="post"><div class="post-head"><div class="avatar">ZP</div><div><strong>${p.user_id===currentUser?.id ? escapeHtml(currentProfile?.display_name || currentUser?.user_metadata?.full_name || "Sen") : "Topluluk üyesi"}</strong><small>${escapeHtml(new Date(p.created_at).toLocaleString("tr-TR"))}</small></div></div><p>${escapeHtml(p.content)}</p></article>`).join("");
-}
-$("postForm").addEventListener("submit",async e=>{
-  e.preventDefault();if(!db||!currentUser)return;
-  const content=$("postText").value.trim();if(!content)return;
-  const button=e.submitter;button.disabled=true;
-  const {error}=await db.from("posts").insert({user_id:currentUser.id,content});
-  button.disabled=false;
-  if(error){status("postStatus","Gönderi eklenemedi. posts tablosu ve RLS politikaları henüz kurulmamış olabilir.");return;}
-  $("postText").value="";status("postStatus","Gönderin paylaşıldı.");await loadPosts();
-});
-async function init(){
-  $("year").textContent=new Date().getFullYear();
-  if(!readyClient())return;
-  const {data:{session},error}=await db.auth.getSession();
-  if(error){status("authStatus",error.message);return;}
-  if(session?.user)showSignedIn(session.user);else showSignedOut();
-  db.auth.onAuthStateChange((_event,session)=>{if(session?.user)showSignedIn(session.user);else showSignedOut();});
-}
+$("authForm").addEventListener("submit",async e=>{e.preventDefault();if(!db&&!readyClient())return;const email=$("email").value.trim(),password=$("password").value,submit=$("submitBtn");submit.disabled=true;submit.textContent="İşleniyor…";try{let result;if(isLogin)result=await db.auth.signInWithPassword({email,password});else{const username=$("username").value.trim().toLowerCase(),fullName=$("fullName").value.trim();if(!/^[a-z0-9_.]{3,24}$/.test(username))throw new Error("Kullanıcı adı 3-24 karakter olmalı; harf, rakam, nokta ve alt çizgi kullan.");result=await db.auth.signUp({email,password,options:{data:{username,full_name:fullName}}});if(!result.error&&!result.data.session){status("authStatus","Kayıt isteği alındı. E-posta doğrulaması açıksa gelen kutunu kontrol et.");return}}if(result.error)throw result.error;if(result.data.user&&!result.data.session&&!isLogin){status("authStatus","Kayıt isteği alındı. E-posta doğrulaması için gelen kutunu kontrol et.");return}if(result.data.user)showSignedIn(result.data.user)}catch(err){status("authStatus",err.message||"İşlem tamamlanamadı.")}finally{submit.disabled=false;submit.textContent=isLogin?"Giriş yap":"Hesap oluştur"}});
+$("logoutBtn").addEventListener("click",async()=>{if(db){const{error}=await db.auth.signOut();if(error){alert("Çıkış yapılamadı: "+error.message);return}}showSignedOut();setMode(true)});
+async function loadProfile(){if(!db||!currentUser)return;const{data,error}=await db.from("profiles").select("id,username,display_name,bio,avatar_url,created_at").eq("id",currentUser.id).maybeSingle();if(error){status("profileStatus","Profil okunamadı: "+error.message);return}if(!data){status("profileStatus","Profil kaydı bulunamadı. Oturumu kapatıp tekrar giriş yapmayı dene.");return}currentProfile=data;$("profileHeading").textContent=data.display_name||"Profilim";$("profileUsername").textContent="@"+(data.username||"kullanici");$("profileDisplayName").value=data.display_name||currentUser.user_metadata?.full_name||"";$("profileUsernameInput").value=data.username||currentUser.user_metadata?.username||"";$("profileBio").value=data.bio||"";$("profileAvatar").src=data.avatar_url||defaultAvatar();$("userLabel").textContent=data.display_name||currentUser.email||"Kullanıcı"}
+function defaultAvatar(){return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' rx='50' fill='%23eaf5ff'/%3E%3Ctext x='50%25' y='58%25' font-size='38' text-anchor='middle' fill='%231687f8' font-family='Arial'%3EZP%3C/text%3E%3C/svg%3E"}
+$("feedTab").addEventListener("click",()=>{$("feedArea").classList.remove("hidden");$("profileArea").classList.add("hidden");$("feedTab").classList.add("active");$("profileTab").classList.remove("active")});
+$("profileTab").addEventListener("click",()=>{$("feedArea").classList.add("hidden");$("profileArea").classList.remove("hidden");$("feedTab").classList.remove("active");$("profileTab").classList.add("active");loadProfile()});
+$("avatarFile").addEventListener("change",e=>{const file=e.target.files?.[0];if(!file)return;if(!["image/jpeg","image/png","image/webp"].includes(file.type)){status("profileStatus","Lütfen JPG, PNG veya WEBP biçiminde bir fotoğraf seç.");return}if(file.size>3*1024*1024){status("profileStatus","Fotoğraf en fazla 3 MB olabilir.");return}pendingAvatarFile=file;$("profileAvatar").src=URL.createObjectURL(file);status("profileStatus","Fotoğraf seçildi. Kaydettiğinde yükleme denenecek.")});
+$("profileForm").addEventListener("submit",async e=>{e.preventDefault();if(!db||!currentUser)return;const username=$("profileUsernameInput").value.trim().toLowerCase(),display_name=$("profileDisplayName").value.trim(),bio=$("profileBio").value.trim();if(!/^[a-z0-9_.]{3,24}$/.test(username)){status("profileStatus","Kullanıcı adı 3-24 karakter olmalı; harf, rakam, nokta ve alt çizgi kullan.");return}const btn=$("saveProfileBtn");btn.disabled=true;btn.textContent="Kaydediliyor…";try{let avatar_url=currentProfile?.avatar_url||null;if(pendingAvatarFile){const ext=pendingAvatarFile.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg",path=`${currentUser.id}/avatar-${Date.now()}.${ext}`;const{data:uploadData,error:uploadError}=await db.storage.from("avatars").upload(path,pendingAvatarFile,{upsert:true,contentType:pendingAvatarFile.type});if(uploadError)throw new Error("Profil fotoğrafı yüklenemedi: "+uploadError.message);const{data:urlData}=db.storage.from("avatars").getPublicUrl(uploadData.path);avatar_url=urlData.publicUrl}const{data,error}=await db.from("profiles").update({username,display_name,bio,avatar_url}).eq("id",currentUser.id).select("id,username,display_name,bio,avatar_url,created_at").single();if(error)throw error;currentProfile=data;pendingAvatarFile=null;$("avatarFile").value="";$("profileHeading").textContent=data.display_name;$("profileUsername").textContent="@"+data.username;$("profileAvatar").src=data.avatar_url||defaultAvatar();$("userLabel").textContent=data.display_name||currentUser.email||"Kullanıcı";status("profileStatus","Profilin başarıyla kaydedildi. ❤️")}catch(err){status("profileStatus",err.message||"Profil kaydedilemedi.")}finally{btn.disabled=false;btn.textContent="Profili kaydet"}});
+async function loadPosts(){if(!db||!currentUser)return;$("feed").innerHTML='<div class="empty">Gönderiler yükleniyor…</div>';const{data,error}=await db.from("posts").select("id,user_id,content,created_at").order("created_at",{ascending:false}).limit(50);if(error){$("feed").innerHTML='<div class="empty">Gönderiler yüklenemedi. posts tablosunu ve erişim politikalarını kontrol etmek gerekiyor.</div>';return}if(!data?.length){$("feed").innerHTML='<div class="empty">Henüz gönderi yok. İlk paylaşımını yapabilirsin.</div>';return}$("feed").innerHTML=data.map(p=>`<article class="post"><div class="post-head"><div class="avatar">ZP</div><div><strong>${p.user_id===currentUser?.id?escapeHtml(currentProfile?.display_name||currentUser?.user_metadata?.full_name||"Sen"):"Topluluk üyesi"}</strong><small>${escapeHtml(new Date(p.created_at).toLocaleString("tr-TR"))}</small></div></div><p>${escapeHtml(p.content)}</p><div class="post-actions"><button class="text-btn" type="button" title="Beğeni özelliği sonraki aşamada eklenecek">♡ Beğen</button><button class="text-btn" type="button" title="Yorum özelliği sonraki aşamada eklenecek">◯ Yorum</button></div></article>`).join("")}
+$("postForm").addEventListener("submit",async e=>{e.preventDefault();if(!db||!currentUser)return;const content=$("postText").value.trim();if(!content)return;const button=e.submitter;button.disabled=true;button.textContent="Paylaşılıyor…";try{const{error}=await db.from("posts").insert({user_id:currentUser.id,content});if(error)throw error;$("postText").value="";status("postStatus","Gönderin paylaşıldı.");await loadPosts()}catch(err){status("postStatus","Gönderi eklenemedi: "+(err.message||"Bilinmeyen hata"))}finally{button.disabled=false;button.textContent="Paylaş"}});
+async function init(){$("year").textContent=new Date().getFullYear();if(!readyClient())return;const{data:{session},error}=await db.auth.getSession();if(error){status("authStatus",error.message);return}if(session?.user)showSignedIn(session.user);else showSignedOut();db.auth.onAuthStateChange((_event,session)=>{if(session?.user)showSignedIn(session.user);else showSignedOut()})}
 setMode(false);init();
-</script>
-</body>
-</html>
+</script></body></html>
