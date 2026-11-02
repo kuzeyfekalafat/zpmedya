@@ -4,201 +4,230 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050817">
-<title>ZP Medya | Giriş ve Kayıt</title>
+<title>ZP Medya</title>
 <style>
-:root{color-scheme:dark;--bg:#050817;--panel:#09132e;--cyan:#00eaff;--blue:#168bff;--purple:#a000ff;--text:#f6f8ff;--muted:#b5c1df;--line:rgba(123,161,255,.42)}
-*{box-sizing:border-box}
-html{min-height:100%;background:var(--bg)}
-body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:radial-gradient(ellipse at 8% 20%,rgba(0,157,255,.22),transparent 36%),radial-gradient(ellipse at 92% 70%,rgba(163,0,255,.2),transparent 34%),#040713;display:flex;align-items:center;justify-content:center;padding:22px 14px 32px;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(130deg,transparent 35%,rgba(0,220,255,.035),transparent 60%,rgba(183,0,255,.04));}
-.auth-wrap{width:min(100%,560px);position:relative;z-index:1}
-.brand{display:flex;align-items:center;gap:15px;margin:0 auto 20px;max-width:500px}
-.logo{width:76px;height:76px;flex:0 0 76px;border-radius:23px;display:grid;place-items:center;font-size:31px;font-weight:950;letter-spacing:-2px;color:#031126;background:linear-gradient(135deg,#15efff 0%,#168cff 48%,#9a35ff 100%);box-shadow:0 0 20px #00cfff99,0 0 48px #573dff55,inset 0 1px 2px #fff9}
-.brand-name{font-size:clamp(27px,7vw,36px);font-weight:900;letter-spacing:-1.4px;line-height:1.05}.brand-name span{background:linear-gradient(90deg,#14eaff,#b04cff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.tagline{color:var(--muted);font-size:16px;margin-top:8px}
-.panel{position:relative;border:1px solid rgba(98,148,255,.55);border-radius:30px;padding:clamp(24px,6vw,42px);background:linear-gradient(145deg,rgba(14,27,62,.97),rgba(5,10,30,.98) 65%,rgba(25,10,54,.96));box-shadow:0 0 0 1px #142b5b66,inset 0 0 32px #1b4c9a20,0 0 32px #007eff2b;overflow:hidden}
-.panel:before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(145deg,#00eaff,#346dff 38%,#a000ff 75%,#00dfff);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.8}
-.panel:after{content:"";position:absolute;left:-80px;right:-80px;bottom:-110px;height:190px;pointer-events:none;background:radial-gradient(ellipse,#007bff33,transparent 68%);filter:blur(8px)}
-.content{position:relative;z-index:1}
-.eyebrow{font-size:12px;font-weight:900;letter-spacing:4px;color:#15eaff;text-transform:uppercase;margin:2px 0 18px}
-h1{font-size:clamp(32px,8vw,44px);line-height:1.1;letter-spacing:-1.5px;margin:0 0 14px;font-weight:900}
-.description{color:var(--muted);font-size:16px;line-height:1.7;margin:0 0 28px}
-.form-view[hidden]{display:none!important}
-.field{display:block;margin:0 0 18px}
-.field-label{display:block;font-size:14px;color:#dfe7ff;margin:0 0 9px}
-.input-shell{display:flex;align-items:center;gap:12px;min-height:61px;padding:0 16px;border:1px solid var(--line);border-radius:18px;background:rgba(3,9,27,.78);box-shadow:inset 0 1px 10px #0004;transition:.2s}
-.input-shell:focus-within{border-color:#11e7ff;box-shadow:0 0 0 3px #00cfff20,0 0 22px #008dff20}
-.input-icon{width:21px;flex:0 0 21px;color:#45e8ff;font-size:19px;text-align:center}
-input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:white;font:inherit;font-size:16px;padding:17px 0}
-input::placeholder{color:#7784a5}
-.show-pass{border:0;background:transparent;color:#8eeeff;font-size:13px;padding:8px;cursor:pointer}
-.options{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:3px 0 25px;color:var(--muted);font-size:14px}
-.remember{display:flex;align-items:center;gap:9px}.remember input{width:17px;height:17px;accent-color:#04dfff}
-.text-button{border:0;background:none;color:#1ce8ff;font:inherit;font-weight:800;text-decoration:underline;cursor:pointer;padding:4px 0}
-.primary{width:100%;min-height:65px;border:0;border-radius:19px;color:#fff;font-size:19px;font-weight:900;letter-spacing:.1px;background:linear-gradient(100deg,#08e8ef 0%,#078dff 42%,#753dff 73%,#ce00ff 100%);box-shadow:0 0 16px #00d9ff55,0 0 34px #792dff35,inset 0 1px 1px #ffffff88;cursor:pointer;transition:transform .15s,filter .15s}
-.primary:active{transform:scale(.99);filter:brightness(1.12)}.primary:disabled{opacity:.65;cursor:wait}
-.arrow{font-size:24px;margin-left:13px;vertical-align:-1px}
-.divider{display:flex;align-items:center;gap:14px;color:#a9b5d7;margin:25px 0 18px}.divider:before,.divider:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,#7080aa)}
-.socials{display:flex;justify-content:center;gap:16px;margin:0 0 25px}
-.social{width:76px;height:72px;border-radius:20px;border:1px solid #5a6da9;background:linear-gradient(145deg,#13234a,#0b1530);color:#fff;font-size:28px;font-weight:900;display:grid;place-items:center;box-shadow:inset 0 0 16px #1c4e9a22;cursor:pointer}
-.social.google{color:#fff}.social.apple{font-size:30px}.social.facebook{color:#60caff;font-family:Arial,sans-serif}
-.switch{text-align:center;color:#c2cce5;font-size:14px;line-height:1.7;margin:0}
-.switch button{border:0;background:none;color:#15eaff;font:inherit;font-weight:900;cursor:pointer;padding:4px}
-.notice{display:none;margin:0 0 18px;border:1px solid #18dff577;border-radius:13px;background:#062743;color:#dffaff;padding:12px 14px;font-size:14px;line-height:1.5;overflow-wrap:anywhere}.notice.show{display:block}
-.foot{text-align:center;color:#6f7fa8;font-size:10px;letter-spacing:2px;margin:20px 0 0}
-@media(min-width:700px){body{padding:36px 20px}.auth-wrap{width:560px}.logo{width:84px;height:84px;flex-basis:84px}.panel{padding:42px}}
-@media(max-width:360px){body{padding:12px 9px 24px}.panel{padding:23px 18px;border-radius:24px}.logo{width:62px;height:62px;flex-basis:62px;border-radius:19px}.social{width:65px;height:64px}.options{font-size:12px}}
+:root{--bg:#050817;--panel:#0b1230;--panel2:#071025;--cyan:#00eaff;--blue:#168bff;--purple:#a000ff;--text:#f6f8ff;--muted:#aab6d7;--line:#30416f}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0%,#102654 0,transparent 38%),radial-gradient(ellipse at 100% 80%,#210b3c 0,transparent 42%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;min-height:100vh}
+button,input,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+header{display:flex;align-items:center;gap:12px;padding:18px 16px;position:sticky;top:0;z-index:5;background:#050817ed;border-bottom:1px solid #1c2b50;backdrop-filter:blur(12px)}
+.logo-icon{width:54px;height:54px;flex-shrink:0;border-radius:17px;background:linear-gradient(135deg,#00eaff,#168bff 55%,#a000ff);display:grid;place-items:center;color:#06102a;font-size:24px;font-weight:950;box-shadow:0 0 26px #00bfff55}
+.brand-title{font-size:26px;font-weight:950;letter-spacing:-1px}.brand-title span{background:linear-gradient(90deg,var(--cyan),#8b69ff);background-clip:text;color:transparent}.tagline{color:var(--muted);margin-top:2px}.header-actions{margin-left:auto;display:flex;gap:8px}.icon-btn{border:1px solid var(--line);background:#101b3c;color:white;border-radius:13px;padding:10px 12px;font-size:18px}
+main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:640px;margin:18px auto;border:1px solid #2274d5;border-radius:30px;padding:clamp(22px,5vw,40px);background:linear-gradient(145deg,#0d1735,#060b20 70%,#100923);box-shadow:0 0 0 2px #00d9ff16,0 0 35px #006eff22;position:relative;overflow:hidden}.auth-wrap:before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(140deg,#00eaff,#2c6dff,#a000ff);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.eyebrow{color:var(--cyan);font-size:14px;font-weight:900;letter-spacing:5px;text-transform:uppercase;margin:0 0 26px}.auth-wrap h1{font-size:clamp(32px,7vw,48px);letter-spacing:-1.7px;line-height:1.08;margin:0 0 18px}.description{font-size:clamp(17px,4vw,22px);line-height:1.7;color:#b9c4e0;margin:0 0 28px}
+.field{display:block;margin:0 0 22px}.field-label{display:block;margin-bottom:12px;font-size:17px}.input-shell{display:flex;align-items:center;gap:12px;border:1px solid #40517f;border-radius:24px;background:#030a1d;padding:0 18px;min-height:76px;box-shadow:inset 0 0 0 1px #111b3b}.input-shell:focus-within{border-color:var(--cyan);box-shadow:0 0 0 3px #00eaff22}.input-icon{font-size:21px;color:#52eaff;min-width:24px;text-align:center}.input-shell input{width:100%;min-width:0;background:transparent;border:0;outline:0;color:white;font-size:17px;padding:18px 0}.input-shell input::placeholder{color:#7e8bad}.show-pass{background:transparent;border:0;color:#8cefff;white-space:nowrap;font-weight:700}
+.options{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#bac5e2;margin:0 0 26px}.remember{display:flex;align-items:center;gap:10px}.remember input{width:20px;height:20px;accent-color:#00dff4}.text-button{border:0;background:none;color:#28e7ff;text-decoration:underline;font-weight:800;padding:4px 0}
+.primary{width:100%;border:0;border-radius:25px;padding:22px 16px;background:linear-gradient(100deg,#00dbe8,#168bff 54%,#c000f4);color:#fff;font-weight:900;font-size:23px;box-shadow:0 0 30px #008dff45;margin:4px 0 24px}.primary:disabled{opacity:.6}.divider{display:flex;align-items:center;gap:16px;color:#aab6d7;margin:24px 0}.divider:before,.divider:after{content:"";height:1px;background:#536386;flex:1}.socials{display:flex;justify-content:center;gap:18px}.social{width:84px;height:84px;border-radius:28px;border:1px solid #6679b4;background:linear-gradient(145deg,#17264b,#0a1330);color:white;font-size:28px;font-weight:900}.social small{display:block;font-size:10px;font-weight:600;color:#aebbe0;margin-top:2px}.switch{text-align:center;color:#aab6d7;margin-top:28px}.switch button{border:0;background:none;color:var(--cyan);font-weight:800}.notice{display:none;padding:14px 16px;border:1px solid #158c9d;background:#052b40;color:#d7fbff;border-radius:18px;margin-bottom:24px;line-height:1.5}.notice.show{display:block}.notice.error{border-color:#a94864;background:#310f26;color:#ffdce8}
+.home-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px}.side-nav,.composer,.post-card,.empty-card,.profile-card{background:#0a1230dd;border:1px solid #24365f;border-radius:22px;box-shadow:0 12px 34px #0002}.side-nav{padding:12px;height:max-content;position:sticky;top:95px}.nav-btn{width:100%;text-align:left;border:0;border-radius:14px;background:transparent;color:#dce6ff;padding:13px 12px;margin:2px 0;font-weight:750}.nav-btn.active,.nav-btn:hover{background:linear-gradient(90deg,#083f68,#29104a);color:white}.feed-title{font-size:25px;margin:2px 0 16px}.composer{padding:17px;margin-bottom:18px}.composer-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#00eaff,#8d39ff);display:grid;place-items:center;color:#06102a;font-weight:950;overflow:hidden;flex-shrink:0}.avatar img{width:100%;height:100%;object-fit:cover}.composer textarea{width:100%;min-height:100px;resize:vertical;background:#050b20;border:1px solid #293b67;border-radius:16px;color:white;padding:14px;outline:none}.composer textarea:focus{border-color:var(--cyan)}.composer-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;color:var(--muted);font-size:13px}.small-primary{border:0;border-radius:14px;background:linear-gradient(100deg,#00cfe8,#5b40ff,#a000ff);color:white;font-weight:850;padding:12px 18px}.post-card{padding:17px;margin-bottom:15px}.post-head{display:flex;align-items:center;gap:10px}.post-name{font-weight:850}.post-meta{font-size:12px;color:#93a2c8;margin-top:3px}.post-content{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;margin:16px 0}.post-actions{display:flex;gap:8px;border-top:1px solid #25365b;padding-top:12px}.post-actions button{flex:1;border:1px solid #26365c;background:#0b1734;color:#cbd8fa;border-radius:12px;padding:10px}.post-actions button:hover{border-color:#00dff4}.empty-card{padding:28px;text-align:center;color:#aab6d7}.profile-card{padding:20px;margin-bottom:18px;display:flex;align-items:center;gap:15px}.profile-card .avatar{width:64px;height:64px;font-size:22px}.profile-name{font-size:20px;font-weight:900}.profile-handle{color:#9eb0d6;margin-top:4px}.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:6;background:#050817f2;border-top:1px solid #24365f;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom));justify-content:space-around;backdrop-filter:blur(12px)}.bottom-nav button{border:0;background:transparent;color:#b8c5e6;font-size:20px;padding:8px}.bottom-nav button span{display:block;font-size:10px;margin-top:3px}.footer-note{text-align:center;color:#7788ae;font-size:12px;margin:28px 0 0}
+@media(max-width:700px){.home-layout{display:block}.side-nav{display:none}.bottom-nav{display:flex}.header-actions .desktop-only{display:none}.brand-title{font-size:23px}.logo-icon{width:50px;height:50px}.auth-wrap{margin:0 auto}.social{width:76px;height:76px}.options{font-size:14px}.input-shell{min-height:68px;border-radius:22px}.primary{font-size:21px}}
 </style>
 </head>
 <body>
-<main class="auth-wrap">
-  <header class="brand" aria-label="ZP Medya">
-    <div class="logo" aria-hidden="true">ZP</div>
-    <div><div class="brand-name">ZP <span>MEDYA</span></div><div class="tagline">Kendini göster.</div></div>
-  </header>
-  <section class="panel">
-    <div class="content">
-      <div id="notice" class="notice" role="status" aria-live="polite"></div>
-      <section id="loginView" class="form-view">
-        <p class="eyebrow">Topluluğumuza katıl</p>
-        <h1>Tekrar Hoş Geldin.</h1>
-        <p class="description">Bağlantı kur, anılarını paylaş ve kendi dünyanı keşfet.</p>
-        <form id="loginForm">
-          <label class="field"><span class="field-label">E-posta adresi</span><span class="input-shell"><span class="input-icon">✉</span><input id="loginEmail" type="email" autocomplete="email" placeholder="ornek@eposta.com" required></span></label>
-          <label class="field"><span class="field-label">Şifre</span><span class="input-shell"><span class="input-icon">♙</span><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Şifreni gir" required><button class="show-pass" type="button" data-toggle="loginPassword">GÖSTER</button></span></label>
-          <div class="options"><label class="remember"><input type="checkbox" id="rememberMe" checked> Beni hatırla</label><button class="text-button" id="forgotBtn" type="button">Şifremi unuttum?</button></div>
-          <button class="primary" type="submit">Giriş Yap <span class="arrow">›</span></button>
-        </form>
-        <div class="divider">veya</div>
-        <div class="socials" aria-label="Diğer giriş seçenekleri">
-          <button class="social google" type="button" data-provider="google" aria-label="Google ile giriş">G</button>
-          <button class="social apple" type="button" data-provider="apple" aria-label="Apple ile giriş">●</button>
-          <button class="social facebook" type="button" data-provider="facebook" aria-label="Facebook ile giriş">f</button>
-        </div>
-        <p class="switch">Henüz hesabın yok mu? <button type="button" data-switch="signup">Kayıt Ol</button></p>
-      </section>
-      <section id="signupView" class="form-view" hidden>
-        <p class="eyebrow">Yeni bir başlangıç</p>
-        <h1>Aramıza Katıl.</h1>
-        <p class="description">Hesabını oluştur ve ZP Medya topluluğunun bir parçası ol.</p>
-        <form id="signupForm">
-          <label class="field"><span class="field-label">Görünen ad</span><span class="input-shell"><span class="input-icon">♙</span><input id="displayName" type="text" autocomplete="name" placeholder="Nasıl hitap edelim?" required maxlength="60"></span></label>
-          <label class="field"><span class="field-label">E-posta adresi</span><span class="input-shell"><span class="input-icon">✉</span><input id="signupEmail" type="email" autocomplete="email" placeholder="ornek@eposta.com" required></span></label>
-          <label class="field"><span class="field-label">Telefon numarası</span><span class="input-shell"><span class="input-icon">＋</span><input id="phone" type="tel" autocomplete="tel" placeholder="+90 5xx xxx xx xx"></span></label>
-          <label class="field"><span class="field-label">Şifre</span><span class="input-shell"><span class="input-icon">♙</span><input id="signupPassword" type="password" autocomplete="new-password" placeholder="En az 8 karakter" minlength="8" required><button class="show-pass" type="button" data-toggle="signupPassword">GÖSTER</button></span></label>
-          <button class="primary" type="submit">Hesap Oluştur <span class="arrow">›</span></button>
-        </form>
-        <div class="divider">veya</div>
-        <div class="socials" aria-label="Diğer kayıt seçenekleri">
-          <button class="social google" type="button" data-provider="google" aria-label="Google ile devam et">G</button>
-          <button class="social apple" type="button" data-provider="apple" aria-label="Apple ile devam et">●</button>
-          <button class="social facebook" type="button" data-provider="facebook" aria-label="Facebook ile devam et">f</button>
-        </div>
-        <p class="switch">Zaten hesabın var mı? <button type="button" data-switch="login">Giriş Yap</button></p>
-      </section>
-      <section id="resetView" class="form-view" hidden>
-        <p class="eyebrow">Hesap güvenliği</p><h1>Şifreni yenile.</h1>
-        <p class="description">Hesabına bağlı e-posta adresini gir; şifre yenileme bağlantısı göndermeyi deneyelim.</p>
-        <form id="resetForm"><label class="field"><span class="field-label">E-posta adresi</span><span class="input-shell"><span class="input-icon">✉</span><input id="resetEmail" type="email" autocomplete="email" placeholder="ornek@eposta.com" required></span></label><button class="primary" type="submit">Bağlantı Gönder <span class="arrow">›</span></button></form>
-        <p class="switch" style="margin-top:20px"><button type="button" data-switch="login">Giriş ekranına dön</button></p>
-      </section>
+<header>
+  <div class="logo-icon">ZP</div>
+  <div><div class="brand-title">ZP <span>MEDYA</span></div><div class="tagline">Kendini göster.</div></div>
+  <div class="header-actions">
+    <button id="refreshBtn" class="icon-btn hidden" aria-label="Yenile">↻</button>
+    <button id="logoutBtn" class="icon-btn hidden" aria-label="Çıkış yap">⇥</button>
+  </div>
+</header>
+<main>
+  <section id="authSection" class="auth-wrap">
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+    <div id="loginView">
+      <p class="eyebrow">Topluluğumuza katıl</p><h1>Tekrar Hoş Geldin.</h1>
+      <p class="description">Bağlantı kur, anılarını paylaş ve kendi dünyanı keşfet.</p>
+      <form id="loginForm">
+        <label class="field"><span class="field-label">E-posta adresi</span><span class="input-shell"><span class="input-icon">✉</span><input id="loginEmail" type="email" autocomplete="email" placeholder="ornek@eposta.com" required></span></label>
+        <label class="field"><span class="field-label">Şifre</span><span class="input-shell"><span class="input-icon">♙</span><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Şifreni gir" required><button type="button" class="show-pass" data-toggle="loginPassword">GÖSTER</button></span></label>
+        <div class="options"><label class="remember"><input type="checkbox" id="rememberMe" checked> Beni hatırla</label><button class="text-button" type="button" data-switch="reset">Şifremi unuttum?</button></div>
+        <button class="primary" type="submit">Giriş Yap　›</button>
+      </form>
+      <div class="divider">veya</div><div class="socials">
+        <button class="social" type="button" data-provider="google" aria-label="Google ile giriş">G<small>Google</small></button>
+        <button class="social" type="button" data-provider="apple" aria-label="Apple ile giriş">●<small>Apple</small></button>
+        <button class="social" type="button" data-provider="facebook" aria-label="Facebook ile giriş" style="color:#60baff">f<small>Facebook</small></button>
+      </div>
+      <p class="switch">Henüz hesabın yok mu? <button type="button" data-switch="signup">Kayıt Ol</button></p>
+    </div>
+    <div id="signupView" class="hidden">
+      <p class="eyebrow">Yeni bir başlangıç</p><h1>Aramıza Katıl.</h1><p class="description">Hesabını oluştur ve ZP Medya topluluğunun bir parçası ol.</p>
+      <form id="signupForm">
+        <label class="field"><span class="field-label">Görünen ad</span><span class="input-shell"><span class="input-icon">♙</span><input id="signupName" type="text" autocomplete="name" placeholder="Nasıl hitap edelim?" required maxlength="60"></span></label>
+        <label class="field"><span class="field-label">E-posta adresi</span><span class="input-shell"><span class="input-icon">✉</span><input id="signupEmail" type="email" autocomplete="email" placeholder="ornek@eposta.com" required></span></label>
+        <label class="field"><span class="field-label">Telefon numarası</span><span class="input-shell"><span class="input-icon">＋</span><input id="signupPhone" type="tel" autocomplete="tel" placeholder="+90 5xx xxx xx xx"></span></label>
+        <label class="field"><span class="field-label">Şifre</span><span class="input-shell"><span class="input-icon">♙</span><input id="signupPassword" type="password" autocomplete="new-password" placeholder="En az 8 karakter" minlength="8" required><button type="button" class="show-pass" data-toggle="signupPassword">GÖSTER</button></span></label>
+        <button class="primary" type="submit">Hesap Oluştur　›</button>
+      </form>
+      <div class="divider">veya</div><div class="socials">
+        <button class="social" type="button" data-provider="google" aria-label="Google ile kayıt">G<small>Google</small></button>
+        <button class="social" type="button" data-provider="apple" aria-label="Apple ile kayıt">●<small>Apple</small></button>
+        <button class="social" type="button" data-provider="facebook" aria-label="Facebook ile kayıt" style="color:#60baff">f<small>Facebook</small></button>
+      </div>
+      <p class="switch">Zaten hesabın var mı? <button type="button" data-switch="login">Giriş Yap</button></p>
+    </div>
+    <div id="resetView" class="hidden">
+      <p class="eyebrow">Hesap güvenliği</p><h1>Şifreni Yenile.</h1><p class="description">Hesabına bağlı e-posta adresini gir; sıfırlama bağlantısı gönderelim.</p>
+      <form id="resetForm"><label class="field"><span class="field-label">E-posta adresi</span><span class="input-shell"><span class="input-icon">✉</span><input id="resetEmail" type="email" autocomplete="email" placeholder="ornek@eposta.com" required></span></label><button class="primary" type="submit">Sıfırlama Bağlantısı Gönder</button></form>
+      <p class="switch"><button type="button" data-switch="login">Giriş ekranına dön</button></p>
     </div>
   </section>
-  <footer class="foot">ZP MEDYA © 2026</footer>
+
+  <section id="homeSection" class="hidden">
+    <div class="profile-card"><div class="avatar" id="profileAvatar">ZP</div><div><div class="profile-name" id="profileName">ZP Medya üyesi</div><div class="profile-handle" id="profileHandle">@uye</div></div></div>
+    <div class="home-layout">
+      <nav class="side-nav" aria-label="Ana menü">
+        <button class="nav-btn active" data-nav="home">🏠　Ana Sayfa</button><button class="nav-btn" data-nav="explore">🔍　Keşfet</button><button class="nav-btn" data-nav="profile">👤　Profilim</button><button class="nav-btn" data-nav="notifications">🔔　Bildirimler</button><button class="nav-btn" data-nav="messages">💬　Mesajlar</button>
+      </nav>
+      <div>
+        <h2 class="feed-title" id="feedTitle">Ana Sayfa</h2>
+        <div class="composer" id="composer">
+          <div class="composer-head"><div class="avatar" id="composerAvatar">ZP</div><strong id="composerName">Bir şeyler paylaş</strong></div>
+          <form id="postForm"><textarea id="postContent" maxlength="3000" placeholder="Aklından neler geçiyor? Toplulukla paylaş..." required></textarea><div class="composer-bottom"><span id="charCount">0 / 3000</span><button class="small-primary" type="submit">＋ Paylaş</button></div></form>
+        </div>
+        <div id="feed" aria-live="polite"><div class="empty-card">Gönderiler yükleniyor…</div></div>
+      </div>
+    </div>
+  </section>
+  <p class="footer-note">© 2026 ZP Medya · Kendini göster.</p>
 </main>
+<nav id="bottomNav" class="bottom-nav hidden" aria-label="Mobil menü"><button data-nav="home">⌂<span>Ana Sayfa</span></button><button data-nav="explore">⌕<span>Keşfet</span></button><button data-nav="create">＋<span>Paylaş</span></button><button data-nav="notifications">♧<span>Bildirim</span></button><button data-nav="profile">♙<span>Profil</span></button></nav>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-'use strict';
-// Bu değerler mevcut ZP Medya Supabase projesinin tarayıcıda kullanılabilen public anahtarıdır.
-// Supabase service_role anahtarını hiçbir zaman buraya koyma.
-const SUPABASE_URL = 'https://nrmcekxsjibaitwleepb.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_7Dwtq45AOQgM6nuwuHe6qQ_ho_LDu7n';
-let supabaseClient = null;
-try {
-  if (window.supabase && SUPABASE_URL.startsWith('https://') && SUPABASE_ANON_KEY) {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+(() => {
+  'use strict';
+  // Projenin tarayıcıda kullanılabilen publishable/anon anahtarı burada tutulur.
+  // service_role anahtarını asla bu dosyaya eklemeyin.
+  const SUPABASE_URL = 'https://nrmcekxsjibaitwleepb.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_7Dwtq45AOQgM6nuwuHe6qQ_ho_LDu7n';
+  const $ = id => document.getElementById(id);
+  const authSection = $('authSection'), homeSection = $('homeSection'), notice = $('notice');
+  let supabase = null, currentUser = null, currentProfile = null, currentView = 'login', busy = false;
+  const showNotice = (message, isError=false) => { notice.textContent = message; notice.className = 'notice show' + (isError ? ' error' : ''); };
+  const clearNotice = () => { notice.textContent=''; notice.className='notice'; };
+  const readableError = err => {
+    const msg = err?.message || 'Beklenmeyen bir hata oluştu.';
+    if (/invalid login credentials/i.test(msg)) return 'E-posta veya şifre hatalı.';
+    if (/email not confirmed/i.test(msg)) return 'E-posta adresini doğrulaman gerekiyor.';
+    if (/user already registered/i.test(msg)) return 'Bu e-posta adresiyle zaten hesap var. Giriş yapmayı dene.';
+    return msg;
+  };
+  function setBusy(form, state) { busy=state; const btn=form.querySelector('button[type="submit"]'); if(btn){btn.disabled=state;btn.dataset.oldText ||= btn.textContent;btn.textContent=state?'Lütfen bekle…':btn.dataset.oldText;} }
+  function switchView(view) {
+    currentView=view; clearNotice();
+    ['login','signup','reset'].forEach(v => $(v+'View').classList.toggle('hidden',v!==view));
+    authSection.classList.remove('hidden'); homeSection.classList.add('hidden');
+    $('logoutBtn').classList.add('hidden'); $('refreshBtn').classList.add('hidden'); $('bottomNav').classList.add('hidden');
+    window.scrollTo({top:0,behavior:'smooth'});
   }
-} catch (e) { console.error('Supabase başlatılamadı:', e); }
-
-const noticeEl = document.getElementById('notice');
-function showNotice(message, isError=false) {
-  noticeEl.textContent = message;
-  noticeEl.style.background = isError ? '#3a1024' : '#062743';
-  noticeEl.style.borderColor = isError ? '#ff5b8b' : '#18dff577';
-  noticeEl.classList.add('show');
-}
-function clearNotice(){noticeEl.classList.remove('show');noticeEl.textContent='';}
-function showView(view) {
-  clearNotice();
-  for (const id of ['loginView','signupView','resetView']) document.getElementById(id).hidden = id !== view;
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-document.querySelectorAll('[data-switch]').forEach(button => button.addEventListener('click', () => showView(button.dataset.switch === 'signup' ? 'signupView' : 'loginView')));
-document.querySelectorAll('[data-toggle]').forEach(button => button.addEventListener('click', () => {
-  const input = document.getElementById(button.dataset.toggle);
-  input.type = input.type === 'password' ? 'text' : 'password';
-  button.textContent = input.type === 'password' ? 'GÖSTER' : 'GİZLE';
-}));
-document.getElementById('forgotBtn').addEventListener('click', () => showView('resetView'));
-function friendlyError(error) {
-  const msg = (error && error.message) ? error.message : 'İşlem tamamlanamadı.';
-  if (/invalid login credentials/i.test(msg)) return 'E-posta veya şifre yanlış.';
-  if (/email not confirmed/i.test(msg)) return 'E-posta adresini doğrulaman gerekiyor.';
-  if (/user already registered/i.test(msg)) return 'Bu e-posta adresiyle zaten hesap var. Giriş yapmayı dene.';
-  if (/password should be at least/i.test(msg)) return 'Şifren en az 8 karakter olmalı.';
-  return msg;
-}
-document.getElementById('loginForm').addEventListener('submit', async event => {
-  event.preventDefault(); clearNotice();
-  if (!supabaseClient) return showNotice('Supabase bağlantısı başlatılamadı. İnternet bağlantını ve dosyadaki ayarları kontrol et.', true);
-  const button = event.submitter; if (button) button.disabled = true;
-  try {
-    const {data,error} = await supabaseClient.auth.signInWithPassword({
-      email: document.getElementById('loginEmail').value.trim(),
-      password: document.getElementById('loginPassword').value
+  function initials(name){ return (name||'ZP').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase() || 'ZP'; }
+  function safeText(value){ return String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function setAvatar(el,url,name){ el.innerHTML=''; if(url){const img=document.createElement('img');img.src=url;img.alt='Profil fotoğrafı';img.onerror=()=>{el.textContent=initials(name)};el.appendChild(img)}else el.textContent=initials(name); }
+  async function getProfile(user) {
+    const {data,error}=await supabase.from('profiles').select('id,username,display_name,bio,avatar_url,created_at').eq('id',user.id).maybeSingle();
+    if(error) console.warn('Profil okunamadı:',error.message);
+    return data || {id:user.id,username:(user.email||'uye').split('@')[0],display_name:user.user_metadata?.display_name || user.user_metadata?.full_name || (user.email||'ZP Medya üyesi').split('@')[0],avatar_url:null};
+  }
+  async function showHome(user) {
+    currentUser=user; currentProfile=await getProfile(user);
+    authSection.classList.add('hidden'); homeSection.classList.remove('hidden');
+    $('logoutBtn').classList.remove('hidden'); $('refreshBtn').classList.remove('hidden'); $('bottomNav').classList.remove('hidden');
+    const name=currentProfile.display_name || user.user_metadata?.display_name || user.email?.split('@')[0] || 'ZP Medya üyesi';
+    $('profileName').textContent=name; $('profileHandle').textContent='@'+(currentProfile.username || (user.email||'uye').split('@')[0]);
+    $('composerName').textContent=name+' olarak paylaş'; setAvatar($('profileAvatar'),currentProfile.avatar_url,name); setAvatar($('composerAvatar'),currentProfile.avatar_url,name);
+    await loadPosts(); window.scrollTo({top:0,behavior:'smooth'});
+  }
+  async function loadPosts(){
+    const feed=$('feed'); feed.innerHTML='<div class="empty-card">Gönderiler yükleniyor…</div>';
+    const {data,error}=await supabase.from('posts').select('id,user_id,content,created_at').order('created_at',{ascending:false}).limit(50);
+    if(error){feed.innerHTML='<div class="empty-card">Gönderiler yüklenemedi. Veritabanı erişim politikalarını (RLS) kontrol etmemiz gerekiyor.<br><br>'+safeText(error.message)+'</div>';return;}
+    if(!data || data.length===0){feed.innerHTML='<div class="empty-card">Henüz gönderi yok. İlk gönderiyi sen paylaş! ✨</div>';return;}
+    const userIds=[...new Set(data.map(p=>p.user_id).filter(Boolean))];
+    let profiles=[];
+    if(userIds.length){const result=await supabase.from('profiles').select('id,username,display_name,avatar_url').in('id',userIds);if(!result.error)profiles=result.data||[];}
+    const byId=new Map(profiles.map(p=>[p.id,p]));
+    feed.innerHTML='';
+    data.forEach(post=>{
+      const p=byId.get(post.user_id)||{};
+      const name=p.display_name || p.username || (post.user_id===currentUser.id?currentProfile.display_name:'ZP Medya üyesi');
+      const card=document.createElement('article');card.className='post-card';
+      const head=document.createElement('div');head.className='post-head';
+      const avatar=document.createElement('div');avatar.className='avatar';setAvatar(avatar,p.avatar_url,name);
+      const who=document.createElement('div');who.innerHTML='<div class="post-name">'+safeText(name)+'</div><div class="post-meta">@'+safeText(p.username||'uye')+' · '+safeText(formatDate(post.created_at))+'</div>';
+      head.append(avatar,who);card.appendChild(head);
+      const content=document.createElement('div');content.className='post-content';content.textContent=post.content||'';card.appendChild(content);
+      const actions=document.createElement('div');actions.className='post-actions';
+      [['♡','Beğen'],['▢','Yorum'],['↗','Paylaş']].forEach(([icon,label])=>{const b=document.createElement('button');b.type='button';b.textContent=icon+' '+label;b.addEventListener('click',()=>showNotice('Bu özellik sonraki geliştirme aşamasında bağlanacak.'));actions.appendChild(b);});
+      card.appendChild(actions);feed.appendChild(card);
     });
-    if (error) throw error;
-    showNotice('Giriş başarılı. Hesap oturumu açıldı. Ana sayfa bağlantısı sonraki adımda eklenecek.');
-    console.info('Supabase oturumu açıldı:', data.user?.id);
-  } catch(error) { showNotice(friendlyError(error), true); }
-  finally { if (button) button.disabled = false; }
-});
-document.getElementById('signupForm').addEventListener('submit', async event => {
-  event.preventDefault(); clearNotice();
-  if (!supabaseClient) return showNotice('Supabase bağlantısı başlatılamadı. İnternet bağlantını ve dosyadaki ayarları kontrol et.', true);
-  const button = event.submitter; if (button) button.disabled = true;
-  const name = document.getElementById('displayName').value.trim();
-  const email = document.getElementById('signupEmail').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  const password = document.getElementById('signupPassword').value;
-  try {
-    const {data,error} = await supabaseClient.auth.signUp({
-      email, password,
-      options: { data: { display_name: name, phone_number: phone } }
+  }
+  function formatDate(value){ if(!value)return 'Şimdi';const d=new Date(value);if(Number.isNaN(d.getTime()))return 'Şimdi';return d.toLocaleString('tr-TR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}); }
+  async function createProfileIfMissing(user, displayName, phone) {
+    const existing=await supabase.from('profiles').select('id').eq('id',user.id).maybeSingle();
+    if(existing.data) return;
+    // Username is a simple unique candidate; RLS/trigger rules may reject this insert.
+    const base=(user.email||'uye').split('@')[0].toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,20)||'uye';
+    const row={id:user.id,username:base+'_'+user.id.slice(0,5),display_name:displayName||base};
+    const {error}=await supabase.from('profiles').insert(row);
+    if(error) console.warn('Profil otomatik eklenemedi:',error.message);
+  }
+  $('loginForm').addEventListener('submit',async e=>{
+    e.preventDefault();if(busy)return;clearNotice();const form=e.currentTarget;setBusy(form,true);
+    try{const {data,error}=await supabase.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;await showHome(data.user);}
+    catch(err){showNotice(readableError(err),true);}finally{setBusy(form,false);}
+  });
+  $('signupForm').addEventListener('submit',async e=>{
+    e.preventDefault();if(busy)return;clearNotice();const form=e.currentTarget;setBusy(form,true);
+    const name=$('signupName').value.trim(), email=$('signupEmail').value.trim(), phone=$('signupPhone').value.trim(), password=$('signupPassword').value;
+    try{
+      const {data,error}=await supabase.auth.signUp({email,password,options:{data:{display_name:name,phone_number:phone}}});if(error)throw error;
+      if(data.user && data.session){await createProfileIfMissing(data.user,name,phone);await showHome(data.user);}
+      else{showNotice('Hesabın oluşturuldu. Giriş yapmadan önce e-posta adresine gelen doğrulama bağlantısını aç.');switchView('login');showNotice('Hesabın oluşturuldu. Giriş yapmadan önce e-posta adresine gelen doğrulama bağlantısını aç.');}
+    }catch(err){showNotice(readableError(err),true);}finally{setBusy(form,false);}
+  });
+  $('resetForm').addEventListener('submit',async e=>{
+    e.preventDefault();if(busy)return;clearNotice();const form=e.currentTarget;setBusy(form,true);
+    try{const {error}=await supabase.auth.resetPasswordForEmail($('resetEmail').value.trim(),{redirectTo:location.origin});if(error)throw error;showNotice('Şifre sıfırlama bağlantısı, destekleniyorsa e-posta adresine gönderildi.');}
+    catch(err){showNotice(readableError(err),true);}finally{setBusy(form,false);}
+  });
+  $('postForm').addEventListener('submit',async e=>{
+    e.preventDefault();if(busy||!currentUser)return;const content=$('postContent').value.trim();if(!content){showNotice('Paylaşmadan önce bir şeyler yaz.',true);return;}
+    const form=e.currentTarget;setBusy(form,true);clearNotice();
+    try{const {error}=await supabase.from('posts').insert({user_id:currentUser.id,content});if(error)throw error;$('postContent').value='';$('charCount').textContent='0 / 3000';showNotice('Gönderin paylaşıldı!');await loadPosts();}
+    catch(err){showNotice('Gönderi kaydedilemedi. RLS politikalarını kontrol etmemiz gerekebilir. '+readableError(err),true);}
+    finally{setBusy(form,false);}
+  });
+  $('postContent').addEventListener('input',()=> $('charCount').textContent=$('postContent').value.length+' / 3000');
+  document.querySelectorAll('[data-switch]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.switch)));
+  document.querySelectorAll('[data-toggle]').forEach(b=>b.addEventListener('click',()=>{const input=$(b.dataset.toggle);const visible=input.type==='text';input.type=visible?'password':'text';b.textContent=visible?'GÖSTER':'GİZLE';}));
+  document.querySelectorAll('[data-provider]').forEach(b=>b.addEventListener('click',async()=>{try{const {error}=await supabase.auth.signInWithOAuth({provider:b.dataset.provider,options:{redirectTo:location.origin}});if(error)throw error;}catch(err){showNotice('Bu sağlayıcı Supabase tarafında yapılandırılmamış olabilir: '+readableError(err),true);}}));
+  document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{
+    const nav=b.dataset.nav;
+    if(nav==='create'){$('postContent').focus();$('composer').scrollIntoView({behavior:'smooth',block:'center'});return;}
+    document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x===b));
+    const labels={home:'Ana Sayfa',explore:'Keşfet',profile:'Profilim',notifications:'Bildirimler',messages:'Mesajlar'};
+    $('feedTitle').textContent=labels[nav]||'Ana Sayfa';
+    if(nav==='home'){ $('composer').classList.remove('hidden');loadPosts(); }
+    else if(nav==='profile'){ $('composer').classList.add('hidden');$('feed').innerHTML='<div class="empty-card">Profil bilgilerin burada gösteriliyor. Profil düzenleme özelliğini sonraki aşamada ekleyeceğiz.</div>'; }
+    else { $('composer').classList.add('hidden');$('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü için gerekli veritabanı ve işlevleri sonraki aşamada bağlayacağız.</div>'; }
+    window.scrollTo({top:0,behavior:'smooth'});
+  }));
+  $('refreshBtn').addEventListener('click',()=>{if(currentUser)loadPosts();});
+  $('logoutBtn').addEventListener('click',async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;currentUser=null;currentProfile=null;switchView('login');showNotice('Güvenli çıkış yapıldı.');}catch(err){showNotice(readableError(err),true);}});
+  async function init(){
+    if(!window.supabase || !window.supabase.createClient){showNotice('Giriş kütüphanesi yüklenemedi. İnternet bağlantını kontrol et.',true);return;}
+    supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    const {data,error}=await supabase.auth.getSession();
+    if(error)console.warn(error.message);
+    if(data?.session?.user){await showHome(data.session.user);}
+    else switchView('login');
+    supabase.auth.onAuthStateChange((event,session)=>{
+      if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null;switchView('login');}
+      else if(event==='SIGNED_IN' && session?.user && !currentUser){setTimeout(()=>showHome(session.user),0);}
     });
-    if (error) throw error;
-    showNotice(data.session ? 'Hesabın oluşturuldu. Kayıt başarılı.' : 'Kayıt isteği gönderildi. E-posta doğrulaması gerekiyorsa gelen kutunu kontrol et.');
-  } catch(error) { showNotice(friendlyError(error), true); }
-  finally { if (button) button.disabled = false; }
-});
-document.getElementById('resetForm').addEventListener('submit', async event => {
-  event.preventDefault(); clearNotice();
-  if (!supabaseClient) return showNotice('Supabase bağlantısı başlatılamadı.', true);
-  const email = document.getElementById('resetEmail').value.trim();
-  try {
-    const {error} = await supabaseClient.auth.resetPasswordForEmail(email, {redirectTo: window.location.origin});
-    if (error) throw error;
-    showNotice('İstek gönderildi. E-posta kutunu ve gereksiz posta klasörünü kontrol et.');
-  } catch(error) { showNotice(friendlyError(error), true); }
-});
-document.querySelectorAll('[data-provider]').forEach(button => button.addEventListener('click', async () => {
-  if (!supabaseClient) return showNotice('Supabase bağlantısı başlatılamadı.', true);
-  const provider = button.dataset.provider;
-  try {
-    const {error} = await supabaseClient.auth.signInWithOAuth({provider, options:{redirectTo:window.location.origin}});
-    if (error) throw error;
-  } catch(error) { showNotice('Bu giriş yöntemi çalışması için Supabase panelinde '+provider+' sağlayıcısının ayrıca etkinleştirilmesi gerekir. Ayrıntı: '+friendlyError(error), true); }
-}));
+  }
+  init();
+})();
 </script>
 </body>
 </html>
