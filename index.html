@@ -8,279 +8,159 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#030817;--panel:#07152b;--panel2:#0b1b35;--line:#1a3d66;--blue:#00c8ff;--blue2:#147bff;--purple:#a33cff;--text:#f4f8ff;--muted:#9fb2d0;--pink:#ff3c86;--shadow:0 0 25px #008cff25}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at top,#0a2350 0,#030817 54%,#020611 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh;padding-bottom:70px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#0a2350 0,#030817 54%,#020611 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh;padding-bottom:82px}
 button,input,textarea{font:inherit}button{cursor:pointer;color:inherit}.hidden{display:none!important}
-
-/* Topbar */
-.topbar{height:60px;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #1a4167;background:#030a19eF;position:sticky;top:0;z-index:50;backdrop-filter:blur(16px)}
-.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px}
-.logo{height:36px;width:40px;border-radius:12px;display:grid;place-items:center;font-size:17px;font-weight:1000;font-style:italic;background:linear-gradient(135deg,#00e5ff,#1769ff 60%,#963cff);box-shadow:0 0 18px #00aaff60}
-.brand small{display:block;font-size:8px;letter-spacing:2px;color:#8eeaff;margin-top:-2px}
-.top-actions{display:flex;gap:8px}
-.iconbtn{border:1px solid var(--line);background:#0a1b33;border-radius:12px;padding:8px 12px;color:#fff;font-size:16px}
-
-/* Layout */
-.app-container{max-width:480px;margin:0 auto;min-height:100vh;position:relative;background:#030817;box-shadow:0 0 40px #000}
-.page{padding:12px 14px 20px}
-.page-title{font-size:22px;margin:0 0 4px;font-weight:850}
-.sub{color:var(--muted);font-size:13px;margin:0 0 14px}
-
-/* Stories */
-.stories{display:flex;gap:12px;overflow-x:auto;padding:4px 0 10px;margin-bottom:10px;scrollbar-width:none}
-.story{flex:0 0 62px;text-align:center;font-size:11px;color:#cbd9ef}
-.storyring{height:58px;width:58px;border-radius:50%;padding:2px;margin:0 auto 5px;background:linear-gradient(135deg,#00eaff,#275cff,#c03cff)}
-.storyring>div{height:100%;width:100%;border-radius:50%;display:grid;place-items:center;background:#07152b;border:2px solid #07152b;font-weight:800;font-size:12px}
-
-/* Chips */
-.chips{display:flex;gap:8px;overflow:auto;margin:10px 0 14px;scrollbar-width:none}
-.chip{white-space:nowrap;border:1px solid #244b75;background:#091a31;color:#c5d8f2;border-radius:30px;padding:7px 14px;font-size:12px;font-weight:600}
-.chip.active{background:linear-gradient(90deg,#008cfa,#8b35ff);border-color:#39dfff;color:#fff;box-shadow:0 0 12px #008cff40}
-
-/* Cards & Feeds */
-.card{background:linear-gradient(155deg,#0a1b34f5,#050e20f5);border:1px solid #1f4571;border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow)}
-.post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.avatar{width:40px;height:40px;flex:0 0 40px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#00d9ff,#553cff);font-weight:900;border:2px solid #43dfff;font-size:14px}
-.post-name{font-weight:800;font-size:13px}
-.handle{font-size:11px;color:#8fa9ca}
-.dots{margin-left:auto;background:none;border:0;font-size:18px;color:#8fa9ca}
-.post-text{font-size:14px;line-height:1.5;margin-bottom:10px}
-.post-art{height:280px;border:1px solid #24588c;border-radius:14px;display:grid;place-items:center;text-align:center;overflow:hidden;background:radial-gradient(circle at 70% 30%,#3042a7,#07152d 43%,#020817 80%);position:relative;margin-bottom:10px}
-.art-logo{font-size:38px;font-weight:1000;font-style:italic;color:#00eaff;text-shadow:0 0 18px #00baff}
-.post-actions{display:flex;align-items:center;gap:15px;border-top:1px solid #1b3656;padding-top:10px;font-size:13px;color:#bcd2f0}
-.post-actions button{background:none;border:0;color:inherit;display:flex;align-items:center;gap:5px}
-
-/* Explore Grid */
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.tile{aspect-ratio:1;border:1px solid #214d7b;border-radius:12px;background:linear-gradient(145deg,#153f74,#071226 70%);display:grid;place-items:center;text-align:center;font-size:12px;color:#a7eaff;padding:6px;font-weight:600}
-
-/* Bottom Nav */
-.bottomnav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;z-index:50;display:flex;justify-content:space-around;padding:8px 4px calc(8px + env(safe-area-inset-bottom));background:#030a19f8;border-top:1px solid #1a4167;backdrop-filter:blur(18px)}
-.bottomnav button{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:#8faad0;font-size:10px;flex:1;padding:4px 0}
-.bottomnav button span:first-child{font-size:20px}
-.bottomnav button.active{color:#00e5ff;text-shadow:0 0 12px #00bfff}
-
-/* Auth & Forms */
-.auth-wrap{padding:24px 16px;min-height:90vh;display:flex;flex-direction:column;justify-content:center}
-.field{display:block;margin-bottom:14px}
-.field span{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#c9dcf7}
-.field input{width:100%;padding:13px;border-radius:12px;border:1px solid #2a4b71;background:#061126;color:white;outline:none}
-.primary{width:100%;border:1px solid #30d9ff;background:linear-gradient(100deg,#00bdf5,#1263ff 60%,#743cff);border-radius:12px;padding:13px;font-weight:800;color:#fff;box-shadow:0 0 18px #007bff40;text-align:center}
-.secondary{width:100%;border:1px solid var(--line);background:#0a1b33;border-radius:12px;padding:12px;color:#fff;font-weight:600;text-align:center;margin-bottom:8px}
-
-/* Profile specific */
-.profile-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
-.profile-big{width:72px;height:72px;border-radius:50%;font-size:20px}
-.stats{display:flex;justify-content:space-around;margin:14px 0;text-align:center;border-top:1px solid #1b3656;border-bottom:1px solid #1b3656;padding:10px 0}
-.stats b{display:block;font-size:16px;color:white}
-.stats span{font-size:11px;color:var(--muted)}
-
-/* Settings list */
-.settings-row{display:flex;justify-content:space-between;align-items:center;padding:13px 4px;border-bottom:1px solid #1c3553;font-size:13px}
+.topbar{height:60px;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #1a4167;background:#030a19ef;position:sticky;top:0;z-index:50;backdrop-filter:blur(16px)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px}.logo{height:36px;width:40px;border-radius:12px;display:grid;place-items:center;font-size:17px;font-weight:1000;font-style:italic;background:linear-gradient(135deg,#00e5ff,#1769ff 60%,#963cff);box-shadow:0 0 18px #00aaff60}.brand small{display:block;font-size:8px;letter-spacing:2px;color:#8eeaff;margin-top:-2px}.top-actions{display:flex;gap:8px}.iconbtn{border:1px solid var(--line);background:#0a1b33;border-radius:12px;padding:8px 12px;color:#fff;font-size:15px}
+.app-container{max-width:480px;margin:0 auto;min-height:100vh;position:relative;background:#030817;box-shadow:0 0 40px #000}.page{padding:12px 14px 20px}.page-title{font-size:22px;margin:0 0 4px;font-weight:850}.sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+.stories{display:flex;gap:12px;overflow-x:auto;padding:4px 0 10px;margin-bottom:10px;scrollbar-width:none}.story{flex:0 0 62px;text-align:center;font-size:11px;color:#cbd9ef}.storyring{height:58px;width:58px;border-radius:50%;padding:2px;margin:0 auto 5px;background:linear-gradient(135deg,#00eaff,#275cff,#c03cff)}.storyring>div{height:100%;width:100%;border-radius:50%;display:grid;place-items:center;background:#07152b;border:2px solid #07152b;font-weight:800;font-size:12px}
+.chips{display:flex;gap:8px;overflow:auto;margin:10px 0 14px;scrollbar-width:none}.chip{white-space:nowrap;border:1px solid #244b75;background:#091a31;color:#c5d8f2;border-radius:30px;padding:7px 14px;font-size:12px;font-weight:600}.chip.active{background:linear-gradient(90deg,#008cfa,#8b35ff);border-color:#39dfff;color:#fff;box-shadow:0 0 12px #008cff40}
+.card{background:linear-gradient(155deg,#0a1b34f5,#050e20f5);border:1px solid #1f4571;border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow)}.post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}.avatar{width:40px;height:40px;flex:0 0 40px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#00d9ff,#553cff);font-weight:900;border:2px solid #43dfff;font-size:14px;overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover}.post-name{font-weight:800;font-size:13px}.handle{font-size:11px;color:#8fa9ca}.dots{margin-left:auto;background:none;border:0;font-size:18px;color:#8fa9ca}.post-text{font-size:14px;line-height:1.5;margin-bottom:10px;white-space:pre-wrap;overflow-wrap:anywhere}.post-art{min-height:80px;border:1px solid #24588c;border-radius:14px;display:grid;place-items:center;text-align:center;overflow:hidden;background:radial-gradient(circle at 70% 30%,#3042a7,#07152d 43%,#020817 80%);position:relative;margin-bottom:10px;padding:18px}.art-logo{font-size:38px;font-weight:1000;font-style:italic;color:#00eaff;text-shadow:0 0 18px #00baff}.post-actions{display:flex;align-items:center;gap:15px;border-top:1px solid #1b3656;padding-top:10px;font-size:13px;color:#bcd2f0}.post-actions button{background:none;border:0;color:inherit;display:flex;align-items:center;gap:5px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.tile{aspect-ratio:1;border:1px solid #214d7b;border-radius:12px;background:linear-gradient(145deg,#153f74,#071226 70%);display:grid;place-items:center;text-align:center;font-size:12px;color:#a7eaff;padding:6px;font-weight:600}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;z-index:50;display:flex;justify-content:space-around;padding:8px 4px calc(8px + env(safe-area-inset-bottom));background:#030a19f8;border-top:1px solid #1a4167;backdrop-filter:blur(18px)}.bottomnav button{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:#8faad0;font-size:10px;flex:1;padding:4px 0}.bottomnav button span:first-child{font-size:20px}.bottomnav button.active{color:#00e5ff;text-shadow:0 0 12px #00bfff}
+.field{display:block;margin-bottom:14px}.field span{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#c9dcf7}.field input,.field textarea,input.search{width:100%;padding:13px;border-radius:12px;border:1px solid #2a4b71;background:#061126;color:white;outline:none}.field textarea{min-height:100px;resize:vertical}.primary{width:100%;border:1px solid #30d9ff;background:linear-gradient(100deg,#00bdf5,#1263ff 60%,#743cff);border-radius:12px;padding:13px;font-weight:800;color:#fff;box-shadow:0 0 18px #007bff40;text-align:center}.secondary{width:100%;border:1px solid var(--line);background:#0a1b33;border-radius:12px;padding:12px;color:#fff;font-weight:600;text-align:center;margin-bottom:8px}.profile-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}.profile-big{width:72px;height:72px;flex:0 0 72px;font-size:20px}.stats{display:flex;justify-content:space-around;margin:14px 0;text-align:center;border-top:1px solid #1b3656;border-bottom:1px solid #1b3656;padding:10px 0}.stats b{display:block;font-size:16px;color:white}.stats span{font-size:11px;color:var(--muted)}.settings-row{display:flex;justify-content:space-between;align-items:center;padding:13px 4px;border-bottom:1px solid #1c3553;font-size:13px}
+.notice{position:fixed;top:70px;left:50%;transform:translateX(-50%);width:min(92%,440px);z-index:100;background:#0b2341;border:1px solid #28bfff;border-radius:12px;padding:12px 14px;box-shadow:0 8px 30px #0008;font-size:13px}.modal-backdrop{position:fixed;inset:0;z-index:90;background:#000b;display:flex;align-items:center;justify-content:center;padding:16px}.modal{width:min(100%,440px);max-height:90vh;overflow:auto;background:#07152b;border:1px solid #1f6da1;border-radius:20px;padding:18px;box-shadow:0 0 40px #007bff35}.modal h2{margin:0 0 6px}.modal .field{margin-top:12px}.muted{color:var(--muted);font-size:12px}.empty{padding:25px 12px;text-align:center;color:var(--muted);font-size:13px}.statusline{font-size:12px;color:var(--muted);padding:8px 0}.danger{color:#ff8ba9}
 </style>
 </head>
 <body>
-
 <div class="app-container">
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo">ZP</div>
-      <div>ZP MEDYA<small>PAYLAŞ · KEŞFET · BAĞLAN</small></div>
-    </div>
-    <div class="top-actions">
-      <button class="iconbtn" onclick="switchPage('profile')">👤</button>
-    </div>
-  </header>
+<header class="topbar">
+  <div class="brand"><div class="logo">ZP</div><div>ZP MEDYA<small>PAYLAŞ · KEŞFET · BAĞLAN</small></div></div>
+  <div class="top-actions"><button class="iconbtn" id="authButton" onclick="openAuth()">Giriş</button><button class="iconbtn" onclick="switchPage('profile')">👤</button></div>
+</header>
 
-  <!-- SAYFALAR -->
-  
-  <!-- 1. ANA SAYFA -->
-  <div id="page-home" class="page">
-    <!-- Hikayeler -->
-    <div class="stories">
-      <div class="story" onclick="alert('Hikayen')"><div class="storyring"><div>＋</div></div>Hikâyen</div>
-      <div class="story"><div class="storyring"><div>ZM</div></div>zp music</div>
-      <div class="story"><div class="storyring"><div>ZF</div></div>zp film</div>
-      <div class="story"><div class="storyring"><div>ZT</div></div>tasarım</div>
-      <div class="story"><div class="storyring"><div>🎬</div></div>projeler</div>
-      <div class="story"><div class="storyring"><div>♫</div></div>müzik</div>
-    </div>
-
-    <!-- Kategoriler (Chips) -->
-    <div class="chips">
-      <div class="chip active">Tümü</div>
-      <div class="chip">♫ Müzik</div>
-      <div class="chip">▣ Film</div>
-      <div class="chip">✎ Tasarım</div>
-      <div class="chip">Projeler</div>
-    </div>
-
-    <!-- Post Kartı -->
-    <div class="card">
-      <div class="post-head">
-        <div class="avatar">KK</div>
-        <div>
-          <div class="post-name">Kuzeyfe Kalafat <span style="color:#00c8ff">✔</span></div>
-          <div class="handle">@kuzeyfekalafat · 2 saat önce</div>
-        </div>
-        <button class="dots">•••</button>
-      </div>
-      <div class="post-text">Yeni projeler yolda... ZP Medya ile dijital dünyada yeni bir soluk başlıyor! 🚀🎵</div>
-      <div class="post-art">
-        <div style="position:relative;z-index:2">
-          <div class="art-logo">ZP</div>
-          <div style="font-weight:900;letter-spacing:2px;font-size:12px;color:#8eeaff">ZP MEDYA</div>
-        </div>
-      </div>
-      <div class="post-actions">
-        <button>♡ 26,2B</button>
-        <button>▢ 464</button>
-        <button>↗ 220</button>
-        <button style="margin-left:auto">♧</button>
-      </div>
-    </div>
+<div id="page-home" class="page">
+  <div class="stories">
+    <div class="story" onclick="showNotice('Hikâye özelliğini sonraki aşamada bağlayacağız.')"><div class="storyring"><div>＋</div></div>Hikâyen</div>
+    <div class="story"><div class="storyring"><div>ZM</div></div>zp music</div><div class="story"><div class="storyring"><div>ZF</div></div>zp film</div><div class="story"><div class="storyring"><div>ZT</div></div>tasarım</div><div class="story"><div class="storyring"><div>🎬</div></div>projeler</div><div class="story"><div class="storyring"><div>♫</div></div>müzik</div>
   </div>
-
-  <!-- 2. KEŞFET -->
-  <div id="page-explore" class="page hidden">
-    <h1 class="page-title">Keşfet</h1>
-    <p class="sub">ZP Medya topluluğunda yeni içerikler bul.</p>
-    <div style="margin-bottom:14px">
-      <input type="text" class="field" style="margin:0" placeholder="⌕ ZP Medya'da ara...">
-    </div>
-    <div class="chips">
-      <div class="chip active">Sana Özel</div>
-      <div class="chip">Popüler</div>
-      <div class="chip">Müzik</div>
-      <div class="chip">Film</div>
-    </div>
-    <div class="grid3">
-      <div class="tile">♫<br>Canlı Müzik</div>
-      <div class="tile">🎬<br>Film Dünyası</div>
-      <div class="tile">▣<br>Set Arkası</div>
-      <div class="tile">〰<br>Sesler</div>
-      <div class="tile">◈<br>Projeler</div>
-      <div class="tile">▧<br>Fotoğraf</div>
-      <div class="tile">✦<br>Etkinlikler</div>
-      <div class="tile">◉<br>Yapım</div>
-      <div class="tile">✎<br>Tasarım</div>
-    </div>
-  </div>
-
-  <!-- 3. VİDEOLAR (REELS) -->
-  <div id="page-videos" class="page hidden">
-    <h1 class="page-title">Videolar · Reels</h1>
-    <p class="sub">Kısa videolar ve yaratıcı içerikler.</p>
-    <div class="card" style="padding:10px">
-      <div class="post-art" style="height:360px">
-        <div style="position:absolute;right:12px;bottom:20px;display:flex;flex-direction:column;gap:15px;align-items:center;z-index:5">
-          <div style="font-size:12px;text-align:center">❤️<br><b>26,2B</b></div>
-          <div style="font-size:12px;text-align:center">💬<br><b>464</b></div>
-          <div style="font-size:12px;text-align:center">↗<br><b>220</b></div>
-        </div>
-        <div class="art-logo">ZP</div>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
-        <div style="font-size:13px"><b>@zpmusic</b> Yeni şarkım çok yakında... ♫</div>
-        <button class="chip active" style="padding:4px 10px">Takip Et</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. MESAJLAR -->
-  <div id="page-messages" class="page hidden">
-    <h1 class="page-title">Mesajlar</h1>
-    <p class="sub">Özel mesajların.</p>
-    <input type="text" class="field" placeholder="Mesajlarda ara...">
-    <div style="display:flex;gap:8px;margin-bottom:12px">
-      <button class="chip active">Birincil</button>
-      <button class="chip">Genel</button>
-      <button class="chip">İstekler (2)</button>
-    </div>
-    <div class="card" style="display:flex;align-items:center;gap:12px">
-      <div class="avatar" style="background:linear-gradient(135deg,#ff3c86,#743cff)">ZM</div>
-      <div style="flex:1">
-        <div style="font-weight:800;font-size:13px">Zaman Perdesi Music <span style="color:#00c8ff">✔</span></div>
-        <div style="font-size:12px;color:var(--muted)">Yeni şarkı için hazır mısın?... · 5 dk</div>
-      </div>
-    </div>
-    <div class="card" style="display:flex;align-items:center;gap:12px">
-      <div class="avatar">ZF</div>
-      <div style="flex:1">
-        <div style="font-weight:800;font-size:13px">ZP Film <span style="color:#00c8ff">✔</span></div>
-        <div style="font-size:12px;color:var(--muted)">Proje detaylarını gönderdim... · 12 dk</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5. PROFİLİM -->
-  <div id="page-profile" class="page hidden">
-    <div class="card">
-      <div class="profile-head">
-        <div class="avatar profile-big">KK</div>
-        <div>
-          <h2 style="margin:0 0 2px;font-size:18px">Kuzeyfe Kalafat <span style="color:#00c8ff">✔</span></h2>
-          <div class="muted">@kuzeyfekalafat</div>
-          <div style="font-size:11px;color:#00c8ff;margin-top:3px">kuzeyfekalafat.com.tr</div>
-        </div>
-      </div>
-      <div class="stats">
-        <div><b>312</b><span>Gönderi</span></div>
-        <div><b>68,4B</b><span>Takipçi</span></div>
-        <div><b>287</b><span>Takip</span></div>
-      </div>
-      <p style="font-size:13px;margin:8px 0">Yapımcı · Müzisyen · Yönetmen · Tasarımcı<br>Zaman Perdesi Prodüksiyon</p>
-      <div style="display:flex;gap:8px">
-        <button class="secondary" style="margin:0">Profili Düzenle</button>
-        <button class="secondary" style="margin:0">Profili Paylaş</button>
-      </div>
-      <div class="chips" style="margin-top:14px">
-        <div class="chip active">♫ Müzik</div>
-        <div class="chip">▣ Film</div>
-        <div class="chip">✎ Tasarım</div>
-        <div class="chip">Projeler</div>
-      </div>
-    </div>
-    <div class="grid3">
-      <div class="tile" style="aspect-ratio:16/9;grid-column:span 3">ZP FİLM PROJELERİ</div>
-      <div class="tile">ZİRVE YOLU</div>
-      <div class="tile">Kilitli Kapılar</div>
-      <div class="tile">Zaman Perdesi</div>
-    </div>
-  </div>
-
-  <!-- ALT MENÜ (TAB BAR) -->
-  <nav class="bottomnav">
-    <button class="active" onclick="switchPage('home', this)">
-      <span>⌂</span>Ana Sayfa
-    </button>
-    <button onclick="switchPage('explore', this)">
-      <span>⌕</span>Keşfet
-    </button>
-    <button onclick="switchPage('videos', this)">
-      <span>▷</span>Videolar
-    </button>
-    <button onclick="switchPage('messages', this)">
-      <span>✉</span>Mesajlar
-    </button>
-    <button onclick="switchPage('profile', this)">
-      <span>◉</span>Profilim
-    </button>
-  </nav>
+  <div class="chips" id="homeChips"><button class="chip active" data-filter="all">Tümü</button><button class="chip" data-filter="Müzik">♫ Müzik</button><button class="chip" data-filter="Film">▣ Film</button><button class="chip" data-filter="Tasarım">✎ Tasarım</button><button class="chip" data-filter="Projeler">Projeler</button></div>
+  <section class="card" id="composer">
+    <div class="post-head"><div class="avatar" id="composerAvatar">ZP</div><div><div class="post-name" id="composerName">ZP Medya</div><div class="handle" id="composerHint">Toplulukla bir şeyler paylaş</div></div></div>
+    <label class="field"><textarea id="postContent" placeholder="Aklından neler geçiyor?"></textarea></label>
+    <button class="primary" id="publishButton" onclick="publishPost()">Gönderiyi paylaş</button>
+    <div class="statusline" id="publishStatus">Metin gönderileri Supabase'e kaydedilir.</div>
+  </section>
+  <div id="feed"><div class="empty">Gönderiler yükleniyor…</div></div>
 </div>
 
-<script>
-function switchPage(pageId, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-  document.getElementById('page-' + pageId).classList.remove('hidden');
-  if(btn) {
-    document.querySelectorAll('.bottomnav button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
-  window.scrollTo(0,0);
-}
-</script>
+<div id="page-explore" class="page hidden"><h1 class="page-title">Keşfet</h1><p class="sub">ZP Medya topluluğunda yeni içerikler bul.</p><input id="searchInput" class="search" placeholder="⌕ Gönderilerde ara..." oninput="renderPosts()"><div class="chips"><button class="chip active" onclick="showNotice('Popüler sıralaması sonraki aşamada eklenecek.')">Sana Özel</button><button class="chip" onclick="showNotice('Popüler sıralaması sonraki aşamada eklenecek.')">Popüler</button></div><div class="grid3"><button class="tile" onclick="filterAndHome('Müzik')">♫<br>Canlı Müzik</button><button class="tile" onclick="filterAndHome('Film')">🎬<br>Film Dünyası</button><button class="tile" onclick="filterAndHome('Film')">▣<br>Set Arkası</button><button class="tile" onclick="showNotice('Sesler bölümü sonraki aşamada eklenecek.')">〰<br>Sesler</button><button class="tile" onclick="filterAndHome('Projeler')">◈<br>Projeler</button><button class="tile" onclick="filterAndHome('Tasarım')">▧<br>Fotoğraf / Tasarım</button><button class="tile" onclick="showNotice('Etkinlikler bölümü sonraki aşamada eklenecek.')">✦<br>Etkinlikler</button><button class="tile" onclick="filterAndHome('Film')">◉<br>Yapım</button><button class="tile" onclick="filterAndHome('Tasarım')">✎<br>Tasarım</button></div></div>
 
+<div id="page-videos" class="page hidden"><h1 class="page-title">Videolar · Reels</h1><p class="sub">Kısa videolar ve yaratıcı içerikler.</p><div class="card"><div class="post-art" style="height:300px"><div><div class="art-logo">ZP</div><b style="letter-spacing:2px;color:#8eeaff">ZP MEDYA</b></div></div><p class="sub">Video yükleme özelliği sonraki aşamada eklenecek.</p><button class="primary" onclick="showNotice('Video yükleme altyapısını henüz eklemedik; bu düğme şu anda bilgilendirme yapar.')">Video özelliği hakkında</button></div></div>
+
+<div id="page-messages" class="page hidden"><h1 class="page-title">Mesajlar</h1><p class="sub">Özel mesajların.</p><div class="card"><div class="empty">Özel mesajlaşma altyapısı henüz bağlanmadı. Gerçek mesajların güvenli şekilde çalışması için ayrıca tablo ve RLS politikaları kurulmalı.</div></div></div>
+
+<div id="page-profile" class="page hidden"><div class="card"><div class="profile-head"><div class="avatar profile-big" id="profileAvatar">ZP</div><div><h2 style="margin:0 0 2px;font-size:18px" id="profileName">Profilim</h2><div class="muted" id="profileHandle">@misafir</div><div style="font-size:11px;color:#00c8ff;margin-top:3px">ZP Medya</div></div></div><div class="stats"><div><b id="postCount">0</b><span>Gönderi</span></div><div><b>—</b><span>Takipçi</span></div><div><b>—</b><span>Takip</span></div></div><p style="font-size:13px;margin:8px 0" id="profileBio">Profil bilgilerin burada görünür.</p><button class="secondary" onclick="openEditProfile()">Profili Düzenle</button><button class="secondary" onclick="shareProfile()">Profili Paylaş</button><button class="secondary" id="signOutButton" onclick="signOut()">Çıkış Yap</button></div><h2 class="page-title" style="font-size:17px">Gönderilerim</h2><div id="myPosts"></div></div>
+
+<div id="page-settings" class="page hidden"><h1 class="page-title">Ayarlar</h1><p class="sub">Hesap ayarları</p><div class="card"><div class="settings-row"><span>Hesap durumu</span><b id="settingsAuth">Misafir</b></div><div class="settings-row"><span>Veri bağlantısı</span><b id="settingsDb">Kontrol ediliyor</b></div><p class="muted">Güvenlik ve gizlilik ayarları, veritabanı politikaları doğrulandıktan sonra eklenmelidir.</p></div></div>
+
+<nav class="bottomnav"><button class="active" onclick="switchPage('home',this)"><span>⌂</span>Ana Sayfa</button><button onclick="switchPage('explore',this)"><span>⌕</span>Keşfet</button><button onclick="switchPage('videos',this)"><span>▷</span>Videolar</button><button onclick="switchPage('messages',this)"><span>✉</span>Mesajlar</button><button onclick="switchPage('profile',this)"><span>◉</span>Profilim</button></nav>
+</div>
+
+<div id="notice" class="notice hidden" role="status"></div>
+<div id="authModal" class="modal-backdrop hidden"><div class="modal"><button class="iconbtn" style="float:right" onclick="closeModal('authModal')">✕</button><h2 id="authTitle">ZP Medya'ya giriş yap</h2><p class="sub">Mevcut Supabase hesabını kullan.</p><form id="authForm"><label class="field"><span>E-posta</span><input id="authEmail" type="email" autocomplete="email" required placeholder="ornek@eposta.com"></label><label class="field"><span>Şifre</span><input id="authPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="En az 6 karakter"></label><label class="field hidden" id="usernameField"><span>Kullanıcı adı</span><input id="authUsername" maxlength="30" placeholder="kullaniciadi"></label><button class="primary" id="authSubmit" type="submit">Giriş yap</button></form><button class="secondary" id="authToggle" style="margin-top:8px" onclick="toggleAuthMode()">Hesabın yok mu? Kayıt ol</button><p class="muted" id="authStatus" aria-live="polite"></p></div></div>
+<div id="editModal" class="modal-backdrop hidden"><div class="modal"><button class="iconbtn" style="float:right" onclick="closeModal('editModal')">✕</button><h2>Profili düzenle</h2><form id="editForm"><label class="field"><span>Görünen ad</span><input id="editDisplayName" maxlength="60" required></label><label class="field"><span>Kullanıcı adı</span><input id="editUsername" maxlength="30" required></label><label class="field"><span>Biyografi</span><textarea id="editBio" maxlength="250"></textarea></label><button class="primary" type="submit">Kaydet</button></form><p class="muted" id="editStatus"></p></div></div>
+
+<script>
+'use strict';
+const SUPABASE_URL = 'https://nrmcekxsjibaitwleepb.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_7Dwtq45AOQgM6nuwuHe6qQ_ho_LDu7n';
+let db = null, currentUser = null, currentProfile = null, posts = [], authMode = 'login', activeFilter = 'all', noticeTimer = null;
+
+function showNotice(message, duration=3600){const el=document.getElementById('notice');el.textContent=message;el.classList.remove('hidden');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>el.classList.add('hidden'),duration)}
+function closeModal(id){document.getElementById(id).classList.add('hidden')}
+function openAuth(){if(currentUser){switchPage('profile');return}document.getElementById('authStatus').textContent='';document.getElementById('authModal').classList.remove('hidden')}
+function switchAuthMode(mode){authMode=mode;document.getElementById('authTitle').textContent=mode==='login'?"ZP Medya'ya giriş yap":"ZP Medya'ya kayıt ol";document.getElementById('authSubmit').textContent=mode==='login'?'Giriş yap':'Hesap oluştur';document.getElementById('authToggle').textContent=mode==='login'?'Hesabın yok mu? Kayıt ol':'Zaten hesabın var mı? Giriş yap';document.getElementById('usernameField').classList.toggle('hidden',mode==='login');document.getElementById('authPassword').autocomplete=mode==='login'?'current-password':'new-password'}
+function toggleAuthMode(){switchAuthMode(authMode==='login'?'signup':'login');document.getElementById('authStatus').textContent=''}
+function switchPage(pageId,btn){document.querySelectorAll('.app-container .page').forEach(p=>p.classList.add('hidden'));const page=document.getElementById('page-'+pageId);if(page)page.classList.remove('hidden');document.querySelectorAll('.bottomnav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');else{const idx={home:0,explore:1,videos:2,messages:3,profile:4}[pageId];if(idx!==undefined)document.querySelectorAll('.bottomnav button')[idx].classList.add('active')}window.scrollTo(0,0);if(pageId==='profile')renderMyPosts()}
+function safeText(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function initials(name){const parts=String(name||'ZP').trim().split(/\s+/).filter(Boolean);return (parts.length>1?parts[0][0]+parts[1][0]:parts[0].slice(0,2)).toUpperCase()}
+function avatarMarkup(profile,name){if(profile&&profile.avatar_url)return `<img src="${safeText(profile.avatar_url)}" alt="">`;return safeText(initials(name||profile?.display_name||profile?.username||'ZP'))}
+function setAvatar(el,profile,name){if(el)el.innerHTML=avatarMarkup(profile,name)}
+function relativeDate(date){const sec=Math.max(0,Math.floor((Date.now()-new Date(date).getTime())/1000));if(sec<60)return 'şimdi';if(sec<3600)return Math.floor(sec/60)+' dk önce';if(sec<86400)return Math.floor(sec/3600)+' saat önce';return Math.floor(sec/86400)+' gün önce'}
+async function init(){
+  if(!window.supabase){document.getElementById('settingsDb').textContent='Kütüphane yüklenemedi';showNotice('Supabase kütüphanesi yüklenemedi. İnternet bağlantısını kontrol et.');return}
+  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+  try{
+    const {data:{session},error}=await db.auth.getSession();if(error)throw error;
+    if(session?.user)await applyUser(session.user);
+    db.auth.onAuthStateChange((event,session)=>{setTimeout(async()=>{try{if(session?.user)await applyUser(session.user);else{currentUser=null;currentProfile=null;updateAccountUI();renderPosts();renderMyPosts()}}catch(e){console.error(e)}},0)});
+    await loadPosts();
+    document.getElementById('settingsDb').textContent='Bağlandı';
+  }catch(e){console.error(e);document.getElementById('settingsDb').textContent='Bağlantı hatası';showNotice('Supabase bağlantı hatası: '+(e.message||'Ayarları kontrol et.'),6000)}
+}
+async function applyUser(user){
+  currentUser=user;
+  try{
+    const {data,error}=await db.from('profiles').select('id,username,display_name,bio,avatar_url,created_at').eq('id',user.id).maybeSingle();
+    if(error)throw error;
+    currentProfile=data||null;
+    if(!currentProfile){
+      const base=(user.email||'kullanici').split('@')[0].toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,22)||'kullanici';
+      const {data:created,error:createError}=await db.from('profiles').insert({id:user.id,username:base+'_'+user.id.slice(0,5),display_name:user.user_metadata?.display_name||base,bio:''}).select().single();
+      if(createError){console.warn('Profil otomatik oluşturulamadı; trigger çalışıyor olabilir:',createError.message)}
+      else currentProfile=created;
+    }
+  }catch(e){console.warn('Profil okunamadı:',e.message);currentProfile=null}
+  updateAccountUI();
+}
+function updateAccountUI(){
+  const name=currentProfile?.display_name||currentProfile?.username||currentUser?.email?.split('@')[0]||'ZP Medya';
+  document.getElementById('authButton').textContent=currentUser?'Hesabım':'Giriş';
+  document.getElementById('composerName').textContent=name;
+  document.getElementById('composerHint').textContent=currentUser?'Toplulukla bir şeyler paylaş':'Gönderi paylaşmak için giriş yap';
+  document.getElementById('publishButton').textContent=currentUser?'Gönderiyi paylaş':'Giriş yap ve paylaş';
+  setAvatar(document.getElementById('composerAvatar'),currentProfile,name);
+  document.getElementById('profileName').textContent=name;
+  document.getElementById('profileHandle').textContent=currentProfile?.username?'@'+currentProfile.username:(currentUser?'@'+currentUser.email.split('@')[0]:'@misafir');
+  document.getElementById('profileBio').textContent=currentProfile?.bio|| (currentUser?'Henüz biyografi eklenmemiş.':'Profilini görmek için giriş yap.');
+  setAvatar(document.getElementById('profileAvatar'),currentProfile,name);
+  document.getElementById('settingsAuth').textContent=currentUser?'Giriş yapıldı':'Misafir';
+  document.getElementById('signOutButton').classList.toggle('hidden',!currentUser);
+}
+async function loadPosts(){
+  if(!db)return;
+  const feed=document.getElementById('feed');feed.innerHTML='<div class="empty">Gönderiler yükleniyor…</div>';
+  const {data,error}=await db.from('posts').select('id,user_id,content,created_at').order('created_at',{ascending:false}).limit(100);
+  if(error){console.error(error);feed.innerHTML='<div class="card"><div class="empty">Gönderiler alınamadı. Supabase posts tablosunun SELECT RLS politikasını kontrol etmek gerekiyor.<br><br>'+safeText(error.message)+'</div></div>';return}
+  posts=data||[];
+  const ids=[...new Set(posts.map(p=>p.user_id).filter(Boolean))];let profilesById={};
+  if(ids.length){const result=await db.from('profiles').select('id,username,display_name,avatar_url').in('id',ids);if(!result.error)(result.data||[]).forEach(p=>profilesById[p.id]=p)}
+  posts=posts.map(p=>({...p,profile:profilesById[p.user_id]||null}));
+  renderPosts();renderMyPosts();
+}
+function renderPosts(){
+  const feed=document.getElementById('feed');if(!feed)return;
+  const query=(document.getElementById('searchInput')?.value||'').trim().toLowerCase();
+  let list=posts.filter(p=>(activeFilter==='all'||!p.category||(p.category||'').toLowerCase()===activeFilter.toLowerCase())&&(!query||String(p.content||'').toLowerCase().includes(query)||String(p.profile?.display_name||p.profile?.username||'').toLowerCase().includes(query)));
+  if(!list.length){feed.innerHTML='<div class="card"><div class="empty">'+(posts.length?'Bu filtrede gönderi bulunamadı.':'Henüz gönderi yok. İlk gönderiyi sen paylaş!')+'</div></div>';return}
+  feed.innerHTML=list.map(p=>{const profile=p.profile;const name=profile?.display_name||profile?.username||'ZP Medya kullanıcısı';const own=currentUser&&p.user_id===currentUser.id;return `<article class="card"><div class="post-head"><div class="avatar">${avatarMarkup(profile,name)}</div><div><div class="post-name">${safeText(name)}</div><div class="handle">@${safeText(profile?.username||'kullanici')} · ${safeText(relativeDate(p.created_at))}</div></div>${own?`<button class="dots" onclick="deletePost('${safeText(p.id)}')" aria-label="Gönderiyi sil">•••</button>`:''}</div><div class="post-text">${safeText(p.content||'')}</div><div class="post-actions"><button onclick="showNotice('Beğeni özelliği için ayrıca likes tablosu ve güvenlik politikaları gerekiyor.')">♡ Beğen</button><button onclick="showNotice('Yorum özelliği sonraki aşamada comments tablosuyla eklenecek.')">▢ Yorum</button><button onclick="sharePost('${safeText(p.id)}')">↗ Paylaş</button></div></article>`}).join('');
+}
+function renderMyPosts(){const el=document.getElementById('myPosts');if(!el)return;const list=currentUser?posts.filter(p=>p.user_id===currentUser.id):[];document.getElementById('postCount').textContent=String(list.length);if(!currentUser){el.innerHTML='<div class="empty">Kendi gönderilerini görmek için giriş yap.</div>';return}if(!list.length){el.innerHTML='<div class="empty">Henüz gönderi paylaşmadın.</div>';return}el.innerHTML=list.map(p=>`<div class="card"><div class="post-text">${safeText(p.content)}</div><div class="handle">${safeText(relativeDate(p.created_at))}</div><button class="secondary" style="margin-top:10px" onclick="deletePost('${safeText(p.id)}')">Gönderiyi sil</button></div>`).join('')}
+async function publishPost(){
+  if(!currentUser){openAuth();showNotice('Gönderi paylaşmak için önce giriş yapmalısın.');return}
+  const box=document.getElementById('postContent'),content=box.value.trim(),status=document.getElementById('publishStatus');if(!content){showNotice('Önce gönderi metnini yaz.');box.focus();return}
+  const btn=document.getElementById('publishButton');btn.disabled=true;btn.textContent='Paylaşılıyor…';status.textContent='';
+  try{const {error}=await db.from('posts').insert({user_id:currentUser.id,content});if(error)throw error;box.value='';status.textContent='Gönderin başarıyla paylaşıldı.';showNotice('Gönderin paylaşıldı!');await loadPosts()}
+  catch(e){console.error(e);status.textContent='Paylaşım başarısız: '+e.message;showNotice('Gönderi kaydedilemedi: '+e.message,6000)}
+  finally{btn.disabled=false;btn.textContent=currentUser?'Gönderiyi paylaş':'Giriş yap ve paylaş'}
+}
+async function deletePost(id){if(!currentUser){openAuth();return}if(!confirm('Bu gönderiyi silmek istediğine emin misin?'))return;try{const {error}=await db.from('posts').delete().eq('id',id).eq('user_id',currentUser.id);if(error)throw error;showNotice('Silme isteği gönderildi. Kayıt görünüyorsa RLS DELETE politikasını kontrol et.');await loadPosts()}catch(e){showNotice('Gönderi silinemedi: '+e.message,6000)}}
+async function sharePost(id){const p=posts.find(x=>String(x.id)===String(id));const text=p?.content||'ZP Medya gönderisi';if(navigator.share){try{await navigator.share({title:'ZP Medya',text,url:location.href})}catch(e){}}else{try{await navigator.clipboard.writeText(text+' — '+location.href);showNotice('Gönderi metni ve sayfa adresi kopyalandı.')}catch(e){showNotice(text)}}}
+async function shareProfile(){const url=location.href;if(navigator.share){try{await navigator.share({title:'ZP Medya profilim',url})}catch(e){}}else{showNotice('Profil adresin: '+url,5000)}}
+function filterAndHome(filter){activeFilter=filter;document.querySelectorAll('#homeChips .chip').forEach(b=>b.classList.toggle('active',b.dataset.filter===filter));switchPage('home');renderPosts()}
+document.getElementById('homeChips').addEventListener('click',e=>{const btn=e.target.closest('[data-filter]');if(!btn)return;activeFilter=btn.dataset.filter;document.querySelectorAll('#homeChips .chip').forEach(b=>b.classList.toggle('active',b===btn));renderPosts()});
+document.getElementById('authForm').addEventListener('submit',async e=>{
+  e.preventDefault();if(!db){showNotice('Supabase bağlantısı hazır değil.');return}
+  const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,username=document.getElementById('authUsername').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');const status=document.getElementById('authStatus'),btn=document.getElementById('authSubmit');btn.disabled=true;status.textContent='İşlem yapılıyor…';
+  try{
+    if(authMode==='login'){const {error}=await db.auth.signInWithPassword({email,password});if(error)throw error;status.textContent='Giriş başarılı.';closeModal('authModal');showNotice('Giriş yaptın.')}
+    else{if(!username){status.textContent='Lütfen kullanıcı adı yaz.';return}const {data,error}=await db.auth.signUp({email,password,options:{data:{username,display_name:username}}});if(error)throw error;if(data.session){status.textContent='Hesap oluşturuldu.';closeModal('authModal');showNotice('Hesabın oluşturuldu.')}else{status.textContent='Kayıt isteği oluşturuldu. E-posta doğrulaması açıksa gelen kutunu kontrol et.'}}
+  }catch(err){status.textContent=err.message||'İşlem başarısız.'}finally{btn.disabled=false}
+});
+document.getElementById('editForm').addEventListener('submit',async e=>{e.preventDefault();if(!currentUser){openAuth();return}const status=document.getElementById('editStatus');const display_name=document.getElementById('editDisplayName').value.trim();const username=document.getElementById('editUsername').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');const bio=document.getElementById('editBio').value.trim();if(!username){status.textContent='Kullanıcı adı boş olamaz.';return}try{const {error}=await db.from('profiles').update({display_name,username,bio}).eq('id',currentUser.id);if(error)throw error;currentProfile={...(currentProfile||{}),id:currentUser.id,display_name,username,bio};updateAccountUI();closeModal('editModal');showNotice('Profil güncellendi.')}catch(err){status.textContent='Profil kaydedilemedi: '+err.message}});
+function openEditProfile(){if(!currentUser){openAuth();return}document.getElementById('editDisplayName').value=currentProfile?.display_name||'';document.getElementById('editUsername').value=currentProfile?.username||'';document.getElementById('editBio').value=currentProfile?.bio||'';document.getElementById('editStatus').textContent='';document.getElementById('editModal').classList.remove('hidden')}
+async function signOut(){if(!db||!currentUser)return;const {error}=await db.auth.signOut();if(error){showNotice('Çıkış yapılamadı: '+error.message);return}currentUser=null;currentProfile=null;updateAccountUI();showNotice('Çıkış yaptın.')}
+document.addEventListener('DOMContentLoaded',()=>{switchAuthMode('login');init()});
+</script>
 </body>
 </html>
