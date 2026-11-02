@@ -1,345 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0757d9">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#030b20">
 <title>ZP Medya</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--blue:#0757d9;--blue2:#1687ff;--navy:#071a3b;--bg:#eef5ff;--card:#fff;--text:#10213b;--muted:#71819a;--line:#dce8f8;--shadow:0 10px 30px rgba(15,76,150,.09)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#e8f3ff 0,#f5f9ff 320px,#eef5ff 100%);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text)}button,input,textarea{font:inherit}button{cursor:pointer;border:0}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #84bcff;outline-offset:2px}.hidden{display:none!important}
-.topbar{height:66px;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 max(16px,calc((100% - 1120px)/2));gap:12px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:21px;letter-spacing:-.7px;color:var(--navy)}.logo{width:40px;height:40px;border-radius:14px;background:linear-gradient(140deg,#23a7ff,#0648cb 70%);display:grid;place-items:center;color:#fff;font-weight:950;font-size:18px;box-shadow:0 6px 16px #1479e655}.top-actions{display:flex;gap:8px;align-items:center}.iconbtn{width:40px;height:40px;border-radius:14px;background:#edf5ff;color:#1257b8;font-size:19px}.smallbtn,.primary{border-radius:13px;padding:11px 16px;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;font-weight:750;box-shadow:0 6px 14px #0757d926}.secondary{border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:#fff;color:var(--blue);font-weight:700}
-.shell{max-width:1120px;margin:24px auto;padding:0 16px;display:grid;grid-template-columns:230px minmax(0,610px) 230px;gap:20px;align-items:start}.panel,.card{background:var(--card);border:1px solid #e0ebfa;border-radius:22px;box-shadow:var(--shadow)}.sidebar{padding:16px;position:sticky;top:86px}.navitem{width:100%;padding:13px 12px;margin:3px 0;border-radius:14px;background:transparent;color:#53647d;text-align:left;display:flex;align-items:center;gap:12px;font-weight:700}.navitem span{font-size:20px;width:24px;text-align:center}.navitem.active,.navitem:hover{background:#eaf4ff;color:var(--blue)}.sidebar-note{margin-top:16px;padding:14px;background:linear-gradient(145deg,#eaf5ff,#f6faff);border-radius:16px;font-size:12px;color:#64758d;line-height:1.5}
-.main{min-width:0}.welcome{padding:20px 22px;background:linear-gradient(120deg,#0757d9,#178eff);color:#fff;border-radius:23px;box-shadow:0 12px 28px #0757d92b;margin-bottom:16px}.welcome h1{font-size:23px;line-height:1.2;margin:0 0 7px}.welcome p{margin:0;color:#e4f2ff;font-size:13px}
-.card{padding:16px;margin-bottom:16px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.section-head h2{font-size:16px;margin:0}.muted{color:var(--muted);font-size:12px}
-.stories{display:flex;gap:14px;overflow:auto;padding:3px 1px 8px;scrollbar-width:thin}.story{flex:0 0 66px;text-align:center;background:transparent;padding:0;color:#445875;font-size:11px;overflow:hidden}.story-ring{height:60px;width:60px;margin:0 auto 7px;border-radius:20px;padding:3px;background:linear-gradient(135deg,#23a7ff,#0757d9,#6a62ff)}.story-ring>div{height:100%;width:100%;border-radius:17px;border:3px solid #fff;background:#eaf4ff;display:grid;place-items:center;font-size:23px;color:#0757d9;font-weight:900}.story.add .story-ring{background:#e5f1ff;border:1px dashed #7eaff0;padding:3px}.story.add .story-ring>div{background:#f5faff;color:#0873ee}
-.composer-row{display:flex;gap:12px;align-items:flex-start}.avatar{width:43px;height:43px;border-radius:15px;display:grid;place-items:center;flex-shrink:0;background:linear-gradient(135deg,#c8e6ff,#e7f2ff);color:#0757d9;font-weight:900;overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover}.composer{flex:1;min-width:0}.composer textarea{width:100%;min-height:75px;resize:vertical;border:1px solid var(--line);background:#f8fbff;border-radius:15px;padding:13px;color:var(--text)}.composer-bottom{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}.compose-tools{display:flex;gap:7px;flex-wrap:wrap}.toolbtn{background:#edf5ff;color:#1765bf;border-radius:11px;padding:9px 10px;font-size:12px;font-weight:750}.post{padding:0;overflow:hidden}.post-head{padding:16px 17px 10px;display:flex;align-items:center;gap:10px}.post-user{min-width:0;flex:1}.post-user strong{display:block;font-size:14px}.post-user small{color:var(--muted);font-size:11px}.more{background:#f0f6ff;color:#45658b;border-radius:10px;width:34px;height:34px;font-size:18px}.post-text{padding:0 17px 14px;line-height:1.55;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}.post-media{width:100%;max-height:480px;object-fit:cover;background:#eaf4ff;display:block}.post-actions{display:flex;align-items:center;gap:7px;padding:10px 13px 13px;border-top:1px solid #edf2fa;flex-wrap:wrap}.action{padding:8px 10px;background:#f3f8ff;color:#536b8b;border-radius:11px;font-size:12px;font-weight:750}.action.liked{background:#ffedf1;color:#df3560}.action:last-child{margin-left:auto}.comments{padding:0 15px 14px}.commentline{display:flex;gap:8px;margin-top:8px}.commentline input{min-width:0;flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-size:12px}.rightcard{padding:17px;margin-bottom:15px}.rightcard h3{margin:0 0 12px;font-size:15px}.trend{padding:10px 0;border-bottom:1px solid #edf2fa}.trend:last-child{border-bottom:0}.trend strong{display:block;font-size:13px}.trend small{color:var(--muted);font-size:11px}.profile-cover{height:95px;border-radius:18px;background:linear-gradient(130deg,#0757d9,#22a2ff,#5d7bff);margin-bottom:-35px}.profile-top{text-align:center;padding:0 14px 12px}.profile-top .avatar{width:72px;height:72px;border:4px solid white;border-radius:24px;margin:0 auto 8px;font-size:23px}.profile-top h2{font-size:17px;margin:0}.profile-top p{font-size:12px;color:var(--muted);margin:5px 0 12px}.stats{display:flex;justify-content:center;gap:22px;font-size:12px}.stats b{display:block;text-align:center;font-size:15px;color:var(--navy)}
-.auth-wrap{min-height:calc(100vh - 66px);display:grid;place-items:center;padding:24px 16px}.auth-card{width:min(100%,430px);padding:27px}.auth-card h1{margin:0 0 8px;font-size:25px}.auth-card>p{margin:0 0 22px;color:var(--muted);font-size:13px;line-height:1.5}.field{display:block;margin:13px 0}.field span{display:block;font-size:12px;font-weight:800;margin-bottom:7px;color:#445875}.field input{width:100%;border:1px solid var(--line);border-radius:13px;padding:13px;background:#f9fbff}.auth-card .primary{width:100%;margin-top:9px}.auth-switch{text-align:center;margin-top:17px;font-size:13px;color:var(--muted)}.textbtn{background:transparent;color:var(--blue);font-weight:800;padding:4px}.notice{border-radius:12px;padding:11px 12px;background:#fff4dd;color:#825500;font-size:12px;line-height:1.5;margin-top:12px}.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#071a3b;color:white;border-radius:14px;padding:12px 17px;font-size:13px;z-index:50;box-shadow:0 10px 25px #071a3b33;max-width:90vw;text-align:center}.empty{text-align:center;padding:26px 15px;color:var(--muted);font-size:13px}.empty b{display:block;color:var(--navy);font-size:15px;margin-bottom:6px}
-.bottomnav{display:none}
-@media(max-width:900px){.shell{grid-template-columns:190px minmax(0,1fr)}.rightcol{display:none}}
-@media(max-width:620px){.topbar{height:60px;padding:0 13px}.brand{font-size:19px}.logo{width:36px;height:36px;border-radius:12px}.top-actions .smallbtn{padding:9px 12px;font-size:12px}.shell{display:block;margin:13px auto 85px;padding:0 11px}.leftcol{display:none}.welcome{padding:18px;border-radius:20px}.welcome h1{font-size:21px}.card{border-radius:19px;padding:14px}.post{padding:0}.post-head{padding:14px 13px 9px}.post-text{padding:0 14px 12px}.post-actions{padding:9px}.action{padding:8px;font-size:11px}.rightcol{display:none}.bottomnav{position:fixed;display:flex;bottom:0;left:0;right:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:7px 10px calc(7px + env(safe-area-inset-bottom));justify-content:space-around}.bottomnav button{background:transparent;color:#627895;font-size:20px;padding:5px 12px;border-radius:12px}.bottomnav button.active{background:#eaf4ff;color:var(--blue)}.auth-wrap{min-height:calc(100vh - 60px)}.auth-card{padding:22px}.composer textarea{min-height:70px}}
-</style>
-</head>
+:root{--bg:#030817;--panel:#07152b;--panel2:#0b1b35;--line:#24466d;--blue:#00c8ff;--blue2:#147bff;--purple:#a33cff;--text:#f4f8ff;--muted:#9fb2d0;--pink:#ff3c86;--shadow:0 0 22px #008cff20}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#0a2350 0,#030817 54%,#020611 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}button,input,textarea{font:inherit}button{cursor:pointer;color:inherit}.hidden{display:none!important}.topbar{height:66px;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #1a4167;background:#030a19eF;position:sticky;top:0;z-index:10;backdrop-filter:blur(16px)}.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px}.logo{height:39px;width:43px;border-radius:12px;display:grid;place-items:center;font-size:19px;font-weight:1000;font-style:italic;background:linear-gradient(135deg,#00e5ff,#1769ff 60%,#963cff);box-shadow:0 0 18px #00aaff60}.brand small{display:block;font-size:8px;letter-spacing:2px;color:#8eeaff;margin-top:-2px}.top-actions{display:flex;gap:8px}.iconbtn,.secondary{border:1px solid var(--line);background:#0a1b33;border-radius:12px;padding:10px 13px}.primary{border:1px solid #30d9ff;background:linear-gradient(100deg,#00bdf5,#1263ff 60%,#743cff);border-radius:13px;padding:12px 17px;font-weight:800;box-shadow:0 0 18px #007bff40}.primary:disabled{opacity:.6}.layout{max-width:1120px;margin:20px auto;padding:0 14px;display:grid;grid-template-columns:205px minmax(0,610px) 245px;gap:16px}.sidebar,.rightbar,.card,.auth-card{background:linear-gradient(155deg,#0a1b34f5,#050e20f5);border:1px solid #214a78;border-radius:18px;box-shadow:var(--shadow)}.sidebar{padding:13px;height:max-content;position:sticky;top:82px}.navitem{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:12px 10px;border:1px solid transparent;background:transparent;border-radius:12px;color:#c5d6f0;margin:2px 0}.navitem.active,.navitem:hover{background:#0b2b4c;border-color:#1267a0;color:#fff;box-shadow:inset 0 0 15px #00aaff12}.navicon{width:22px;text-align:center;font-size:18px;color:#5ee4ff}.sidefoot{font-size:11px;color:#7992b7;line-height:1.7;padding:14px 8px}.main{min-width:0}.page-title{font-size:22px;margin:0 0 5px;font-weight:850}.sub{color:var(--muted);font-size:13px;margin:0 0 16px}.stories{display:flex;gap:12px;overflow-x:auto;padding:13px;margin-bottom:14px}.story{flex:0 0 62px;text-align:center;font-size:10px;color:#cbd9ef}.storyring{height:56px;width:56px;border-radius:50%;padding:3px;margin:0 auto 6px;background:linear-gradient(135deg,#00eaff,#275cff,#c03cff)}.storyring>div{height:100%;width:100%;border-radius:50%;display:grid;place-items:center;background:#07152b;border:2px solid #07152b;font-weight:800}.card{padding:15px;margin-bottom:14px}.chips{display:flex;gap:7px;overflow:auto;margin:10px 0 14px}.chip{white-space:nowrap;border:1px solid #31557d;background:#091a31;color:#c5d8f2;border-radius:30px;padding:7px 12px;font-size:12px}.chip.active{background:linear-gradient(90deg,#008cfa,#8b35ff);border-color:#39dfff;color:#fff}.compose-row{display:flex;gap:10px}.avatar{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#00d9ff,#553cff);font-weight:900;border:2px solid #43dfff}.compose-row textarea{resize:vertical;min-height:70px;width:100%;border:1px solid #24486e;border-radius:12px;background:#061126;color:#fff;padding:12px;outline:none}.compose-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}.muted{color:var(--muted);font-size:12px}.post-head{display:flex;align-items:center;gap:10px}.post-name{font-weight:800;font-size:13px}.handle{font-size:11px;color:#8fa9ca}.dots{margin-left:auto;background:none;border:0;font-size:20px}.post-text{line-height:1.55;font-size:14px;margin:12px 0}.post-art{height:235px;border:1px solid #24588c;border-radius:13px;display:grid;place-items:center;text-align:center;overflow:hidden;background:radial-gradient(circle at 70% 30%,#3042a7,#07152d 43%,#020817 80%);position:relative}.post-art:before{content:"";position:absolute;width:220px;height:220px;border-radius:50%;border:1px solid #00cfff55;box-shadow:0 0 50px #007bff22;transform:rotate(-25deg) scaleX(1.5)}.art-inner{position:relative;z-index:1}.art-logo{font-size:40px;font-weight:1000;font-style:italic;color:#00eaff;text-shadow:0 0 18px #00baff}.art-caption{font-weight:900;letter-spacing:2px}.post-actions{display:flex;align-items:center;gap:4px;border-top:1px solid #1b3656;margin-top:12px;padding-top:9px}.action{border:0;background:transparent;color:#adc4e4;padding:7px 8px;border-radius:9px;font-size:12px}.action:hover,.action.liked{color:#ff4b86;background:#ff3c8610}.action.save{margin-left:auto}.rightbar{height:max-content;padding:14px;position:sticky;top:82px}.search{width:100%;border:1px solid #31557b;background:#040e20;color:white;padding:10px 12px;border-radius:12px;outline:none}.right-title{font-weight:800;margin:15px 0 10px}.trend{padding:9px 0;border-bottom:1px solid #17304e;font-size:12px}.trend b{display:block;font-size:13px;margin:3px 0}.bottomnav{display:none}.auth-wrap{min-height:calc(100vh - 66px);display:grid;place-items:center;padding:24px 14px}.auth-card{width:min(100%,470px);padding:25px 23px}.auth-logo{display:flex;gap:12px;align-items:center;margin-bottom:22px}.auth-title{font-size:29px;margin:0 0 7px}.auth-desc{color:var(--muted);line-height:1.5;margin:0 0 22px}.field{display:block;margin:15px 0}.field span{display:block;font-size:13px;font-weight:750;margin-bottom:7px;color:#c9dcf7}.field input{width:100%;padding:14px;border-radius:13px;border:1px solid #2a4b71;background:#061126;color:white;outline:none}.field input:focus,.search:focus,textarea:focus{border-color:#00d9ff;box-shadow:0 0 0 3px #00d9ff15}.full{width:100%}.auth-switch{text-align:center;color:var(--muted);font-size:13px;margin:17px 0}.textbtn{background:none;border:0;color:#4ddcff;font-weight:800}.notice{padding:12px;border:1px solid #7d5b23;background:#33270f;border-radius:12px;color:#f5d38b;font-size:12px;line-height:1.5}.social-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.social-buttons button{font-size:12px}.profile-head{display:flex;align-items:center;gap:14px}.profile-big{width:76px;height:76px;border-radius:50%;font-size:22px}.stats{display:flex;gap:24px;margin:18px 0}.stats span{font-size:12px;color:var(--muted)}.stats b{display:block;font-size:18px;color:white}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.tile{aspect-ratio:1;border:1px solid #214d7b;border-radius:9px;background:linear-gradient(145deg,#153f74,#071226 70%);display:grid;place-items:center;text-align:center;font-size:11px;color:#a7eaff;padding:6px}.settings-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #1c3553;font-size:13px}.empty{text-align:center;padding:24px;color:var(--muted);font-size:13px}.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:30;background:#102b4c;border:1px solid #38dfff;color:white;border-radius:12px;padding:12px 16px;max-width:90%;box-shadow:0 0 22px #00aaff35;font-size:13px}.mobile-head{display:none}
+@media(max-width:900px){.layout{grid-template-columns:180px minmax(0,1fr)}.rightbar{display:none}}@media(max-width:650px){.topbar{height:60px;padding:8px 12px}.brand{font-size:15px}.logo{height:37px;width:40px}.top-actions .desktop-only{display:none}.layout{display:block;margin:12px auto 80px;padding:0 10px}.sidebar{display:none}.rightbar{display:none}.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;justify-content:space-around;gap:0;padding:8px 2px calc(8px + env(safe-area-inset-bottom));background:#030a19f5;border-top:1px solid #24517a;backdrop-filter:blur(18px)}.bottomnav button{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:#9eb5d6;font-size:9px;min-width:0;flex:1;padding:4px 0}.bottomnav button span:first-child{font-size:19px}.bottomnav button.active{color:#42e7ff;text-shadow:0 0 12px #00bfff}.auth-wrap{padding:22px 12px;min-height:calc(100vh - 60px)}.auth-card{padding:22px 18px}.auth-title{font-size:26px}.post-art{height:210px}.card{padding:13px}.stories{padding:10px 4px}.compose-bottom{align-items:flex-start}.compose-bottom .muted{max-width:55%}.profile-head{align-items:flex-start}.stats{justify-content:space-between;gap:8px}.stats b{font-size:16px}.mobile-head{display:block}.toast{bottom:84px}}
+</style></head>
 <body>
-<header class="topbar">
-  <div class="brand"><div class="logo">ZP</div><span>ZP Medya</span></div>
-  <div class="top-actions">
-    <button class="iconbtn" title="Ana sayfa" onclick="showApp()">⌂</button>
-    <button id="headerAuth" class="smallbtn" onclick="showAuth()">Giriş Yap</button>
-    <button id="headerProfile" class="iconbtn hidden" title="Profil" onclick="showProfile()">♙</button>
-  </div>
-</header>
-
-<section id="authView" class="auth-wrap">
-  <div class="auth-card panel">
-    <div class="brand" style="margin-bottom:20px"><div class="logo">ZP</div><span>ZP Medya</span></div>
-    <h1 id="authTitle">Tekrar hoş geldin!</h1>
-    <p id="authDesc">Hesabına giriş yap ve ZP Medya topluluğuna katıl.</p>
-    <form id="authForm">
-      <label id="nameField" class="field hidden"><span>Görünen ad</span><input id="displayName" autocomplete="name" maxlength="50" placeholder="Adın"></label>
-      <label class="field"><span>E-posta</span><input id="email" type="email" autocomplete="email" required placeholder="ornek@email.com"></label>
-      <label class="field"><span>Şifre</span><input id="password" type="password" autocomplete="current-password" required minlength="6" placeholder="En az 6 karakter"></label>
-      <button id="authSubmit" class="primary" type="submit">Giriş Yap</button>
-    </form>
-    <div class="auth-switch"><span id="switchText">Henüz hesabın yok mu?</span> <button id="switchButton" class="textbtn" type="button" onclick="toggleAuthMode()">Kayıt Ol</button></div>
-    <div class="notice">Güvenlik: Bu sayfa mevcut Supabase projenin kimlik doğrulamasını kullanır. Yönetici yetkisi bu ekrandan verilmez.</div>
-  </div>
-</section>
-
-<div id="appView" class="shell hidden">
-  <aside class="leftcol">
-    <div class="panel sidebar">
-      <button class="navitem active" onclick="showApp()"><span>⌂</span> Ana Sayfa</button>
-      <button class="navitem" onclick="toast('Arama özelliğini sonraki aşamada bağlayacağız.')"><span>⌕</span> Keşfet</button>
-      <button class="navitem" onclick="toast('Mesajlar sonraki aşamada eklenecek.')"><span>✉</span> Mesajlar</button>
-      <button class="navitem" onclick="toast('Bildirimler sonraki aşamada eklenecek.')"><span>♧</span> Bildirimler</button>
-      <button class="navitem" onclick="showProfile()"><span>♙</span> Profilim</button>
-      <button class="navitem" onclick="openSettings()"><span>⚙</span> Ayarlar</button>
-      <button class="navitem" onclick="signOut()"><span>↪</span> Çıkış Yap</button>
-      <div class="sidebar-note"><b>ZP Medya</b><br>Paylaş, keşfet ve topluluğunu oluştur. Bazı sosyal özellikler henüz geliştirme aşamasındadır.</div>
-    </div>
-  </aside>
-
-  <main class="main">
-    <section id="feedPage">
-      <div class="welcome"><h1>Merhaba, <span id="welcomeName">ZP Medya!</span> 👋</h1><p>Bugün dünyanla ne paylaşmak istersin?</p></div>
-      <section class="card">
-        <div class="section-head"><h2>Hikâyeler</h2><span class="muted">ZP topluluğu</span></div>
-        <div class="stories">
-          <button class="story add" onclick="toast('Hikâye paylaşımı henüz etkin değil.')"><div class="story-ring"><div>＋</div></div>Hikâyem</button>
-          <button class="story" onclick="toast('Hikâyeler sonraki aşamada eklenecek.')"><div class="story-ring"><div>ZP</div></div>ZP Medya</button>
-          <button class="story" onclick="toast('Hikâyeler sonraki aşamada eklenecek.')"><div class="story-ring"><div>♫</div></div>Müzik</button>
-          <button class="story" onclick="toast('Hikâyeler sonraki aşamada eklenecek.')"><div class="story-ring"><div>▣</div></div>Tasarım</button>
-          <button class="story" onclick="toast('Hikâyeler sonraki aşamada eklenecek.')"><div class="story-ring"><div>▶</div></div>Video</button>
-        </div>
-      </section>
-      <section class="card">
-        <div class="section-head"><h2>Bir gönderi oluştur</h2><span class="muted">Topluluğunla paylaş</span></div>
-        <div class="composer-row">
-          <div class="avatar" id="composerAvatar">ZP</div>
-          <div class="composer">
-            <textarea id="postContent" maxlength="2000" placeholder="Aklından neler geçiyor?"></textarea>
-            <div class="composer-bottom">
-              <div class="compose-tools">
-                <button class="toolbtn" onclick="toast('Fotoğraf yükleme sonraki aşamada bağlanacak.')">▧ Fotoğraf</button>
-                <button class="toolbtn" onclick="toast('Video yükleme sonraki aşamada bağlanacak.')">▶ Video</button>
-              </div>
-              <button class="primary" id="publishBtn" onclick="publishPost()">Paylaş ↗</button>
-            </div>
-          </div>
-        </div>
-        <div id="composerStatus" class="muted" style="margin:10px 0 0 55px"></div>
-      </section>
-      <div class="section-head" style="padding:0 4px"><h2>Akış</h2><span class="muted">En yeni gönderiler</span></div>
-      <div id="feed"><div class="empty"><b>Gönderiler yükleniyor…</b>Biraz bekle.</div></div>
-    </section>
-
-    <section id="profilePage" class="hidden">
-      <div class="welcome"><h1>Profilim</h1><p>Kendini ve paylaşımlarını yönet.</p></div>
-      <div class="card" style="text-align:center">
-        <div class="avatar" id="profileAvatar" style="width:78px;height:78px;margin:0 auto 12px;border-radius:25px;font-size:25px">ZP</div>
-        <h2 id="profileName" style="margin:0;font-size:20px">Profil</h2><p id="profileEmail" class="muted"></p>
-        <div class="stats" style="margin:16px 0"><span><b id="postCount">0</b>Gönderi</span><span><b>—</b>Takipçi</span><span><b>—</b>Takip</span></div>
-      </div>
-      <div class="card">
-        <div class="section-head"><h2>Profili düzenle</h2></div>
-        <label class="field"><span>Görünen ad</span><input id="editDisplayName" maxlength="50" placeholder="Adın"></label>
-        <label class="field"><span>Kullanıcı adı</span><input id="editUsername" maxlength="30" placeholder="kullaniciadi"></label>
-        <label class="field"><span>Biyografi</span><textarea id="editBio" maxlength="160" placeholder="Kendinden kısaca bahset" style="width:100%;min-height:85px;border:1px solid var(--line);border-radius:13px;padding:12px;background:#f9fbff"></textarea></label>
-        <button class="primary" onclick="saveProfile()">Profili Kaydet</button>
-      </div>
-      <button class="secondary" onclick="showApp()">← Ana sayfaya dön</button>
-    </section>
-
-    <section id="settingsPage" class="hidden">
-      <div class="welcome"><h1>Ayarlar</h1><p>Hesap seçenekleri</p></div>
-      <div class="card"><h2 style="font-size:17px">Hesap</h2><p class="muted" id="settingsEmail"></p><button class="secondary" onclick="showProfile()">Profili düzenle</button> <button class="secondary" onclick="signOut()">Çıkış Yap</button></div>
-      <div class="notice">Yönetici paneli, rol tabanlı güvenlik ve içerik yönetimi ayrı bir aşamada güvenli şekilde kurulmalıdır.</div>
-      <button class="secondary" style="margin-top:15px" onclick="showApp()">← Ana sayfaya dön</button>
-    </section>
-  </main>
-
-  <aside class="rightcol">
-    <div class="panel rightcard">
-      <div class="profile-cover"></div>
-      <div class="profile-top"><div class="avatar" id="miniAvatar">ZP</div><h2 id="miniName">ZP Medya üyesi</h2><p id="miniHandle">@zpmedya</p><button class="secondary" onclick="showProfile()">Profili Gör</button></div>
-    </div>
-    <div class="panel rightcard"><h3>✨ Öne çıkanlar</h3><div class="trend"><strong>#ZPMedya</strong><small>Topluluğumuz</small></div><div class="trend"><strong>#Müzik</strong><small>Yeni sesler, yeni fikirler</small></div><div class="trend"><strong>#Tasarım</strong><small>Yaratıcılığını paylaş</small></div></div>
-    <div class="muted" style="padding:4px 8px;line-height:1.7">© 2026 ZP Medya<br>Güvenli ve özgün bir topluluk oluşturuyoruz.</div>
-  </aside>
-</div>
-
-<nav class="bottomnav hidden" id="bottomNav">
-  <button class="active" onclick="showApp()" aria-label="Ana sayfa">⌂</button>
-  <button onclick="toast('Keşfet sonraki aşamada eklenecek.')" aria-label="Keşfet">⌕</button>
-  <button onclick="toast('Gönderi oluşturma alanını yukarıda bulabilirsin.')" aria-label="Paylaş">＋</button>
-  <button onclick="toast('Bildirimler sonraki aşamada eklenecek.')" aria-label="Bildirimler">♧</button>
-  <button onclick="showProfile()" aria-label="Profil">♙</button>
-</nav>
-<div id="toast" class="toast hidden" role="status"></div>
-
+<header class="topbar"><div class="brand"><div class="logo">ZP</div><div>ZP MEDYA<small>PAYLAŞ · KEŞFET · BAĞLAN</small></div></div><div class="top-actions"><button class="iconbtn desktop-only" onclick="go('home')" aria-label="Ana sayfa">⌂</button><button id="headerAuth" class="primary" onclick="showAuth()">Giriş Yap</button><button id="headerProfile" class="iconbtn hidden" onclick="go('profile')">👤</button></div></header>
+<section id="authView" class="auth-wrap"><div class="auth-card"><div class="auth-logo"><div class="logo" style="height:48px;width:52px;font-size:23px">ZP</div><div><b style="font-size:22px">ZP MEDYA</b><div class="muted">PAYLAŞ · KEŞFET · BAĞLAN</div></div></div><h1 class="auth-title" id="authTitle">Tekrar hoş geldin</h1><p class="auth-desc" id="authDesc">Hesabına giriş yap ve ZP Medya topluluğuna katıl.</p><form id="authForm"><label id="nameField" class="field hidden"><span>Adın ve soyadın</span><input id="displayName" maxlength="50" autocomplete="name" placeholder="Adın ve soyadın"></label><label id="usernameField" class="field hidden"><span>Kullanıcı adı</span><input id="username" maxlength="30" placeholder="ornek: kuzeyfe"></label><label class="field"><span>E-posta adresin</span><input id="email" type="email" required autocomplete="email" placeholder="ornek@email.com"></label><label class="field"><span>Şifren</span><input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="En az 6 karakter"></label><button id="authSubmit" class="primary full" type="submit">Giriş Yap　➜</button></form><div style="display:flex;align-items:center;gap:10px;margin:15px 0;color:#6f8db4;font-size:11px"><span style="height:1px;background:#29496c;flex:1"></span>veya<span style="height:1px;background:#29496c;flex:1"></span></div><div class="social-buttons"><button class="secondary" onclick="socialLogin('google')">🌐 Google ile giriş</button><button class="secondary" onclick="socialLogin('facebook')">f Facebook ile giriş</button></div><div class="auth-switch"><span id="switchText">ZP Medya’da hesabın yok mu?</span> <button id="switchButton" class="textbtn" type="button" onclick="toggleAuthMode()">Yeni Hesap Oluştur</button></div><div class="notice">Güvenlik: Bu sayfa mevcut Supabase projenin kimlik doğrulamasını kullanır. Yönetici yetkisi bu ekrandan verilmez. Google/Facebook girişi için Supabase tarafında sağlayıcı kurulumu gerekir.</div></div></section>
+<div id="appView" class="hidden"><div class="layout"><aside class="sidebar"><button class="navitem active" data-page="home" onclick="go('home')"><span class="navicon">⌂</span>Ana Sayfa</button><button class="navitem" data-page="explore" onclick="go('explore')"><span class="navicon">⌕</span>Keşfet</button><button class="navitem" data-page="videos" onclick="go('videos')"><span class="navicon">▷</span>Videolar (Reels)</button><button class="navitem" data-page="messages" onclick="go('messages')"><span class="navicon">✉</span>Mesajlar</button><button class="navitem" data-page="notifications" onclick="go('notifications')"><span class="navicon">♡</span>Bildirimler</button><button class="navitem" data-page="profile" onclick="go('profile')"><span class="navicon">◉</span>Profilim</button><button class="navitem" data-page="settings" onclick="go('settings')"><span class="navicon">⚙</span>Ayarlar</button><div class="sidefoot">© 2026 ZP Medya<br>Güvenli ve yaratıcı topluluk.</div></aside><main class="main">
+<section id="page-home" class="page"><h1 class="page-title">Ana Sayfa</h1><p class="sub">Dünyanı paylaş, ilham ver, keşfet.</p><div class="card stories"><div class="story" onclick="toast('Hikâye ekleme sonraki aşamada etkinleştirilecek.')"><div class="storyring"><div>＋</div></div>Hikâyen</div><div class="story"><div class="storyring"><div>ZM</div></div>zp music</div><div class="story"><div class="storyring"><div>ZF</div></div>zp film</div><div class="story"><div class="storyring"><div>ZT</div></div>tasarım</div><div class="story"><div class="storyring"><div>🎬</div></div>projeler</div><div class="story"><div class="storyring"><div>♫</div></div>müzik</div></div><div class="chips"><button class="chip active" onclick="setChip(this)">Tümü</button><button class="chip" onclick="setChip(this)">♫ Müzik</button><button class="chip" onclick="setChip(this)">▣ Film</button><button class="chip" onclick="setChip(this)">✎ Tasarım</button><button class="chip" onclick="setChip(this)">Projeler</button></div><div class="card"><div class="compose-row"><div class="avatar" id="composerAvatar">ZP</div><textarea id="postContent" maxlength="2000" placeholder="Aklından neler geçiyor? ZP Medya'da paylaş..."></textarea></div><div class="compose-bottom"><span class="muted">✧ Fikrini toplulukla paylaş</span><button class="primary" id="publishBtn" onclick="publishPost()">Paylaş ↗</button></div><div id="composerStatus" class="muted" style="margin-top:8px"></div></div><div id="feed"><div class="card empty">Gönderiler yükleniyor…</div></div></section>
+<section id="page-explore" class="page hidden"><h1 class="page-title">Keşfet</h1><p class="sub">ZP Medya topluluğunda yeni içerikler bul.</p><input class="search" id="exploreSearch" placeholder="⌕ ZP Medya'da ara..." oninput="filterTiles(this.value)"><div class="chips"><button class="chip active" onclick="setChip(this)">Sana Özel</button><button class="chip" onclick="setChip(this)">Popüler</button><button class="chip" onclick="setChip(this)">Müzik</button><button class="chip" onclick="setChip(this)">Film</button></div><div class="grid3" id="exploreTiles"><div class="tile" data-search="müzik konser">♫<br>Canlı Müzik</div><div class="tile" data-search="film sinema">🎬<br>Film Dünyası</div><div class="tile" data-search="tasarım kamera">▣<br>Set Arkası</div><div class="tile" data-search="müzik ses">〰<br>Sesler</div><div class="tile" data-search="doğa proje">◈<br>Projeler</div><div class="tile" data-search="fotoğraf">▧<br>Fotoğraf</div><div class="tile" data-search="etkinlik konser">✦<br>Etkinlikler</div><div class="tile" data-search="film yapım">◉<br>Yapım</div><div class="tile" data-search="tasarım sanat">✎<br>Tasarım</div></div></section>
+<section id="page-videos" class="page hidden"><h1 class="page-title">Videolar · Reels</h1><p class="sub">Kısa videolar ve yaratıcı içerikler.</p><div class="card"><div class="post-art" style="height:390px"><div class="art-inner"><div class="art-logo">ZP</div><div class="art-caption">ZP MEDYA</div><p class="muted">Video akışı</p></div></div><p>Yeni şarkım çok yakında... ♫</p><div class="post-actions"><button class="action" onclick="toast('Beğeni özelliği sonraki aşamada bağlanacak.')">♡ Beğen</button><button class="action" onclick="toast('Yorum özelliği sonraki aşamada bağlanacak.')">▢ Yorum</button><button class="action" onclick="toast('Video yükleme sonraki aşamada etkinleştirilecek.')">＋ Video yükle</button></div></div></section>
+<section id="page-messages" class="page hidden"><h1 class="page-title">Mesajlar</h1><p class="sub">Özel mesajların.</p><div class="card"><input class="search" placeholder="Mesajlarda ara..." oninput="toast('Mesaj arama henüz etkin değil.')"><div class="empty">✉<br><b>Mesajlaşma yakında</b><br>Özel mesaj sistemi için veritabanı tabloları ve güvenlik kuralları kurulacak.</div></div></section>
+<section id="page-notifications" class="page hidden"><h1 class="page-title">Bildirimler</h1><p class="sub">Hesabındaki gelişmeler.</p><div class="card"><div class="empty">♡<br><b>Henüz bildirim yok</b><br>Beğeni, yorum ve takip bildirimleri sonraki aşamada bağlanacak.</div></div></section>
+<section id="page-profile" class="page hidden"><h1 class="page-title">Profilim</h1><p class="sub">Kişisel sayfanı düzenle.</p><div class="card"><div class="profile-head"><div class="avatar profile-big" id="profileAvatar">ZP</div><div><h2 id="profileName" style="margin:0 0 4px;font-size:20px">ZP Medya üyesi</h2><div class="muted" id="profileHandle">@zpmedya</div><div class="muted" id="profileEmail" style="margin-top:5px"></div></div></div><div class="stats"><span><b id="postCount">0</b>Gönderi</span><span><b>—</b>Takipçi</span><span><b>—</b>Takip</span></div><p class="muted" id="profileBio">ZP Medya topluluğuna hoş geldin.</p><button class="secondary" onclick="toggleEditProfile()">✎ Profili Düzenle</button><div id="profileEdit" class="hidden" style="margin-top:16px"><label class="field"><span>Görünen ad</span><input id="editDisplayName" maxlength="50" placeholder="Adın"></label><label class="field"><span>Kullanıcı adı</span><input id="editUsername" maxlength="30" placeholder="kullaniciadi"></label><label class="field"><span>Biyografi</span><input id="editBio" maxlength="160" placeholder="Kendinden kısaca bahset"></label><button class="primary" onclick="saveProfile()">Değişiklikleri Kaydet</button></div></div><h3>Gönderilerin</h3><div id="profilePosts" class="grid3"><div class="tile">Gönderilerin burada görünecek.</div></div></section>
+<section id="page-settings" class="page hidden"><h1 class="page-title">Ayarlar ve Hareketler</h1><p class="sub">Hesap tercihlerini yönet.</p><div class="card"><div class="settings-row"><span>👤 Hesap merkezi</span><span>›</span></div><div class="settings-row" onclick="go('profile')"><span>✎ Profilini düzenle</span><span>›</span></div><div class="settings-row"><span>♧ Bildirimler</span><span>›</span></div><div class="settings-row"><span>◇ Gizlilik</span><span>›</span></div><div class="settings-row"><span>♧ Hesap güvenliği</span><span>›</span></div><div class="settings-row"><span>▣ Kaydedilenler</span><span>›</span></div><div class="settings-row"><span>◷ Arşiv</span><span>›</span></div><div class="settings-row"><span>☾ Koyu tema</span><span style="color:#45eaff">Açık</span></div><button class="secondary full" style="margin-top:16px" onclick="toast('Hesap değiştirme özelliği sonraki aşamada eklenecek.')">＋ Hesap Ekle / Değiştir</button><button class="primary full" style="margin-top:10px" onclick="signOut()">↪ Çıkış Yap</button></div></section>
+</main><aside class="rightbar"><input class="search" placeholder="⌕ Ara..." oninput="toast('Arama altyapısı sonraki aşamada eklenecek.')"><div class="right-title">ZP Medya'da gündem</div><div class="trend">TOPLULUK<b>#ZPMedya</b><span class="muted">Paylaş ve keşfet</span></div><div class="trend">MÜZİK<b>#YeniŞarkılar</b><span class="muted">Yeni sesler keşfet</span></div><div class="trend">FİLM<b>#YeniProjeler</b><span class="muted">Yapım dünyasından</span></div><div class="trend">TASARIM<b>#Yaratıcılık</b><span class="muted">Fikirlerini paylaş</span></div><div class="sidefoot">© 2026 ZP Medya<br>Topluluk kuralları · Gizlilik</div></aside></div></div>
+<nav class="bottomnav hidden" id="bottomNav"><button class="active" data-page="home" onclick="go('home')"><span>⌂</span>Ana Sayfa</button><button data-page="explore" onclick="go('explore')"><span>⌕</span>Keşfet</button><button data-page="videos" onclick="go('videos')"><span>▷</span>Videolar</button><button data-page="messages" onclick="go('messages')"><span>✉</span>Mesajlar</button><button data-page="profile" onclick="go('profile')"><span>◉</span>Profilim</button></nav><div id="toast" class="toast hidden" role="status"></div>
 <script>
-/* Supabase tarayıcıda kullanılabilen publishable key. Service-role key'i buraya asla koyma. */
-const SUPABASE_URL = "https://nrmcekxsjibaitwleepb.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_7Dwtq45AOQgM6nuwuHe6qQ_ho_LDu7n";
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
-let currentUser = null;
-let currentProfile = null;
-let isSignup = false;
-let toastTimer = null;
-
-function toast(message){
-  const el=document.getElementById('toast'); el.textContent=message; el.classList.remove('hidden');
-  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.add('hidden'),3200);
-}
-function initials(text){return (text||'ZP').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'ZP'}
-function showAuth(){document.getElementById('authView').classList.remove('hidden');document.getElementById('appView').classList.add('hidden');document.getElementById('bottomNav').classList.add('hidden')}
-function toggleAuthMode(){
-  isSignup=!isSignup;
-  document.getElementById('authTitle').textContent=isSignup?'ZP Medya’ya katıl':'Tekrar hoş geldin!';
-  document.getElementById('authDesc').textContent=isSignup?'Ücretsiz hesabını oluştur ve topluluğa katıl.':'Hesabına giriş yap ve ZP Medya topluluğuna katıl.';
-  document.getElementById('nameField').classList.toggle('hidden',!isSignup);
-  document.getElementById('authSubmit').textContent=isSignup?'Kayıt Ol':'Giriş Yap';
-  document.getElementById('switchText').textContent=isSignup?'Zaten hesabın var mı?':'Henüz hesabın yok mu?';
-  document.getElementById('switchButton').textContent=isSignup?'Giriş Yap':'Kayıt Ol';
-  document.getElementById('password').autocomplete=isSignup?'new-password':'current-password';
-}
-document.getElementById('authForm').addEventListener('submit',async e=>{
-  e.preventDefault();
-  const email=document.getElementById('email').value.trim();
-  const password=document.getElementById('password').value;
-  const displayName=document.getElementById('displayName').value.trim();
-  const submit=document.getElementById('authSubmit');
-  submit.disabled=true;submit.textContent='İşleniyor…';
-  try{
-    if(isSignup){
-      const {data,error}=await db.auth.signUp({email,password,options:{data:{display_name:displayName||email.split('@')[0]}}});
-      if(error)throw error;
-      if(data.session){currentUser=data.user;await ensureProfile();await enterApp();toast('Hesabın oluşturuldu!')}
-      else toast('Kayıt isteği alındı. E-posta doğrulaması gerekiyorsa gelen kutunu kontrol et.');
-    }else{
-      const {data,error}=await db.auth.signInWithPassword({email,password});
-      if(error)throw error;
-      currentUser=data.user;await ensureProfile();await enterApp();toast('Giriş başarılı.');
-    }
-  }catch(err){toast(friendlyError(err))}
-  finally{submit.disabled=false;submit.textContent=isSignup?'Kayıt Ol':'Giriş Yap'}
-});
-function friendlyError(err){
-  const m=String(err?.message||'Bir hata oluştu.');
-  if(m.toLowerCase().includes('invalid login credentials'))return 'E-posta veya şifre hatalı.';
-  if(m.toLowerCase().includes('already registered'))return 'Bu e-posta ile bir hesap zaten var.';
-  if(m.toLowerCase().includes('email not confirmed'))return 'Önce e-posta adresini doğrulamalısın.';
-  return m;
-}
-async function ensureProfile(){
-  if(!currentUser)return;
-  const {data,error}=await db.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
-  if(error){console.warn('Profil okunamadı:',error.message);currentProfile=null;return}
-  if(data){currentProfile=data;return}
-  const meta=currentUser.user_metadata||{};
-  const row={id:currentUser.id,username:makeUsername(currentUser.email||'zpmedya'),display_name:meta.display_name||((currentUser.email||'ZP Medya').split('@')[0]),bio:''};
-  const result=await db.from('profiles').upsert(row,{onConflict:'id'}).select().maybeSingle();
-  if(result.error){console.warn('Profil oluşturulamadı:',result.error.message);currentProfile=row}else currentProfile=result.data||row;
-}
-function makeUsername(s){return s.split('@')[0].toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,24)||'zpmedya'}
-async function enterApp(){
-  document.getElementById('authView').classList.add('hidden');
-  document.getElementById('appView').classList.remove('hidden');
-  document.getElementById('bottomNav').classList.remove('hidden');
-  document.getElementById('headerAuth').classList.add('hidden');
-  document.getElementById('headerProfile').classList.remove('hidden');
-  updateProfileUI();showApp();await loadPosts();
-}
-function updateProfileUI(){
-  const name=currentProfile?.display_name||currentUser?.user_metadata?.display_name||currentUser?.email?.split('@')[0]||'ZP Medya üyesi';
-  const username=currentProfile?.username||makeUsername(currentUser?.email||'zpmedya');
-  document.getElementById('welcomeName').textContent=name;
-  document.getElementById('profileName').textContent=name;
-  document.getElementById('profileEmail').textContent=currentUser?.email||'';
-  document.getElementById('miniName').textContent=name;
-  document.getElementById('miniHandle').textContent='@'+username;
-  document.getElementById('settingsEmail').textContent=currentUser?.email||'';
-  document.getElementById('editDisplayName').value=currentProfile?.display_name||name;
-  document.getElementById('editUsername').value=username;
-  document.getElementById('editBio').value=currentProfile?.bio||'';
-  ['composerAvatar','profileAvatar','miniAvatar'].forEach(id=>{const el=document.getElementById(id);el.textContent=initials(name)});
-}
-function showApp(){
-  document.getElementById('feedPage').classList.remove('hidden');
-  document.getElementById('profilePage').classList.add('hidden');
-  document.getElementById('settingsPage').classList.add('hidden');
-  document.querySelectorAll('.navitem').forEach((x,i)=>x.classList.toggle('active',i===0));
-  document.querySelectorAll('.bottomnav button').forEach((x,i)=>x.classList.toggle('active',i===0));
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function showProfile(){
-  document.getElementById('feedPage').classList.add('hidden');
-  document.getElementById('profilePage').classList.remove('hidden');
-  document.getElementById('settingsPage').classList.add('hidden');
-  document.querySelectorAll('.navitem').forEach((x,i)=>x.classList.toggle('active',i===4));
-  document.querySelectorAll('.bottomnav button').forEach((x,i)=>x.classList.toggle('active',i===4));
-  updateProfileUI();window.scrollTo({top:0,behavior:'smooth'});
-}
-function openSettings(){
-  document.getElementById('feedPage').classList.add('hidden');
-  document.getElementById('profilePage').classList.add('hidden');
-  document.getElementById('settingsPage').classList.remove('hidden');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-async function saveProfile(){
-  if(!currentUser)return;
-  const display_name=document.getElementById('editDisplayName').value.trim();
-  const username=document.getElementById('editUsername').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,30);
-  const bio=document.getElementById('editBio').value.trim();
-  if(!display_name||!username){toast('Görünen ad ve kullanıcı adı boş olamaz.');return}
-  const {data,error}=await db.from('profiles').upsert({id:currentUser.id,display_name,username,bio},{onConflict:'id'}).select().maybeSingle();
-  if(error){toast('Profil kaydedilemedi: '+error.message);return}
-  currentProfile=data||{...(currentProfile||{}),display_name,username,bio};updateProfileUI();toast('Profil güncellendi.');
-}
-async function publishPost(){
-  if(!currentUser){showAuth();return}
-  const input=document.getElementById('postContent');const content=input.value.trim();
-  if(!content){toast('Paylaşmadan önce bir şeyler yaz.');input.focus();return}
-  const btn=document.getElementById('publishBtn');btn.disabled=true;btn.textContent='Paylaşılıyor…';
-  try{
-    const {error}=await db.from('posts').insert({user_id:currentUser.id,content});
-    if(error)throw error;
-    input.value='';document.getElementById('composerStatus').textContent='Gönderin paylaşıldı.';
-    await loadPosts();toast('Gönderin paylaşıldı!');
-  }catch(err){toast('Gönderi paylaşılmadı: '+err.message)}
-  finally{btn.disabled=false;btn.textContent='Paylaş ↗'}
-}
-function safeText(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function timeAgo(value){
-  const mins=Math.max(0,Math.floor((Date.now()-new Date(value).getTime())/60000));
-  if(mins<1)return 'şimdi';if(mins<60)return mins+' dk önce';
-  const h=Math.floor(mins/60);if(h<24)return h+' sa önce';return Math.floor(h/24)+' gün önce';
-}
-async function loadPosts(){
-  const feed=document.getElementById('feed');feed.innerHTML='<div class="empty"><b>Gönderiler yükleniyor…</b></div>';
-  try{
-    const {data:posts,error}=await db.from('posts').select('id,user_id,content,created_at').order('created_at',{ascending:false}).limit(50);
-    if(error)throw error;
-    if(!posts||!posts.length){feed.innerHTML='<div class="card empty"><b>Akışın henüz boş 👀</b>İlk gönderiyi sen paylaş!</div>';document.getElementById('postCount').textContent='0';return}
-    const ids=[...new Set(posts.map(p=>p.user_id).filter(Boolean))];
-    let profiles={};
-    if(ids.length){const result=await db.from('profiles').select('id,username,display_name,avatar_url').in('id',ids);if(!result.error)(result.data||[]).forEach(p=>profiles[p.id]=p)}
-    feed.innerHTML=posts.map(p=>{
-      const prof=profiles[p.user_id]||{};
-      const name=prof.display_name||prof.username||'ZP Medya üyesi';
-      const avatar=prof.avatar_url?`<img src="${safeText(prof.avatar_url)}" alt="">`:safeText(initials(name));
-      const mine=p.user_id===currentUser?.id;
-      return `<article class="card post" data-post-id="${safeText(p.id)}">
-        <div class="post-head"><div class="avatar">${avatar}</div><div class="post-user"><strong>${safeText(name)}</strong><small>${safeText(prof.username?'@'+prof.username+' · ':'')}${safeText(timeAgo(p.created_at))}</small></div>${mine?'<button class="more" title="Gönderi seçenekleri" onclick="deletePost(this)">⋯</button>':''}</div>
-        <div class="post-text">${safeText(p.content)}</div>
-        <div class="post-actions"><button class="action" onclick="toast('Beğeni özelliğini veritabanına sonraki aşamada bağlayacağız.')">♡ Beğen</button><button class="action" onclick="toast('Yorumlar sonraki aşamada eklenecek.')">▢ Yorum</button><button class="action" onclick="sharePost(this)">↗ Paylaş</button><button class="action" onclick="toast('Kaydetme sonraki aşamada eklenecek.')">⚑ Kaydet</button></div>
-      </article>`;
-    }).join('');
-    document.getElementById('postCount').textContent=String(posts.filter(p=>p.user_id===currentUser?.id).length);
-  }catch(err){feed.innerHTML=`<div class="card empty"><b>Gönderiler yüklenemedi.</b>${safeText(err.message)}<br><button class="secondary" style="margin-top:12px" onclick="loadPosts()">Tekrar dene</button></div>`}
-}
-async function deletePost(button){
-  const article=button.closest('[data-post-id]');if(!article)return;
-  if(!confirm('Bu gönderiyi silmek istiyor musun?'))return;
-  const id=article.dataset.postId;
-  const {error}=await db.from('posts').delete().eq('id',id).eq('user_id',currentUser.id);
-  if(error){toast('Gönderi silinemedi: '+error.message);return}
-  toast('Gönderi silindi.');await loadPosts();
-}
-async function sharePost(button){
-  const article=button.closest('[data-post-id]');
-  const text=article?.querySelector('.post-text')?.innerText||location.href;
-  try{if(navigator.share)await navigator.share({title:'ZP Medya',text,url:location.href});else if(navigator.clipboard){await navigator.clipboard.writeText(text+'\n'+location.href);toast('Paylaşım metni kopyalandı.')}else toast('Paylaşım için tarayıcının menüsünü kullan.')}catch(e){}
-}
-async function signOut(){
-  const {error}=await db.auth.signOut();
-  if(error){toast(error.message);return}
-  currentUser=null;currentProfile=null;
-  document.getElementById('headerAuth').classList.remove('hidden');
-  document.getElementById('headerProfile').classList.add('hidden');
-  document.getElementById('appView').classList.add('hidden');
-  document.getElementById('bottomNav').classList.add('hidden');
-  showAuth();toast('Çıkış yapıldı.');
-}
-db.auth.onAuthStateChange(async(event,session)=>{
-  if(session?.user&&!currentUser){
-    currentUser=session.user;
-    setTimeout(async()=>{if(currentUser){await ensureProfile();await enterApp()}},0);
-  }else if(!session&&currentUser){
-    currentUser=null;currentProfile=null;
-    document.getElementById('headerAuth').classList.remove('hidden');
-    document.getElementById('headerProfile').classList.add('hidden');
-    document.getElementById('appView').classList.add('hidden');
-    document.getElementById('bottomNav').classList.add('hidden');showAuth();
-  }
-});
-(async()=>{
-  const {data}=await db.auth.getSession();
-  if(data?.session?.user){currentUser=data.session.user;await ensureProfile();await enterApp()}
-})();
-</script>
-</body>
-</html>
+// Supabase public/publishable key: güvenli veritabanı erişimi RLS politikalarıyla korunmalıdır.
+const SUPABASE_URL='https://nrmcekxsjibaitwleepb.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_7Dwtq45AOQgM6nuwuHe6qQ_ho_LDu7n';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let currentUser=null,currentProfile=null,isSignup=false,toastTimer;
+const $=id=>document.getElementById(id);
+function toast(m){const el=$('toast');el.textContent=m;el.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.add('hidden'),3200)}
+function initials(s){return (s||'ZP').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'ZP'}
+function safe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showAuth(){ $('authView').classList.remove('hidden');$('appView').classList.add('hidden');$('bottomNav').classList.add('hidden');$('headerAuth').classList.remove('hidden');$('headerProfile').classList.add('hidden') }
+function toggleAuthMode(){isSignup=!isSignup;$('authTitle').textContent=isSignup?'Yeni Hesap Oluştur':'Tekrar hoş geldin';$('authDesc').textContent=isSignup?'ZP Medya topluluğuna katıl, paylaş ve keşfet.':'Hesabına giriş yap ve ZP Medya topluluğuna katıl.';$('nameField').classList.toggle('hidden',!isSignup);$('usernameField').classList.toggle('hidden',!isSignup);$('authSubmit').textContent=isSignup?'Hesap Oluştur':'Giriş Yap　➜';$('switchText').textContent=isSignup?'Zaten bir hesabın var mı?':'ZP Medya’da hesabın yok mu?';$('switchButton').textContent=isSignup?'Giriş Yap':'Yeni Hesap Oluştur';$('password').autocomplete=isSignup?'new-password':'current-password'}
+$('authForm').addEventListener('submit',async e=>{e.preventDefault();const email=$('email').value.trim(),password=$('password').value,displayName=$('displayName').value.trim(),username=$('username').value.trim().replace(/^@/,'').toLowerCase();const btn=$('authSubmit');btn.disabled=true;btn.textContent='İşleniyor…';try{if(isSignup){const {data,error}=await db.auth.signUp({email,password,options:{data:{display_name:displayName||email.split('@')[0],username:username||email.split('@')[0]}}});if(error)throw error;if(data.session){currentUser=data.user;await ensureProfile();await enterApp();toast('Hesabın oluşturuldu!')}else{toast('Kayıt isteği alındı. E-postanı doğrula, sonra giriş yap.');toggleAuthMode()}}else{const {data,error}=await db.auth.signInWithPassword({email,password});if(error)throw error;currentUser=data.user;await ensureProfile();await enterApp();toast('Giriş başarılı.')} }catch(err){toast(err.message||'İşlem tamamlanamadı.')}finally{btn.disabled=false;btn.textContent=isSignup?'Hesap Oluştur':'Giriş Yap　➜'}});
+async function ensureProfile(){if(!currentUser)return;let {data,error}=await db.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();if(error){console.warn(error);return}if(!data){const name=currentUser.user_metadata?.display_name||currentUser.email?.split('@')[0]||'ZP üyesi';const username=(currentUser.user_metadata?.username||name).toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,30)||'zpmedya';const ins=await db.from('profiles').insert({id:currentUser.id,display_name:name,username,bio:''}).select().maybeSingle();if(!ins.error)data=ins.data;else console.warn(ins.error)}currentProfile=data||null;renderProfile()}
+async function enterApp(){$('authView').classList.add('hidden');$('appView').classList.remove('hidden');$('bottomNav').classList.remove('hidden');$('headerAuth').classList.add('hidden');$('headerProfile').classList.remove('hidden');go('home');renderProfile();await loadPosts()}
+function renderProfile(){const p=currentProfile||{},name=p.display_name||currentUser?.user_metadata?.display_name||currentUser?.email?.split('@')[0]||'ZP Medya üyesi';$('profileName').textContent=name;$('profileHandle').textContent='@'+(p.username||'zpmedya');$('profileEmail').textContent=currentUser?.email||'';$('profileBio').textContent=p.bio||'ZP Medya topluluğuna hoş geldin.';$('profileAvatar').textContent=initials(name);$('composerAvatar').textContent=initials(name);$('editDisplayName').value=p.display_name||name;$('editUsername').value=p.username||'';$('editBio').value=p.bio||''}
+function go(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));const target=$('page-'+page);if(target)target.classList.remove('hidden');document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));if(page==='profile')loadProfilePosts()}
+function setChip(btn){btn.parentElement.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));btn.classList.add('active')}
+function socialLogin(provider){toast(provider==='google'?'Google girişi için Supabase > Authentication > Providers bölümünde Google yapılandırılmalı.':'Facebook girişi için Supabase > Authentication > Providers bölümünde Facebook yapılandırılmalı.')}
+function toggleEditProfile(){$('profileEdit').classList.toggle('hidden')}
+async function saveProfile(){if(!currentUser)return;const display_name=$('editDisplayName').value.trim(),username=$('editUsername').value.trim().replace(/^@/,'').toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,30),bio=$('editBio').value.trim();if(!display_name||!username){toast('Görünen ad ve kullanıcı adı gerekli.');return}const {data,error}=await db.from('profiles').upsert({id:currentUser.id,display_name,username,bio},{onConflict:'id'}).select().maybeSingle();if(error){toast('Profil kaydedilemedi: '+error.message);return}currentProfile=data||{...currentProfile,display_name,username,bio};renderProfile();$('profileEdit').classList.add('hidden');toast('Profil güncellendi.')}
+async function publishPost(){if(!currentUser){toast('Gönderi paylaşmak için giriş yap.');return}const content=$('postContent').value.trim();if(!content){toast('Önce bir şeyler yaz.');return}const btn=$('publishBtn');btn.disabled=true;try{const {error}=await db.from('posts').insert({user_id:currentUser.id,content});if(error)throw error;$('postContent').value='';$('composerStatus').textContent='Gönderin paylaşıldı.';await loadPosts();toast('Gönderin paylaşıldı!')}catch(e){toast('Gönderi paylaşılamadı: '+(e.message||'Supabase tablo/politikalarını kontrol et.'))}finally{btn.disabled=false}}
+async function loadPosts(){const feed=$('feed');feed.innerHTML='<div class="card empty">Gönderiler yükleniyor…</div>';try{const {data,error}=await db.from('posts').select('id,user_id,content,created_at').order('created_at',{ascending:false}).limit(30);if(error)throw error;if(!data?.length){feed.innerHTML='<div class="card empty">Henüz gönderi yok.<br><b>İlk paylaşımı sen yap!</b></div>';return}const ids=[...new Set(data.map(p=>p.user_id).filter(Boolean))];let profiles={};if(ids.length){const r=await db.from('profiles').select('id,username,display_name').in('id',ids);if(!r.error)(r.data||[]).forEach(p=>profiles[p.id]=p)}feed.innerHTML=data.map(p=>{const pr=profiles[p.user_id]||{},name=pr.display_name||'ZP Medya üyesi',handle=pr.username||'zpmedya',date=p.created_at?new Date(p.created_at).toLocaleString('tr-TR',{dateStyle:'short',timeStyle:'short'}):'';return `<article class="card"><div class="post-head"><div class="avatar">${safe(initials(name))}</div><div><div class="post-name">${safe(name)}</div><div class="handle">@${safe(handle)} · ${safe(date)}</div></div><button class="dots" onclick="toast('Gönderi menüsü sonraki aşamada eklenecek.')">•••</button></div><div class="post-text">${safe(p.content).replace(/\n/g,'<br>')}</div><div class="post-actions"><button class="action" onclick="toast('Beğeni sistemi sonraki aşamada bağlanacak.')">♡ Beğen</button><button class="action" onclick="toast('Yorum sistemi sonraki aşamada bağlanacak.')">▢ Yorum</button><button class="action" onclick="sharePost(${JSON.stringify(p.id)})">↗ Paylaş</button><button class="action save" onclick="toast('Kaydetme sistemi sonraki aşamada bağlanacak.')">♧ Kaydet</button></div></article>`}).join('')}catch(e){console.warn(e);feed.innerHTML='<div class="card empty">Gönderiler yüklenemedi. Supabase posts tablosu ve SELECT RLS politikasını kontrol et.</div>'}}
+async function loadProfilePosts(){if(!$('profilePosts'))return;const {data,error}=await db.from('posts').select('id,content,created_at').eq('user_id',currentUser?.id||'').order('created_at',{ascending:false}).limit(9);if(error||!data?.length){$('profilePosts').innerHTML='<div class="tile">Henüz gönderin yok.</div>';return}$('postCount').textContent=data.length;$('profilePosts').innerHTML=data.map(p=>`<div class="tile" title="${safe(p.content)}">${safe(p.content.slice(0,70))}</div>`).join('')}
+async function sharePost(id){try{if(navigator.share)await navigator.share({title:'ZP Medya',text:'ZP Medya gönderisi',url:location.href+'#post-'+id});else{await navigator.clipboard.writeText(location.href+'#post-'+id);toast('Bağlantı kopyalandı.')}}catch(e){toast('Paylaşım iptal edildi.')}}
+async function signOut(){const {error}=await db.auth.signOut();if(error){toast(error.message);return}currentUser=null;currentProfile=null;showAuth();toast('Çıkış yapıldı.')}
+function filterTiles(q){document.querySelectorAll('#exploreTiles .tile').forEach(t=>t.classList.toggle('hidden',!((t.dataset.search||'')+' '+t.textContent).toLowerCase().includes(q.toLowerCase())))}
+(async()=>{try{const {data}=await db.auth.getSession();if(data?.session){currentUser=data.session.user;await ensureProfile();await enterApp()}}catch(e){console.warn(e)}})();
+</script></body></html>
