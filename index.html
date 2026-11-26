@@ -228,6 +228,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     ]);
     const likes=likesResult.error?[]:(likesResult.data||[]);
     const comments=commentsResult.error?[]:(commentsResult.data||[]);
+    const commentIds=comments.map(c=>c.id);
+    let commentLikes=[];
+    if(commentIds.length){const clr=await supabase.from('comment_likes').select('comment_id,user_id').in('comment_id',commentIds);if(!clr.error)commentLikes=clr.data||[];}
     const commentUserIds=[...new Set(comments.map(c=>c.user_id).filter(Boolean))];
     let commentProfiles=[];
     if(commentUserIds.length){const cr=await supabase.from('profiles').select('id,username,display_name,avatar_url').in('id',commentUserIds);if(!cr.error)commentProfiles=cr.data||[];}
@@ -260,8 +263,15 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
         const commentAvatar=document.createElement('div');commentAvatar.className='avatar';commentAvatar.style.cssText='width:34px;height:34px;font-size:12px;margin-top:2px';setAvatar(commentAvatar,cp.avatar_url,commentNames.get(c.user_id)||'Üye');
         const textWrap=document.createElement('div');textWrap.style.cssText='min-width:0;flex:1';
         const label=document.createElement('strong');label.textContent=commentNames.get(c.user_id)||'Üye';
+        const labelLine=document.createElement('div');labelLine.style.cssText='display:flex;align-items:center;gap:7px;flex-wrap:wrap';
+        labelLine.appendChild(label);
+        if(String(c.user_id)===String(post.user_id)){const ownerTag=document.createElement('span');ownerTag.textContent='Gönderi sahibi';ownerTag.style.cssText='font-size:11px;color:#9aa6bd;font-weight:500';labelLine.appendChild(ownerTag);}
         const body=document.createElement('div');body.style.cssText='margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere';body.textContent=c.content;
-        textWrap.append(label,body);item.append(commentAvatar,textWrap);
+        const commentLikeRows=commentLikes.filter(x=>String(x.comment_id)===String(c.id));
+        const commentLiked=commentLikeRows.some(x=>String(x.user_id)===String(currentUser.id));
+        const commentLikeBtn=document.createElement('button');commentLikeBtn.type='button';commentLikeBtn.textContent=(commentLiked?'♥':'♡')+' '+commentLikeRows.length;commentLikeBtn.setAttribute('aria-label','Yorumu beğen');commentLikeBtn.style.cssText='margin-top:5px;padding:2px 7px;border:0;background:transparent;color:'+(commentLiked?'#ff5da8':'#aab6d7')+';font-size:13px';
+        commentLikeBtn.addEventListener('click',async()=>{commentLikeBtn.disabled=true;try{if(commentLiked){const {error}=await supabase.from('comment_likes').delete().eq('comment_id',c.id).eq('user_id',currentUser.id);if(error)throw error;}else{const {error}=await supabase.from('comment_likes').insert({comment_id:c.id,user_id:currentUser.id});if(error)throw error;}await loadPosts();}catch(err){showNotice('Yorum beğenisi kaydedilemedi: '+readableError(err),true);}finally{commentLikeBtn.disabled=false;}});
+        textWrap.append(labelLine,body,commentLikeBtn);item.append(commentAvatar,textWrap);
         if(!isReply){
           const replyBtn=document.createElement('button');replyBtn.type='button';replyBtn.textContent='Yanıtla';replyBtn.style.cssText='margin-top:7px;background:transparent;border:0;color:#63dfff;padding:4px 0;font-weight:700';
           const replyForm=document.createElement('form');replyForm.className='hidden';replyForm.style.cssText='display:flex;gap:8px;margin-top:8px';
