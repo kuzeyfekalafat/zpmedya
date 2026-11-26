@@ -163,7 +163,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       showNotice('Hesabın yönetici tarafından geçici olarak askıya alındı. Destek için ZP Medya yönetimiyle iletişime geç.',true);
       return;
     }
-    isAdmin=false; const roleCheck=await supabase.from('user_roles').select('role').eq('user_id',user.id).maybeSingle(); isAdmin=!!(roleCheck.data?.role==='admin' && (user.email||'').toLowerCase()==='zpmedyaapp@gmail.com'); $('adminNav').classList.toggle('hidden',!isAdmin); $('adminBottomNav').classList.toggle('hidden',!isAdmin); $('accountBadge').innerHTML=isAdmin?'<span class="admin-badge">👑 YÖNETİCİ</span>':'<span class="verified-badge">✓</span>';
+    isAdmin=false; const roleCheck=await supabase.from('user_roles').select('role').eq('user_id',user.id).maybeSingle(); isAdmin=!!(roleCheck.data?.role==='admin' && (user.email||'').toLowerCase()==='zpmedyaapp@gmail.com'); const badgeCheck=await supabase.from('member_badges').select('badge_type').eq('user_id',user.id).maybeSingle(); const hasVerifiedBadge=badgeCheck.data?.badge_type==='verified'; $('adminNav').classList.toggle('hidden',!isAdmin); $('adminBottomNav').classList.toggle('hidden',!isAdmin); $('accountBadge').innerHTML=isAdmin?'<span class="admin-badge">👑 YÖNETİCİ</span>':(hasVerifiedBadge?'<span class="verified-badge">✓</span>':'');
     authSection.classList.add('hidden'); homeSection.classList.remove('hidden');
     $('logoutBtn').classList.remove('hidden'); $('refreshBtn').classList.remove('hidden'); $('bottomNav').classList.remove('hidden');
     const name=currentProfile.display_name || user.user_metadata?.display_name || user.email?.split('@')[0] || 'ZP Medya üyesi';
