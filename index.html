@@ -73,11 +73,11 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
   </section>
 
   <section id="homeSection" class="hidden">
-    <div class="profile-card"><div class="avatar" id="profileAvatar">ZP</div><div style="min-width:0;flex:1"><div class="profile-name" id="profileName">ZP Medya üyesi</div><div class="profile-handle" id="profileHandle">@uye</div></div><button type="button" class="small-primary" id="editProfileBtn">Profili Düzenle</button></div>
-    <section id="profileEditor" class="composer hidden"><h3 style="margin-top:0">Profilini düzenle</h3><form id="profileForm"><label class="field"><span class="field-label">Görünen ad</span><span class="input-shell"><input id="editDisplayName" maxlength="60" required placeholder="Görünen ad"></span></label><label class="field"><span class="field-label">Kullanıcı adı</span><span class="input-shell"><span class="input-icon">@</span><input id="editUsername" maxlength="30" pattern="[a-zA-Z0-9_]+" required placeholder="kullanici_adi"></span></label><label class="field"><span class="field-label">Hakkında</span><textarea id="editBio" maxlength="300" placeholder="Kendinden kısaca bahset…"></textarea></label><div class="composer-bottom"><span id="profileEditStatus">Kullanıcı adı yalnızca harf, rakam ve alt çizgi içerebilir.</span><button class="small-primary" type="submit">Kaydet</button></div></form></section>
+    <div class="profile-card"><div class="avatar" id="profileAvatar">ZP</div><div style="min-width:0;flex:1"><div class="profile-name" id="profileName">ZP Medya üyesi</div><div class="profile-handle" id="profileHandle">@uye</div><div id="accountBadge"></div></div><button type="button" class="small-primary" id="editProfileBtn">Profili Düzenle</button></div>
+    <section id="profileEditor" class="composer hidden"><h3 style="margin-top:0">Profilini düzenle</h3><form id="profileForm"><label class="field"><span class="field-label">Profil fotoğrafı</span><input id="avatarFile" type="file" accept="image/jpeg,image/png,image/webp"><small style="color:#aab6d7">JPG, PNG veya WebP · En fazla 5 MB</small></label><label class="field"><span class="field-label">Görünen ad</span><span class="input-shell"><input id="editDisplayName" maxlength="60" required placeholder="Görünen ad"></span></label><label class="field"><span class="field-label">Kullanıcı adı</span><span class="input-shell"><span class="input-icon">@</span><input id="editUsername" maxlength="30" pattern="[a-zA-Z0-9_]+" required placeholder="kullanici_adi"></span></label><label class="field"><span class="field-label">Hakkında</span><textarea id="editBio" maxlength="300" placeholder="Kendinden kısaca bahset…"></textarea></label><div class="composer-bottom"><span id="profileEditStatus">Kullanıcı adı yalnızca harf, rakam ve alt çizgi içerebilir.</span><button class="small-primary" type="submit">Kaydet</button></div></form></section>
     <div class="home-layout">
       <nav class="side-nav" aria-label="Ana menü">
-        <button class="nav-btn active" data-nav="home">🏠　Ana Sayfa</button><button class="nav-btn" data-nav="explore">🔍　Keşfet</button><button class="nav-btn" data-nav="profile">👤　Profilim</button><button class="nav-btn" data-nav="notifications">🔔　Bildirimler</button><button class="nav-btn" data-nav="messages">💬　Mesajlar</button>
+        <button class="nav-btn active" data-nav="home">🏠　Ana Sayfa</button><button class="nav-btn" data-nav="explore">🔍　Keşfet</button><button class="nav-btn" data-nav="profile">👤　Profilim</button><button class="nav-btn" data-nav="notifications">🔔　Bildirimler</button><button class="nav-btn" data-nav="messages">💬　Mesajlar</button><button class="nav-btn hidden" id="adminNav" data-nav="admin">👑　Yönetim Paneli</button>
       </nav>
       <div>
         <h2 class="feed-title" id="feedTitle">Ana Sayfa</h2>
@@ -92,7 +92,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
   </section>
   <p class="footer-note">© 2026 ZP Medya · Kendini göster.</p>
 </main>
-<nav id="bottomNav" class="bottom-nav hidden" aria-label="Mobil menü"><button data-nav="home">⌂<span>Ana Sayfa</span></button><button data-nav="explore">⌕<span>Keşfet</span></button><button data-nav="create">＋<span>Paylaş</span></button><button data-nav="notifications">♧<span>Bildirim</span></button><button data-nav="profile">♙<span>Profil</span></button></nav>
+<nav id="bottomNav" class="bottom-nav hidden" aria-label="Mobil menü"><button data-nav="home">⌂<span>Ana Sayfa</span></button><button data-nav="explore">⌕<span>Keşfet</span></button><button data-nav="create">＋<span>Paylaş</span></button><button data-nav="messages">💬<span>Mesajlar</span></button><button data-nav="notifications">♧<span>Bildirim</span></button><button data-nav="profile">♙<span>Profil</span></button></nav>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -104,7 +104,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
   const SUPABASE_ANON_KEY = 'sb_publishable_7Dwtq45AOQgM6nuwuHe6qQ_ho_LDu7n';
   const $ = id => document.getElementById(id);
   const authSection = $('authSection'), homeSection = $('homeSection'), notice = $('notice');
-  let supabase = null, currentUser = null, currentProfile = null, currentView = 'login', busy = false;
+  let supabase = null, currentUser = null, currentProfile = null, currentView = 'login', busy = false, isAdmin = false;
   const showNotice = (message, isError=false) => { notice.textContent = message; notice.className = 'notice show' + (isError ? ' error' : ''); };
   const clearNotice = () => { notice.textContent=''; notice.className='notice'; };
   const readableError = err => {
@@ -131,7 +131,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     return data || {id:user.id,username:(user.email||'uye').split('@')[0],display_name:user.user_metadata?.display_name || user.user_metadata?.full_name || (user.email||'ZP Medya üyesi').split('@')[0],avatar_url:null};
   }
   async function showHome(user) {
-    currentUser=user; currentProfile=await getProfile(user);
+    currentUser=user; currentProfile=await getProfile(user); isAdmin=false; const roleCheck=await supabase.from('user_roles').select('role').eq('user_id',user.id).maybeSingle(); isAdmin=!!(roleCheck.data?.role==='admin' && (user.email||'').toLowerCase()==='zpmedyaapp@gmail.com'); $('adminNav').classList.toggle('hidden',!isAdmin); $('accountBadge').innerHTML=isAdmin?'<span class="admin-badge">👑 YÖNETİCİ</span>':'<span class="verified-badge">✓</span>';
     authSection.classList.add('hidden'); homeSection.classList.remove('hidden');
     $('logoutBtn').classList.remove('hidden'); $('refreshBtn').classList.remove('hidden'); $('bottomNav').classList.remove('hidden');
     const name=currentProfile.display_name || user.user_metadata?.display_name || user.email?.split('@')[0] || 'ZP Medya üyesi';
@@ -296,11 +296,11 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     const nav=b.dataset.nav;
     if(nav==='create'){$('postContent').focus();$('composer').scrollIntoView({behavior:'smooth',block:'center'});return;}
     document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x===b));
-    const labels={home:'Ana Sayfa',explore:'Keşfet',profile:'Profilim',notifications:'Bildirimler',messages:'Mesajlar'};
+    const labels={home:'Ana Sayfa',explore:'Keşfet',profile:'Profilim',notifications:'Bildirimler',messages:'Mesajlar',admin:'Yönetim Paneli'};
     $('feedTitle').textContent=labels[nav]||'Ana Sayfa';
     if(nav==='home'){ $('composer').classList.remove('hidden');$('profileEditor').classList.add('hidden');$('storiesPanel').classList.remove('hidden');loadPosts();loadStories(); }
     else if(nav==='profile'){ $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.remove('hidden');$('feed').innerHTML='<div class="empty-card">Profil bilgilerini buradan düzenleyebilirsin.</div>'; }
-    else { $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.add('hidden');if(nav==='notifications')loadNotifications();else if(nav==='messages')loadMessages();else if(nav==='explore')loadExplore();else $('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
+    else { $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.add('hidden');if(nav==='notifications')loadNotifications();else if(nav==='messages')loadMessages();else if(nav==='explore')loadExplore();else if(nav==='admin'){if(isAdmin)loadAdminPanel();else $('feed').innerHTML='<div class="empty-card">Yetkin yok.</div>';}else $('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
     window.scrollTo({top:0,behavior:'smooth'});
   }));
   $('editProfileBtn').addEventListener('click',()=>{document.querySelector('[data-nav="profile"]').click();$('profileEditor').scrollIntoView({behavior:'smooth',block:'center'});});
