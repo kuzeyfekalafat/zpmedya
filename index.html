@@ -101,7 +101,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
         <section class="composer" id="storiesPanel"><strong>Hikâyeler · 24 saat</strong><form id="storyForm" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><input id="storyFile" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" required><input id="storyCaption" maxlength="500" placeholder="Açıklama (isteğe bağlı)"><button class="small-primary" type="submit">Hikâye Paylaş</button></form><div id="storiesList" style="display:flex;gap:10px;overflow-x:auto;margin-top:12px"></div></section>
         <div class="composer" id="composer">
           <div class="composer-head"><div class="avatar" id="composerAvatar">ZP</div><strong id="composerName">Bir şeyler paylaş</strong></div>
-          <form id="postForm"><textarea id="postContent" maxlength="2000" placeholder="Aklından neler geçiyor? Toplulukla paylaş..." required></textarea><div class="composer-bottom"><span id="charCount">0 / 2000</span><button class="small-primary" type="submit">＋ Paylaş</button></div></form>
+          <form id="postForm"><textarea id="postContent" maxlength="2000" placeholder="Aklından neler geçiyor? Toplulukla paylaş..."></textarea><label class="field" style="margin:12px 0 0"><span class="field-label">Fotoğraf veya video ekle</span><input id="postMediaFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime"><small style="color:#aab6d7">Fotoğraf veya video · En fazla 50 MB</small></label><div id="postMediaPreview" class="hidden" style="margin-top:10px"></div><div class="composer-bottom"><span id="charCount">0 / 2000</span><button class="small-primary" type="submit">＋ Paylaş</button></div></form>
         </div>
         <div id="publicAnnouncements"></div>
         <div id="feed" aria-live="polite"><div class="empty-card">Gönderiler yükleniyor…</div></div>
@@ -214,7 +214,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
   }
   async function loadPosts(){
     const feed=$('feed'); feed.innerHTML='<div class="empty-card">Gönderiler yükleniyor…</div>';
-    const {data,error}=await supabase.from('posts').select('id,user_id,content,created_at').order('created_at',{ascending:false}).limit(50);
+    const {data,error}=await supabase.from('posts').select('id,user_id,content,media_url,media_type,created_at').order('created_at',{ascending:false}).limit(50);
     if(error){feed.innerHTML='<div class="empty-card">Gönderiler yüklenemedi. Veritabanı erişim politikalarını (RLS) kontrol etmemiz gerekiyor.<br><br>'+safeText(error.message)+'</div>';return;}
     if(!data || data.length===0){feed.innerHTML='<div class="empty-card">Henüz gönderi yok. İlk gönderiyi sen paylaş! ✨</div>';return;}
     const userIds=[...new Set(data.map(p=>p.user_id).filter(Boolean))];
@@ -244,7 +244,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       const avatar=document.createElement('div');avatar.className='avatar';setAvatar(avatar,p.avatar_url,name);
       const who=document.createElement('div');who.innerHTML='<div class="post-name">'+safeText(name)+'</div><div class="post-meta">@'+safeText(p.username||'uye')+' · '+safeText(formatDate(post.created_at))+'</div>';
       head.append(avatar,who);head.style.cursor='pointer';head.addEventListener('click',()=>loadPublicProfile(post.user_id));avatar.style.cursor='pointer';avatar.addEventListener('click',()=>loadPublicProfile(post.user_id));card.appendChild(head);
-      const content=document.createElement('div');content.className='post-content';content.textContent=post.content||'';card.appendChild(content);
+      if(post.content){const content=document.createElement('div');content.className='post-content';content.textContent=post.content;card.appendChild(content);}if(post.media_url){const media=document.createElement(post.media_type==='video'?'video':'img');media.src=post.media_url;media.style.cssText='display:block;width:100%;max-height:560px;object-fit:contain;border-radius:16px;background:#030817;margin:10px 0';if(post.media_type==='video'){media.controls=true;media.playsInline=true;}else{media.alt='Gönderi fotoğrafı';media.loading='lazy';}card.appendChild(media);}
       const actions=document.createElement('div');actions.className='post-actions';
       const likeBtn=document.createElement('button');likeBtn.type='button';likeBtn.textContent=(liked?'♥':'♡')+' Beğen ('+postLikes.length+')';if(liked)likeBtn.style.color='#ff75b5';
       likeBtn.addEventListener('click',async()=>{likeBtn.disabled=true;try{if(liked){const {error}=await supabase.from('post_likes').delete().eq('post_id',post.id).eq('user_id',currentUser.id);if(error)throw error;}else{const {error}=await supabase.from('post_likes').insert({post_id:post.id,user_id:currentUser.id});if(error)throw error;}await loadPosts();}catch(err){showNotice('Beğeni kaydedilemedi: '+readableError(err),true);}finally{likeBtn.disabled=false;}});
@@ -290,7 +290,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const p=pr.data;const [fc,following,posts]=await Promise.all([
       supabase.from('follows').select('follower_id',{count:'exact',head:true}).eq('following_id',userId),
       supabase.from('follows').select('follower_id').eq('follower_id',currentUser.id).eq('following_id',userId).maybeSingle(),
-      supabase.from('posts').select('id,user_id,content,created_at').eq('user_id',userId).order('created_at',{ascending:false}).limit(50)
+      supabase.from('posts').select('id,user_id,content,media_url,media_type,created_at').eq('user_id',userId).order('created_at',{ascending:false}).limit(50)
     ]);
     feed.innerHTML='';const back=document.createElement('button');back.className='small-primary';back.textContent='← Keşfete dön';back.addEventListener('click',()=>document.querySelector('[data-nav="explore"]').click());feed.appendChild(back);
     const card=document.createElement('section');card.className='post-card';card.style.marginTop='14px';const head=document.createElement('div');head.className='post-head';
@@ -302,7 +302,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     feed.appendChild(card);const title=document.createElement('h3');title.className='feed-title';title.textContent='Gönderiler';feed.appendChild(title);
     if(posts.error){const e=document.createElement('div');e.className='empty-card';e.textContent='Gönderiler yüklenemedi: '+posts.error.message;feed.appendChild(e);return;}
     if(!posts.data?.length){const e=document.createElement('div');e.className='empty-card';e.textContent='Henüz gönderi yok.';feed.appendChild(e);return;}
-    posts.data.forEach(post=>{const item=document.createElement('article');item.className='post-card';const body=document.createElement('div');body.className='post-content';body.textContent=post.content||'';const date=document.createElement('div');date.className='post-meta';date.textContent=formatDate(post.created_at);item.append(body,date);feed.appendChild(item);});
+    posts.data.forEach(post=>{const item=document.createElement('article');item.className='post-card';if(post.content){const body=document.createElement('div');body.className='post-content';body.textContent=post.content;item.appendChild(body);}if(post.media_url){const media=document.createElement(post.media_type==='video'?'video':'img');media.src=post.media_url;media.style.cssText='display:block;width:100%;max-height:560px;object-fit:contain;border-radius:16px;background:#030817;margin:10px 0';if(post.media_type==='video'){media.controls=true;media.playsInline=true;}else{media.alt='Gönderi fotoğrafı';media.loading='lazy';}item.appendChild(media);}const date=document.createElement('div');date.className='post-meta';date.textContent=formatDate(post.created_at);item.append(body||document.createTextNode(''),date);feed.appendChild(item);});
   }
   async function loadExplore(){
     const feed=$('feed');feed.innerHTML='';
@@ -463,11 +463,15 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     try{const {error}=await supabase.auth.resetPasswordForEmail($('resetEmail').value.trim(),{redirectTo:location.origin});if(error)throw error;showNotice('Şifre sıfırlama bağlantısı, destekleniyorsa e-posta adresine gönderildi.');}
     catch(err){showNotice(readableError(err),true);}finally{setBusy(form,false);}
   });
+  $('postMediaFile').addEventListener('change',()=>{const file=$('postMediaFile').files[0],box=$('postMediaPreview');box.innerHTML='';box.classList.toggle('hidden',!file);if(!file)return;const url=URL.createObjectURL(file);const media=document.createElement(file.type.startsWith('video/')?'video':'img');media.src=url;media.style.cssText='max-width:100%;max-height:260px;border-radius:14px';if(media.tagName==='VIDEO'){media.controls=true;media.playsInline=true;}box.appendChild(media);});
   $('postForm').addEventListener('submit',async e=>{
-    e.preventDefault();if(busy||!currentUser)return;const content=$('postContent').value.trim();if(!content){showNotice('Paylaşmadan önce bir şeyler yaz.',true);return;}
+    e.preventDefault();if(busy||!currentUser)return;const content=$('postContent').value.trim(),file=$('postMediaFile').files[0];if(!content&&!file){showNotice('Metin yaz veya fotoğraf/video ekle.',true);return;}
+    if(file&&file.size>50*1024*1024){showNotice('Dosya 50 MB sınırını aşamaz.',true);return;}
+    const allowed=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm','video/quicktime'];if(file&&!allowed.includes(file.type)){showNotice('Bu dosya türü desteklenmiyor.',true);return;}
     const form=e.currentTarget;setBusy(form,true);clearNotice();
-    try{const {error}=await supabase.from('posts').insert({user_id:currentUser.id,content});if(error)throw error;$('postContent').value='';$('charCount').textContent='0 / 2000';showNotice('Gönderin paylaşıldı!');await loadPosts();}
-    catch(err){showNotice('Gönderi kaydedilemedi. RLS politikalarını kontrol etmemiz gerekebilir. '+readableError(err),true);}
+    try{let mediaUrl=null,mediaType=null;if(file){const ext=(file.name.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'');const path=currentUser.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2)+'.'+ext;const up=await supabase.storage.from('post-media').upload(path,file,{contentType:file.type,cacheControl:'3600',upsert:false});if(up.error)throw up.error;mediaUrl=supabase.storage.from('post-media').getPublicUrl(path).data.publicUrl;mediaType=file.type.startsWith('video/')?'video':'image';}
+      const {error}=await supabase.from('posts').insert({user_id:currentUser.id,content,media_url:mediaUrl,media_type:mediaType});if(error)throw error;$('postContent').value='';$('postMediaFile').value='';$('postMediaPreview').innerHTML='';$('postMediaPreview').classList.add('hidden');$('charCount').textContent='0 / 2000';showNotice('Gönderin paylaşıldı!');await loadPosts();}
+    catch(err){showNotice('Gönderi kaydedilemedi: '+readableError(err),true);}
     finally{setBusy(form,false);}
   });
   $('postContent').addEventListener('input',()=> $('charCount').textContent=$('postContent').value.length+' / 2000');
