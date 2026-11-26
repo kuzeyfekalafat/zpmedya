@@ -243,20 +243,73 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
   }
   async function loadAdminPanel(){
     if(!isAdmin){$('feed').innerHTML='<div class="empty-card">Bu alan yalnızca yetkili yönetici hesabına açıktır.</div>';return;}
-    const feed=$('feed');feed.innerHTML='<div class="empty-card">Yönetim verileri yükleniyor…</div>';
-    const [users,posts,reports]=await Promise.all([
-      supabase.from('profiles').select('id',{count:'exact',head:true}),
-      supabase.from('posts').select('id',{count:'exact',head:true}),
-      supabase.from('reports').select('id,target_type,target_id,reason,status,created_at').in('status',['open','reviewing']).order('created_at',{ascending:false}).limit(50)
+    const feed=$('feed');feed.innerHTML='<div class="empty-card">Yönetim merkezi yükleniyor…</div>';
+    const [users,posts,reports,roles,badges,announcements]=await Promise.all([
+      supabase.from('profiles').select('id,username,display_name,avatar_url,created_at').order('created_at',{ascending:false}).limit(100),
+      supabase.from('posts').select('id,user_id,content,created_at').order('created_at',{ascending:false}).limit(100),
+      supabase.from('reports').select('id,reporter_id,target_type,target_id,reason,status,created_at').in('status',['open','reviewing']).order('created_at',{ascending:false}).limit(100),
+      supabase.from('user_roles').select('user_id,role'),
+      supabase.from('member_badges').select('user_id,badge_type'),
+      supabase.from('admin_announcements').select('id,title,body,created_at').order('created_at',{ascending:false}).limit(20)
     ]);
-    feed.innerHTML='';const panel=document.createElement('section');panel.className='composer';
-    const heading=document.createElement('h3');heading.textContent='👑 ZP Medya Yönetim Merkezi';panel.appendChild(heading);
-    [['Üyeler',users.count],['Gönderiler',posts.count],['Bekleyen şikâyetler',reports.data?.length||0]].forEach(([label,value])=>{const stat=document.createElement('p');stat.textContent=label+': '+(value??'—');panel.appendChild(stat);});
-    feed.appendChild(panel);
-    const title=document.createElement('h3');title.textContent='İncelenecek şikâyetler';feed.appendChild(title);
-    if(reports.error){const error=document.createElement('div');error.className='empty-card';error.textContent='Şikâyetler yüklenemedi: '+reports.error.message;feed.appendChild(error);return;}
-    if(!reports.data?.length){const empty=document.createElement('div');empty.className='empty-card';empty.textContent='Bekleyen şikâyet yok.';feed.appendChild(empty);return;}
-    reports.data.forEach(report=>{const card=document.createElement('article');card.className='post-card';const info=document.createElement('p');info.textContent=report.target_type+' · '+report.reason+' · '+formatDate(report.created_at);const done=document.createElement('button');done.className='small-primary';done.textContent='Çözüldü olarak işaretle';done.addEventListener('click',async()=>{done.disabled=true;const result=await supabase.from('reports').update({status:'resolved'}).eq('id',report.id);if(result.error){showNotice('Güncellenemedi: '+readableError(result.error),true);done.disabled=false;}else{card.remove();showNotice('Şikâyet çözüldü olarak işaretlendi.');}});card.append(info,done);feed.appendChild(card);});
+    feed.innerHTML='';
+    const panel=document.createElement('section');panel.className='composer';
+    const heading=document.createElement('h2');heading.textContent='👑 ZP Medya Yönetim Merkezi';panel.appendChild(heading);
+    const stats=document.createElement('div');stats.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px';
+    [['Toplam üye',users.data?.length],['Gönderi',posts.data?.length],['Bekleyen şikâyet',reports.data?.length]].forEach(([label,value])=>{const box=document.createElement('div');box.className='post-card';const n=document.createElement('strong');n.style.fontSize='25px';n.textContent=String(value??'—');const t=document.createElement('div');t.className='post-meta';t.textContent=label;box.append(n,t);stats.appendChild(box);});
+    panel.appendChild(stats);feed.appendChild(panel);
+    const section=(title)=>{const h=document.createElement('h3');h.textContent=title;h.style.margin='26px 0 12px';feed.appendChild(h);};
+    const errorCard=(msg)=>{const e=document.createElement('div');e.className='empty-card';e.textContent=msg;feed.appendChild(e);};
+    const roleMap=new Map((roles.data||[]).map(x=>[x.user_id,x.role]));
+    const badgeMap=new Set((badges.data||[]).map(x=>x.user_id));
+    section('Üye yönetimi');
+    if(users.error) errorCard('Üyeler yüklenemedi: '+users.error.message);
+    else if(!users.data?.length) errorCard('Henüz üye bulunmuyor.');
+    else users.data.forEach(u=>{
+      const row=document.createElement('article');row.className='post-card';row.style.display='flex';row.style.alignItems='center';row.style.gap='10px';
+      const avatar=document.createElement('div');avatar.className='avatar';setAvatar(avatar,u.avatar_url,u.display_name||u.username);
+      const info=document.createElement('div');info.style.cssText='min-width:0;flex:1';
+      const name=document.createElement('strong');name.textContent=u.display_name||u.username||'Üye';
+      const meta=document.createElement('div');meta.className='post-meta';meta.textContent='@'+(u.username||'uye')+' · '+(roleMap.get(u.id)==='admin'?'Yönetici':'Üye');
+      info.append(name,meta);row.append(avatar,info);
+      if(u.id!==currentUser.id && roleMap.get(u.id)!=='admin'){
+        const badgeBtn=document.createElement('button');badgeBtn.className='small-primary';badgeBtn.textContent=badgeMap.has(u.id)?'Mavi rozeti kaldır':'Mavi rozet ver';
+        badgeBtn.addEventListener('click',async()=>{badgeBtn.disabled=true;try{if(badgeMap.has(u.id)){const x=await supabase.from('member_badges').delete().eq('user_id',u.id);if(x.error)throw x.error;badgeMap.delete(u.id);badgeBtn.textContent='Mavi rozet ver';}else{const x=await supabase.from('member_badges').insert({user_id:u.id,badge_type:'verified',granted_by:currentUser.id});if(x.error)throw x.error;badgeMap.add(u.id);badgeBtn.textContent='Mavi rozeti kaldır';}showNotice('Üye rozeti güncellendi.');}catch(err){showNotice('Rozet güncellenemedi: '+readableError(err),true);}finally{badgeBtn.disabled=false;}});
+        row.appendChild(badgeBtn);
+      }
+      feed.appendChild(row);
+    });
+    section('Gönderi denetimi');
+    if(posts.error) errorCard('Gönderiler yüklenemedi: '+posts.error.message);
+    else if(!posts.data?.length) errorCard('Henüz gönderi yok.');
+    else posts.data.forEach(p=>{
+      const row=document.createElement('article');row.className='post-card';
+      const body=document.createElement('p');body.textContent=p.content||'(Boş gönderi)';
+      const meta=document.createElement('div');meta.className='post-meta';meta.textContent='Üye ID: '+p.user_id+' · '+formatDate(p.created_at);
+      const del=document.createElement('button');del.className='small-primary';del.textContent='Gönderiyi sil';
+      del.addEventListener('click',async()=>{if(!confirm('Bu gönderi kalıcı olarak silinsin mi?'))return;del.disabled=true;const x=await supabase.from('posts').delete().eq('id',p.id);if(x.error){showNotice('Gönderi silinemedi: '+readableError(x.error),true);del.disabled=false;}else{row.remove();showNotice('Gönderi silindi.');}});
+      row.append(body,meta,del);feed.appendChild(row);
+    });
+    section('Şikâyet yönetimi');
+    if(reports.error) errorCard('Şikâyetler yüklenemedi: '+reports.error.message);
+    else if(!reports.data?.length) errorCard('Bekleyen şikâyet yok.');
+    else reports.data.forEach(r=>{
+      const row=document.createElement('article');row.className='post-card';
+      const body=document.createElement('p');body.textContent=r.target_type+' · '+r.reason+' · Hedef: '+r.target_id;
+      const meta=document.createElement('div');meta.className='post-meta';meta.textContent='Bildiren: '+r.reporter_id+' · '+formatDate(r.created_at);
+      const actions=document.createElement('div');actions.style.cssText='display:flex;gap:8px;flex-wrap:wrap';
+      [['Çözüldü','resolved'],['Geçersiz','dismissed']].forEach(([label,status])=>{const b=document.createElement('button');b.className='small-primary';b.textContent=label;b.addEventListener('click',async()=>{b.disabled=true;const x=await supabase.from('reports').update({status}).eq('id',r.id);if(x.error){showNotice('Şikâyet güncellenemedi: '+readableError(x.error),true);b.disabled=false;}else{row.remove();showNotice('Şikâyet durumu güncellendi.');}});actions.appendChild(b);});
+      row.append(body,meta,actions);feed.appendChild(row);
+    });
+    section('Yönetici duyuruları');
+    const form=document.createElement('form');form.className='composer';
+    const titleInput=document.createElement('input');titleInput.required=true;titleInput.maxLength=100;titleInput.placeholder='Duyuru başlığı';titleInput.style.cssText='width:100%;padding:12px;margin-bottom:10px;border-radius:12px;background:#050b20;color:white;border:1px solid #293b67';
+    const bodyInput=document.createElement('textarea');bodyInput.required=true;bodyInput.maxLength=2000;bodyInput.placeholder='Topluluğa iletilecek duyuru…';bodyInput.style.cssText='width:100%;min-height:90px;padding:12px;border-radius:12px;background:#050b20;color:white;border:1px solid #293b67';
+    const send=document.createElement('button');send.type='submit';send.className='small-primary';send.textContent='Duyuruyu yayınla';form.append(titleInput,bodyInput,send);
+    form.addEventListener('submit',async ev=>{ev.preventDefault();send.disabled=true;const x=await supabase.from('admin_announcements').insert({title:titleInput.value.trim(),body:bodyInput.value.trim(),created_by:currentUser.id});if(x.error){showNotice('Duyuru yayınlanamadı: '+readableError(x.error),true);send.disabled=false;}else{showNotice('Duyuru yayınlandı.');loadAdminPanel();}});
+    feed.appendChild(form);
+    if(announcements.error) errorCard('Duyurular yüklenemedi: '+announcements.error.message);
+    else (announcements.data||[]).forEach(a=>{const row=document.createElement('article');row.className='post-card';const t=document.createElement('strong');t.textContent=a.title;const b=document.createElement('p');b.textContent=a.body;const meta=document.createElement('div');meta.className='post-meta';meta.textContent=formatDate(a.created_at);const del=document.createElement('button');del.className='small-primary';del.textContent='Duyuruyu sil';del.addEventListener('click',async()=>{if(!confirm('Duyuru silinsin mi?'))return;const x=await supabase.from('admin_announcements').delete().eq('id',a.id);if(x.error)showNotice('Duyuru silinemedi: '+readableError(x.error),true);else{row.remove();showNotice('Duyuru silindi.');}});row.append(t,b,meta,del);feed.appendChild(row);});
   }
   async function loadNotifications(){
     const feed=$('feed');feed.innerHTML='<div class="empty-card">Bildirimler yükleniyor…</div>';
