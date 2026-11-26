@@ -512,8 +512,15 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
         if(conversations.error){showNotice('Sohbet listesi açılamadı: '+readableError(conversations.error),true);return;}
         const conversation=(conversations.data||[]).find(c=>String(c.conversation_id)===String(messageResult.data.conversation_id));
         if(!conversation){showNotice('Bu sohbete erişim yetkin bulunmuyor.',true);return;}
+        // Bildirimden doğrudan sohbete geç: nav click'i loadMessages() başlatıp
+        // openConversation() sonucunu geç gelen liste yanıtıyla ezebiliyordu.
         const messagesNav=document.querySelector('[data-nav="messages"]');
-        if(messagesNav)messagesNav.click();
+        if(messagesNav){
+          document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x===messagesNav));
+          $('feedTitle').textContent='Mesajlar';
+          document.querySelector('.profile-card').classList.add('hidden');
+          $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.add('hidden');
+        }
         await openConversation(conversation.conversation_id,conversation.display_name||conversation.username||'Üye');
         return;
       }
