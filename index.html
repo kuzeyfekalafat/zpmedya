@@ -230,8 +230,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const comments=commentsResult.error?[]:(commentsResult.data||[]);
     const commentUserIds=[...new Set(comments.map(c=>c.user_id).filter(Boolean))];
     let commentProfiles=[];
-    if(commentUserIds.length){const cr=await supabase.from('profiles').select('id,username,display_name').in('id',commentUserIds);if(!cr.error)commentProfiles=cr.data||[];}
+    if(commentUserIds.length){const cr=await supabase.from('profiles').select('id,username,display_name,avatar_url').in('id',commentUserIds);if(!cr.error)commentProfiles=cr.data||[];}
     const commentNames=new Map(commentProfiles.map(p=>[p.id,p.display_name||p.username||'Üye']));
+    const commentProfileById=new Map(commentProfiles.map(p=>[p.id,p]));
     feed.innerHTML='';
     data.forEach(post=>{
       const p=byId.get(post.user_id)||{};
@@ -254,10 +255,13 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       const area=document.createElement('div');area.className='comments-area hidden';area.style.marginTop='12px';
       const topComments=postComments.filter(c=>!c.parent_comment_id);
       const addCommentRow=(c,isReply=false)=>{
-        const item=document.createElement('div');item.style.cssText='padding:10px 0 10px '+(isReply?'24px':'0')+';border-bottom:1px solid #25365b;font-size:14px';
+        const item=document.createElement('div');item.style.cssText='display:flex;align-items:flex-start;gap:10px;padding:10px 0 10px '+(isReply?'24px':'0')+';border-bottom:1px solid #25365b;font-size:14px';
+        const cp=commentProfileById.get(c.user_id)||{};
+        const commentAvatar=document.createElement('div');commentAvatar.className='avatar';commentAvatar.style.cssText='width:34px;height:34px;font-size:12px;margin-top:2px';setAvatar(commentAvatar,cp.avatar_url,commentNames.get(c.user_id)||'Üye');
+        const textWrap=document.createElement('div');textWrap.style.cssText='min-width:0;flex:1';
         const label=document.createElement('strong');label.textContent=commentNames.get(c.user_id)||'Üye';
         const body=document.createElement('div');body.style.cssText='margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere';body.textContent=c.content;
-        item.append(label,body);
+        textWrap.append(label,body);item.append(commentAvatar,textWrap);
         if(!isReply){
           const replyBtn=document.createElement('button');replyBtn.type='button';replyBtn.textContent='Yanıtla';replyBtn.style.cssText='margin-top:7px;background:transparent;border:0;color:#63dfff;padding:4px 0;font-weight:700';
           const replyForm=document.createElement('form');replyForm.className='hidden';replyForm.style.cssText='display:flex;gap:8px;margin-top:8px';
