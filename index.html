@@ -183,6 +183,17 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
       const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:12px';const input=document.createElement('input');input.maxLength=1000;input.required=true;input.placeholder='Yorumunu yaz…';input.style.cssText='min-width:0;flex:1;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:11px';const send=document.createElement('button');send.type='submit';send.className='small-primary';send.textContent='Gönder';form.append(input,send);form.addEventListener('submit',async ev=>{ev.preventDefault();const value=input.value.trim();if(!value)return;send.disabled=true;try{const {error}=await supabase.from('comments').insert({post_id:post.id,user_id:currentUser.id,content:value});if(error)throw error;await loadPosts();showNotice('Yorumun eklendi.');}catch(err){showNotice('Yorum eklenemedi: '+readableError(err),true);}finally{send.disabled=false;}});area.appendChild(form);card.appendChild(area);feed.appendChild(card);
     });
   }
+  async function loadNotifications(){
+    const feed=$('feed');feed.innerHTML='<div class="empty-card">Bildirimler yükleniyor…</div>';
+    const {data,error}=await supabase.from('notifications').select('id,actor_id,notification_type,reference_id,content,is_read,created_at').eq('recipient_id',currentUser.id).order('created_at',{ascending:false}).limit(50);
+    if(error){feed.innerHTML='<div class="empty-card">Bildirimler yüklenemedi: '+safeText(error.message)+'</div>';return;}
+    if(!data.length){feed.innerHTML='<div class="empty-card">Henüz bildirimin yok.</div>';return;}
+    const ids=[...new Set(data.map(n=>n.actor_id).filter(Boolean))];let ps=[];
+    if(ids.length){const r=await supabase.from('profiles').select('id,display_name,username').in('id',ids);if(!r.error)ps=r.data||[];}
+    const names=new Map(ps.map(p=>[p.id,p.display_name||p.username||'Bir üye']));
+    feed.innerHTML='';
+    data.forEach(n=>{const item=document.createElement('article');item.className='post-card';item.style.cursor='pointer';const who=names.get(n.actor_id)||'ZP Medya';const msg=document.createElement('div');msg.textContent=(who+' '+(n.content||'sana bildirim gönderdi.'));msg.style.fontWeight='750';const meta=document.createElement('div');meta.className='post-meta';meta.textContent=formatDate(n.created_at)+(n.is_read?' · Okundu':' · Yeni');item.append(msg,meta);if(!n.is_read)item.style.borderColor='#168bff';item.addEventListener('click',async()=>{const {error}=await supabase.from('notifications').update({is_read:true}).eq('id',n.id).eq('recipient_id',currentUser.id);if(!error){meta.textContent=formatDate(n.created_at)+' · Okundu';item.style.borderColor='';}});feed.appendChild(item);});
+  }
   function formatDate(value){ if(!value)return 'Şimdi';const d=new Date(value);if(Number.isNaN(d.getTime()))return 'Şimdi';return d.toLocaleString('tr-TR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}); }
   async function createProfileIfMissing(user, displayName, phone) {
     const existing=await supabase.from('profiles').select('id').eq('id',user.id).maybeSingle();
@@ -231,7 +242,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     $('feedTitle').textContent=labels[nav]||'Ana Sayfa';
     if(nav==='home'){ $('composer').classList.remove('hidden');$('profileEditor').classList.add('hidden');loadPosts(); }
     else if(nav==='profile'){ $('composer').classList.add('hidden');$('profileEditor').classList.remove('hidden');$('feed').innerHTML='<div class="empty-card">Profil bilgilerini buradan düzenleyebilirsin.</div>'; }
-    else { $('composer').classList.add('hidden');$('profileEditor').classList.add('hidden');$('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
+    else { $('composer').classList.add('hidden');$('profileEditor').classList.add('hidden');if(nav==='notifications')loadNotifications();else $('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
     window.scrollTo({top:0,behavior:'smooth'});
   }));
   $('editProfileBtn').addEventListener('click',()=>{document.querySelector('[data-nav="profile"]').click();$('profileEditor').scrollIntoView({behavior:'smooth',block:'center'});});
