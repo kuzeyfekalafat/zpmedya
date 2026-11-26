@@ -208,6 +208,32 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
       $('storyFile').value='';$('storyCaption').value='';showNotice('Hikâyen paylaşıldı.');await loadStories();
     }catch(err){showNotice('Hikâye paylaşılamadı: '+readableError(err),true);}finally{setBusy(form,false);}
   });
+
+  async function loadMessages(){
+    const feed=$('feed');feed.innerHTML='<div class="empty-card">Mesajlar yükleniyor…</div>';
+    const {data,error}=await supabase.rpc('list_my_conversations');
+    if(error){feed.innerHTML='<div class="empty-card">Mesaj listesi yüklenemedi: '+safeText(error.message)+'</div>';return;}
+    const wrap=document.createElement('div');wrap.className='composer';
+    const title=document.createElement('strong');title.textContent='Yeni sohbet başlat';
+    const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:10px;flex-wrap:wrap';
+    const input=document.createElement('input');input.placeholder='Kullanıcı adı';input.required=true;input.style.cssText='flex:1;min-width:150px;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:11px';
+    const btn=document.createElement('button');btn.className='small-primary';btn.textContent='Sohbet Aç';form.append(input,btn);
+    form.addEventListener('submit',async ev=>{ev.preventDefault();btn.disabled=true;try{const username=input.value.trim().replace(/^@/,'').toLowerCase();const found=await supabase.from('profiles').select('id').eq('username',username).maybeSingle();if(found.error)throw found.error;if(!found.data)throw new Error('Bu kullanıcı adı bulunamadı.');if(found.data.id===currentUser.id)throw new Error('Kendinle sohbet başlatamazsın.');const created=await supabase.rpc('create_conversation',{p_participant_ids:[found.data.id]});if(created.error)throw created.error;await loadMessages();showNotice('Sohbet oluşturuldu.');}catch(err){showNotice('Sohbet açılamadı: '+readableError(err),true);}finally{btn.disabled=false;}});
+    wrap.append(title,form);feed.innerHTML='';feed.appendChild(wrap);
+    if(!data||!data.length){const empty=document.createElement('div');empty.className='empty-card';empty.textContent='Henüz sohbetin yok. Kullanıcı adıyla yeni sohbet başlatabilirsin.';feed.appendChild(empty);return;}
+    data.forEach(c=>{const row=document.createElement('button');row.type='button';row.className='post-card';row.style.cssText='width:100%;text-align:left;color:white;display:block';const name=document.createElement('strong');name.textContent=c.display_name||c.username||'Üye';const last=document.createElement('div');last.className='post-meta';last.textContent=c.last_message||'Sohbeti aç';row.append(name,last);row.addEventListener('click',()=>openConversation(c.conversation_id,c.display_name||c.username||'Üye'));feed.appendChild(row);});
+  }
+  async function openConversation(id,name){
+    const feed=$('feed');feed.innerHTML='';
+    const back=document.createElement('button');back.className='small-primary';back.textContent='← Mesaj listesi';back.addEventListener('click',loadMessages);feed.appendChild(back);
+    const heading=document.createElement('h3');heading.textContent=name;feed.appendChild(heading);
+    const list=document.createElement('div');list.className='composer';feed.appendChild(list);
+    const {data,error}=await supabase.from('messages').select('id,sender_id,content,created_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(100);
+    if(error){list.textContent='Mesajlar yüklenemedi: '+error.message;return;}
+    (data||[]).forEach(m=>{const item=document.createElement('div');item.style.cssText='padding:9px;margin:6px 0;border-radius:12px;background:'+(m.sender_id===currentUser.id?'#12345a':'#17203d');item.textContent=(m.sender_id===currentUser.id?'Sen: ':'')+(m.content||'');list.appendChild(item);});
+    const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:10px';const input=document.createElement('input');input.maxLength=5000;input.required=true;input.placeholder='Mesaj yaz…';input.style.cssText='flex:1;min-width:0;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:12px';const send=document.createElement('button');send.className='small-primary';send.textContent='Gönder';form.append(input,send);feed.appendChild(form);
+    form.addEventListener('submit',async ev=>{ev.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;try{const result=await supabase.from('messages').insert({conversation_id:id,sender_id:currentUser.id,content});if(result.error)throw result.error;await openConversation(id,name);}catch(err){showNotice('Mesaj gönderilemedi: '+readableError(err),true);}finally{send.disabled=false;}});
+  }
   async function loadNotifications(){
     const feed=$('feed');feed.innerHTML='<div class="empty-card">Bildirimler yükleniyor…</div>';
     const {data,error}=await supabase.from('notifications').select('id,actor_id,notification_type,reference_id,content,is_read,created_at').eq('recipient_id',currentUser.id).order('created_at',{ascending:false}).limit(50);
@@ -267,7 +293,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     $('feedTitle').textContent=labels[nav]||'Ana Sayfa';
     if(nav==='home'){ $('composer').classList.remove('hidden');$('profileEditor').classList.add('hidden');$('storiesPanel').classList.remove('hidden');loadPosts();loadStories(); }
     else if(nav==='profile'){ $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.remove('hidden');$('feed').innerHTML='<div class="empty-card">Profil bilgilerini buradan düzenleyebilirsin.</div>'; }
-    else { $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.add('hidden');if(nav==='notifications')loadNotifications();else $('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
+    else { $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.add('hidden');if(nav==='notifications')loadNotifications();else if(nav==='messages')loadMessages();else $('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
     window.scrollTo({top:0,behavior:'smooth'});
   }));
   $('editProfileBtn').addEventListener('click',()=>{document.querySelector('[data-nav="profile"]').click();$('profileEditor').scrollIntoView({behavior:'smooth',block:'center'});});
