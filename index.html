@@ -424,7 +424,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     window.scrollTo({top:0,behavior:'smooth'});
   }));
   $('editProfileBtn').addEventListener('click',()=>{document.querySelector('[data-nav="profile"]').click();$('profileEditor').scrollIntoView({behavior:'smooth',block:'center'});});
-  $('adminQuickBtn').addEventListener('click',()=>{document.querySelector('[data-nav="admin"]').click();});
+  const adminQuickBtn=$('adminQuickBtn');
+  if(adminQuickBtn) adminQuickBtn.addEventListener('click',()=>{document.querySelector('[data-nav="admin"]').click();});
   $('profileForm').addEventListener('submit',async e=>{
     e.preventDefault();if(busy||!currentUser)return;const form=e.currentTarget;setBusy(form,true);$('profileEditStatus').textContent='Kaydediliyor…';
     const display_name=$('editDisplayName').value.trim(),username=$('editUsername').value.trim().toLowerCase(),bio=$('editBio').value.trim();
