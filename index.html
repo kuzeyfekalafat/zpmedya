@@ -418,6 +418,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x===b));
     const labels={home:'Ana Sayfa',explore:'Keşfet',profile:'Profilim',notifications:'Bildirimler',messages:'Mesajlar',admin:'Yönetim Merkezi'};
     $('feedTitle').textContent=labels[nav]||'Ana Sayfa';
+    // Profil özeti yalnızca Profilim sekmesinde görünür; diğer sekmeler kendi içerikleriyle açılır.
+    document.querySelector('.profile-card').classList.toggle('hidden',nav!=='profile');
     if(nav==='home'){ $('composer').classList.remove('hidden');$('profileEditor').classList.add('hidden');$('storiesPanel').classList.remove('hidden');loadPosts();loadStories(); }
     else if(nav==='profile'){ $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.remove('hidden');$('feed').innerHTML='<div class="empty-card">Profil bilgilerini buradan düzenleyebilirsin.</div>'; }
     else { $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.add('hidden');if(nav==='notifications')loadNotifications();else if(nav==='messages')loadMessages();else if(nav==='explore')loadExplore();else if(nav==='admin'){if(isAdmin)loadAdminPanel();else $('feed').innerHTML='<div class="empty-card">Yetkin yok.</div>';}else $('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
