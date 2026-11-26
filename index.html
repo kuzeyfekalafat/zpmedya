@@ -81,6 +81,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
       </nav>
       <div>
         <h2 class="feed-title" id="feedTitle">Ana Sayfa</h2>
+        <section class="composer" id="storiesPanel"><strong>Hikâyeler · 24 saat</strong><form id="storyForm" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><input id="storyFile" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" required><input id="storyCaption" maxlength="500" placeholder="Açıklama (isteğe bağlı)"><button class="small-primary" type="submit">Hikâye Paylaş</button></form><div id="storiesList" style="display:flex;gap:10px;overflow-x:auto;margin-top:12px"></div></section>
         <div class="composer" id="composer">
           <div class="composer-head"><div class="avatar" id="composerAvatar">ZP</div><strong id="composerName">Bir şeyler paylaş</strong></div>
           <form id="postForm"><textarea id="postContent" maxlength="2000" placeholder="Aklından neler geçiyor? Toplulukla paylaş..." required></textarea><div class="composer-bottom"><span id="charCount">0 / 2000</span><button class="small-primary" type="submit">＋ Paylaş</button></div></form>
@@ -137,7 +138,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     $('profileName').textContent=name; $('profileHandle').textContent='@'+(currentProfile.username || (user.email||'uye').split('@')[0]);
     $('editDisplayName').value=currentProfile.display_name||name; $('editUsername').value=currentProfile.username||(user.email||'uye').split('@')[0].replace(/[^a-z0-9_]/gi,''); $('editBio').value=currentProfile.bio||'';
     $('composerName').textContent=name+' olarak paylaş'; setAvatar($('profileAvatar'),currentProfile.avatar_url,name); setAvatar($('composerAvatar'),currentProfile.avatar_url,name);
-    await loadPosts(); window.scrollTo({top:0,behavior:'smooth'});
+    await Promise.all([loadPosts(),loadStories()]); window.scrollTo({top:0,behavior:'smooth'});
   }
   async function loadPosts(){
     const feed=$('feed'); feed.innerHTML='<div class="empty-card">Gönderiler yükleniyor…</div>';
@@ -183,6 +184,30 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
       const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:12px';const input=document.createElement('input');input.maxLength=1000;input.required=true;input.placeholder='Yorumunu yaz…';input.style.cssText='min-width:0;flex:1;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:11px';const send=document.createElement('button');send.type='submit';send.className='small-primary';send.textContent='Gönder';form.append(input,send);form.addEventListener('submit',async ev=>{ev.preventDefault();const value=input.value.trim();if(!value)return;send.disabled=true;try{const {error}=await supabase.from('comments').insert({post_id:post.id,user_id:currentUser.id,content:value});if(error)throw error;await loadPosts();showNotice('Yorumun eklendi.');}catch(err){showNotice('Yorum eklenemedi: '+readableError(err),true);}finally{send.disabled=false;}});area.appendChild(form);card.appendChild(area);feed.appendChild(card);
     });
   }
+
+  async function loadStories(){
+    const list=$('storiesList');list.innerHTML='';
+    const {data,error}=await supabase.from('stories').select('id,user_id,media_url,media_type,caption,created_at,expires_at').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(30);
+    if(error){list.textContent='Hikâyeler yüklenemedi.';return;}
+    if(!data.length){list.textContent='Henüz hikâye yok.';return;}
+    const ids=[...new Set(data.map(x=>x.user_id))];let ps=[];
+    if(ids.length){const r=await supabase.from('profiles').select('id,display_name,username').in('id',ids);if(!r.error)ps=r.data||[];}
+    const names=new Map(ps.map(p=>[p.id,p.display_name||p.username||'Üye']));
+    data.forEach(st=>{const tile=document.createElement('div');tile.style.cssText='min-width:120px;max-width:140px;border:1px solid #30416f;border-radius:14px;padding:7px;background:#071025';const media=document.createElement(st.media_type==='video'?'video':'img');media.src=st.media_url;media.style.cssText='width:100%;height:120px;object-fit:cover;border-radius:9px';if(st.media_type==='video'){media.controls=true;media.playsInline=true;}else media.alt='Hikâye';const who=document.createElement('strong');who.textContent=names.get(st.user_id)||'Üye';const cap=document.createElement('small');cap.textContent=st.caption||formatDate(st.created_at);tile.append(media,who,cap);list.appendChild(tile);});
+  }
+  $('storyForm').addEventListener('submit',async e=>{
+    e.preventDefault();if(busy||!currentUser)return;const file=$('storyFile').files[0];if(!file)return;
+    if(file.size>50*1024*1024){showNotice('Dosya 50 MB sınırını aşamaz.',true);return;}
+    const allowed=['image/jpeg','image/png','image/webp','video/mp4','video/webm'];if(!allowed.includes(file.type)){showNotice('Bu dosya türü desteklenmiyor.',true);return;}
+    const form=e.currentTarget;setBusy(form,true);
+    try{const ext=(file.name.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'');const path=currentUser.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2)+'.'+ext;
+      const up=await supabase.storage.from('story-media').upload(path,file,{contentType:file.type,upsert:false});if(up.error)throw up.error;
+      const url=supabase.storage.from('story-media').getPublicUrl(path).data.publicUrl;
+      const type=file.type.startsWith('video/')?'video':'image';
+      const ins=await supabase.from('stories').insert({user_id:currentUser.id,media_url:url,media_type:type,caption:$('storyCaption').value.trim()||null});if(ins.error)throw ins.error;
+      $('storyFile').value='';$('storyCaption').value='';showNotice('Hikâyen paylaşıldı.');await loadStories();
+    }catch(err){showNotice('Hikâye paylaşılamadı: '+readableError(err),true);}finally{setBusy(form,false);}
+  });
   async function loadNotifications(){
     const feed=$('feed');feed.innerHTML='<div class="empty-card">Bildirimler yükleniyor…</div>';
     const {data,error}=await supabase.from('notifications').select('id,actor_id,notification_type,reference_id,content,is_read,created_at').eq('recipient_id',currentUser.id).order('created_at',{ascending:false}).limit(50);
@@ -240,9 +265,9 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x===b));
     const labels={home:'Ana Sayfa',explore:'Keşfet',profile:'Profilim',notifications:'Bildirimler',messages:'Mesajlar'};
     $('feedTitle').textContent=labels[nav]||'Ana Sayfa';
-    if(nav==='home'){ $('composer').classList.remove('hidden');$('profileEditor').classList.add('hidden');loadPosts(); }
-    else if(nav==='profile'){ $('composer').classList.add('hidden');$('profileEditor').classList.remove('hidden');$('feed').innerHTML='<div class="empty-card">Profil bilgilerini buradan düzenleyebilirsin.</div>'; }
-    else { $('composer').classList.add('hidden');$('profileEditor').classList.add('hidden');if(nav==='notifications')loadNotifications();else $('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
+    if(nav==='home'){ $('composer').classList.remove('hidden');$('profileEditor').classList.add('hidden');$('storiesPanel').classList.remove('hidden');loadPosts();loadStories(); }
+    else if(nav==='profile'){ $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.remove('hidden');$('feed').innerHTML='<div class="empty-card">Profil bilgilerini buradan düzenleyebilirsin.</div>'; }
+    else { $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.add('hidden');if(nav==='notifications')loadNotifications();else $('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
     window.scrollTo({top:0,behavior:'smooth'});
   }));
   $('editProfileBtn').addEventListener('click',()=>{document.querySelector('[data-nav="profile"]').click();$('profileEditor').scrollIntoView({behavior:'smooth',block:'center'});});
