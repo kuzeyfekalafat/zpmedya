@@ -86,6 +86,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
           <div class="composer-head"><div class="avatar" id="composerAvatar">ZP</div><strong id="composerName">Bir şeyler paylaş</strong></div>
           <form id="postForm"><textarea id="postContent" maxlength="2000" placeholder="Aklından neler geçiyor? Toplulukla paylaş..." required></textarea><div class="composer-bottom"><span id="charCount">0 / 2000</span><button class="small-primary" type="submit">＋ Paylaş</button></div></form>
         </div>
+        <div id="publicAnnouncements"></div>
         <div id="feed" aria-live="polite"><div class="empty-card">Gönderiler yükleniyor…</div></div>
       </div>
     </div>
@@ -138,7 +139,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     $('profileName').textContent=name; $('profileHandle').textContent='@'+(currentProfile.username || (user.email||'uye').split('@')[0]);
     $('editDisplayName').value=currentProfile.display_name||name; $('editUsername').value=currentProfile.username||(user.email||'uye').split('@')[0].replace(/[^a-z0-9_]/gi,''); $('editBio').value=currentProfile.bio||'';
     $('composerName').textContent=name+' olarak paylaş'; setAvatar($('profileAvatar'),currentProfile.avatar_url,name); setAvatar($('composerAvatar'),currentProfile.avatar_url,name);
-    await Promise.all([loadPosts(),loadStories()]); window.scrollTo({top:0,behavior:'smooth'});
+    await Promise.all([loadPosts(),loadStories(),loadPublicAnnouncements()]); window.scrollTo({top:0,behavior:'smooth'});
   }
   async function loadPosts(){
     const feed=$('feed'); feed.innerHTML='<div class="empty-card">Gönderiler yükleniyor…</div>';
@@ -310,6 +311,14 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     feed.appendChild(form);
     if(announcements.error) errorCard('Duyurular yüklenemedi: '+announcements.error.message);
     else (announcements.data||[]).forEach(a=>{const row=document.createElement('article');row.className='post-card';const t=document.createElement('strong');t.textContent=a.title;const b=document.createElement('p');b.textContent=a.body;const meta=document.createElement('div');meta.className='post-meta';meta.textContent=formatDate(a.created_at);const del=document.createElement('button');del.className='small-primary';del.textContent='Duyuruyu sil';del.addEventListener('click',async()=>{if(!confirm('Duyuru silinsin mi?'))return;const x=await supabase.from('admin_announcements').delete().eq('id',a.id);if(x.error)showNotice('Duyuru silinemedi: '+readableError(x.error),true);else{row.remove();showNotice('Duyuru silindi.');}});row.append(t,b,meta,del);feed.appendChild(row);});
+  }
+  async function loadPublicAnnouncements(){
+    const host=$('publicAnnouncements');if(!host)return;host.innerHTML='';
+    const {data,error}=await supabase.from('admin_announcements').select('id,title,body,created_at').order('created_at',{ascending:false}).limit(5);
+    if(error||!data?.length)return;
+    const wrap=document.createElement('section');wrap.className='composer';const heading=document.createElement('h3');heading.textContent='📢 ZP Medya duyuruları';wrap.appendChild(heading);
+    data.forEach(a=>{const item=document.createElement('article');item.className='post-card';const title=document.createElement('strong');title.textContent=a.title;const body=document.createElement('p');body.textContent=a.body;const date=document.createElement('div');date.className='post-meta';date.textContent=formatDate(a.created_at);item.append(title,body,date);wrap.appendChild(item);});
+    host.appendChild(wrap);
   }
   async function loadNotifications(){
     const feed=$('feed');feed.innerHTML='<div class="empty-card">Bildirimler yükleniyor…</div>';
