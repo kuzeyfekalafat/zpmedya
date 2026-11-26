@@ -112,8 +112,8 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
 </main>
 <nav id="bottomNav" class="bottom-nav hidden" aria-label="Mobil menü"><button data-nav="home">⌂<span>Ana Sayfa</span></button><button data-nav="explore">⌕<span>Keşfet</span></button><button data-nav="create">＋<span>Paylaş</span></button><button data-nav="messages">💬<span>Mesajlar</span></button><button data-nav="notifications">♧<span>Bildirim</span></button><button data-nav="profile">♙<span>Profil</span></button><button id="adminBottomNav" class="hidden" data-nav="admin">♛<span>Yönetim</span></button></nav>
 
-<script src="https://unpkg.com/@supabase/supabase-js@2.50.0/dist/umd/supabase.js"></script>
-<script>
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 (() => {
   'use strict';
   // Projenin tarayıcıda kullanılabilen publishable/anon anahtarı burada tutulur.
@@ -447,7 +447,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
         showNotice('Giriş bileşeni yüklenemedi. Sayfayı yenile; sorun sürerse bağlantıyı kontrol edelim.',true);
         return;
       }
-      const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+      const client=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
       if(!client || !client.auth || typeof client.auth.getSession!=='function'){
         throw new Error('Supabase giriş istemcisi başlatılamadı.');
       }
