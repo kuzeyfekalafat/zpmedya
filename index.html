@@ -122,7 +122,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
   const SUPABASE_ANON_KEY = 'sb_publishable_7Dwtq45AOQgM6nuwuHe6qQ_ho_LDu7n';
   const $ = id => document.getElementById(id);
   const authSection = $('authSection'), homeSection = $('homeSection'), notice = $('notice');
-  let supabase = null, currentUser = null, currentProfile = null, currentView = 'login', busy = false, isAdmin = false;
+  let supabase = null, currentUser = null, currentProfile = null, currentView = 'login', busy = false, isAdmin = false, supabaseReady = false;
+  function requireAuthClient(){ if(!supabase || !supabase.auth){ showNotice('Giriş sistemi henüz hazır değil. Birkaç saniye bekleyip tekrar dene.',true); return false; } return true; }
   const showNotice = (message, isError=false) => { notice.textContent = message; notice.className = 'notice show' + (isError ? ' error' : ''); };
   const clearNotice = () => { notice.textContent=''; notice.className='notice'; };
   const readableError = err => {
@@ -376,12 +377,12 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     if(error) console.warn('Profil otomatik eklenemedi:',error.message);
   }
   $('loginForm').addEventListener('submit',async e=>{
-    e.preventDefault();if(busy)return;clearNotice();const form=e.currentTarget;setBusy(form,true);
+    e.preventDefault(); if(!requireAuthClient()) return;if(busy)return;clearNotice();const form=e.currentTarget;setBusy(form,true);
     try{const {data,error}=await supabase.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;await showHome(data.user);}
     catch(err){showNotice(readableError(err),true);}finally{setBusy(form,false);}
   });
   $('signupForm').addEventListener('submit',async e=>{
-    e.preventDefault();if(busy)return;clearNotice();const form=e.currentTarget;setBusy(form,true);
+    e.preventDefault(); if(!requireAuthClient()) return;if(busy)return;clearNotice();const form=e.currentTarget;setBusy(form,true);
     const name=$('signupName').value.trim(), email=$('signupEmail').value.trim(), phone=$('signupPhone').value.trim(), password=$('signupPassword').value;
     try{
       const {data,error}=await supabase.auth.signUp({email,password,options:{data:{display_name:name,phone_number:phone}}});if(error)throw error;
@@ -390,7 +391,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     }catch(err){showNotice(readableError(err),true);}finally{setBusy(form,false);}
   });
   $('resetForm').addEventListener('submit',async e=>{
-    e.preventDefault();if(busy)return;clearNotice();const form=e.currentTarget;setBusy(form,true);
+    e.preventDefault(); if(!requireAuthClient()) return;if(busy)return;clearNotice();const form=e.currentTarget;setBusy(form,true);
     try{const {error}=await supabase.auth.resetPasswordForEmail($('resetEmail').value.trim(),{redirectTo:location.origin});if(error)throw error;showNotice('Şifre sıfırlama bağlantısı, destekleniyorsa e-posta adresine gönderildi.');}
     catch(err){showNotice(readableError(err),true);}finally{setBusy(form,false);}
   });
@@ -404,7 +405,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
   $('postContent').addEventListener('input',()=> $('charCount').textContent=$('postContent').value.length+' / 2000');
   document.querySelectorAll('[data-switch]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.switch)));
   document.querySelectorAll('[data-toggle]').forEach(b=>b.addEventListener('click',()=>{const input=$(b.dataset.toggle);const visible=input.type==='text';input.type=visible?'password':'text';b.textContent=visible?'GÖSTER':'GİZLE';}));
-  document.querySelectorAll('[data-provider]').forEach(b=>b.addEventListener('click',async()=>{try{const {error}=await supabase.auth.signInWithOAuth({provider:b.dataset.provider,options:{redirectTo:location.origin}});if(error)throw error;}catch(err){showNotice('Bu sağlayıcı Supabase tarafında yapılandırılmamış olabilir: '+readableError(err),true);}}));
+  document.querySelectorAll('[data-provider]').forEach(b=>b.addEventListener('click',async()=>{if(!requireAuthClient())return;try{const {error}=await supabase.auth.signInWithOAuth({provider:b.dataset.provider,options:{redirectTo:location.origin}});if(error)throw error;}catch(err){showNotice('Bu sağlayıcı Supabase tarafında yapılandırılmamış olabilir: '+readableError(err),true);}}));
   document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{
     const nav=b.dataset.nav;
     if(nav==='create'){$('postContent').focus();$('composer').scrollIntoView({behavior:'smooth',block:'center'});return;}
@@ -440,17 +441,17 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     }catch(err){showNotice('Fotoğraf yüklenemedi: '+readableError(err),true);}finally{e.target.value='';}
   });
   $('refreshBtn').addEventListener('click',()=>{if(currentUser)loadPosts();});
-  $('logoutBtn').addEventListener('click',async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;currentUser=null;currentProfile=null;switchView('login');showNotice('Güvenli çıkış yapıldı.');}catch(err){showNotice(readableError(err),true);}});
+  $('logoutBtn').addEventListener('click',async()=>{if(!requireAuthClient())return;try{const {error}=await supabase.auth.signOut();if(error)throw error;currentUser=null;currentProfile=null;switchView('login');showNotice('Güvenli çıkış yapıldı.');}catch(err){showNotice(readableError(err),true);}});
   async function init(){
     try {
       if(typeof createClient!=='function'){
         throw new Error('Supabase modülü yüklenemedi.');
       }
       const client=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+      supabase=client; supabaseReady=true;
       if(!client || !client.auth || typeof client.auth.getSession!=='function'){
         throw new Error('Supabase giriş istemcisi başlatılamadı.');
       }
-      supabase=client;
       const {data,error}=await client.auth.getSession();
       if(error) throw error;
       if(data?.session?.user){await showHome(data.session.user);}
@@ -461,8 +462,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       });
     } catch(err) {
       console.error('ZP Medya başlatma hatası:',err);
-      supabase=null;
-      showNotice('Giriş sistemi başlatılamadı: '+readableError(err)+' Sayfayı yenileyip tekrar dene.',true);
+      // İstemci oluşturulduysa koru; geçici oturum okuma hatası giriş istemcisini null yapmamalı.
+      showNotice('Oturum kontrolü tamamlanamadı: '+readableError(err)+' Giriş bilgilerini tekrar deneyebilirsin.',true);
     }
   }
   init();
