@@ -391,16 +391,40 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const back=document.createElement('button');back.className='small-primary';back.textContent='← Mesaj listesi';back.addEventListener('click',loadMessages);feed.appendChild(back);
     const heading=document.createElement('h3');heading.textContent=name;feed.appendChild(heading);
     const list=document.createElement('div');list.className='composer';feed.appendChild(list);
-    const {data,error}=await supabase.from('messages').select('id,sender_id,content,created_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(100);
+    const {data,error}=await supabase.from('messages').select('id,sender_id,content,created_at,read_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(100);
     if(error){list.textContent='Mesajlar yüklenemedi: '+error.message;return;}
     const renderedMessageIds=new Set();
-    const appendMessage=m=>{if(!m||renderedMessageIds.has(String(m.id)))return;renderedMessageIds.add(String(m.id));const item=document.createElement('div');item.style.cssText='padding:9px;margin:6px 0;border-radius:12px;background:'+(m.sender_id===currentUser.id?'#12345a':'#17203d');item.textContent=(m.sender_id===currentUser.id?'Sen: ':'')+(m.content||'');list.appendChild(item);list.scrollTop=list.scrollHeight;};
+    const appendMessage=m=>{
+      if(!m||renderedMessageIds.has(String(m.id)))return;
+      renderedMessageIds.add(String(m.id));
+      const own=m.sender_id===currentUser.id;
+      const item=document.createElement('div');item.dataset.messageId=String(m.id);
+      item.style.cssText='padding:9px;margin:6px 0;border-radius:12px;background:'+(own?'#12345a':'#17203d');
+      const body=document.createElement('div');body.textContent=(own?'Sen: ':'')+(m.content||'');
+      item.appendChild(body);
+      if(own){const receipt=document.createElement('small');receipt.dataset.readReceipt='true';receipt.style.cssText='display:block;text-align:right;font-size:11px;color:#aab6d7;margin-top:4px';receipt.textContent=m.read_at?'✓✓ Okundu':'✓ Gönderildi';item.appendChild(receipt);}
+      list.appendChild(item);list.scrollTop=list.scrollHeight;
+    };
     (data||[]).forEach(appendMessage);
+    // Sohbet açıldığında karşı taraftan gelen okunmamış mesajları okundu olarak işaretle.
+    const markRead=await supabase.from('messages').update({read_at:new Date().toISOString()}).eq('conversation_id',id).neq('sender_id',currentUser.id).is('read_at',null);
+    if(markRead.error)console.warn('Mesaj okundu bilgisi güncellenemedi:',markRead.error.message);
     if(activeMessageChannel){supabase.removeChannel(activeMessageChannel);activeMessageChannel=null;}
     activeMessageChannel=supabase.channel('zp-conversation-'+id)
-      .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'conversation_id=eq.'+id},payload=>{
-        const m=payload.new||{};appendMessage(m);
-        if(m.sender_id!==currentUser.id)showNotice('Yeni mesaj: '+(name||'sohbet'));
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'conversation_id=eq.'+id},async payload=>{
+        const m=payload.new||{};
+        if(m.sender_id!==currentUser.id){
+          const read=await supabase.from('messages').update({read_at:new Date().toISOString()}).eq('id',m.id).is('read_at',null);
+          m.read_at=read.error?null:new Date().toISOString();
+          showNotice('Yeni mesaj: '+(name||'sohbet'));
+        }
+        appendMessage(m);
+      })
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'messages',filter:'conversation_id=eq.'+id},payload=>{
+        const m=payload.new||{};if(m.sender_id!==currentUser.id||!m.read_at)return;
+        const row=list.querySelector('[data-message-id="'+m.id+'"]');
+        const receipt=row&&row.querySelector('[data-read-receipt]');
+        if(receipt)receipt.textContent='✓✓ Okundu';
       }).subscribe();
     const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:10px';const input=document.createElement('input');input.maxLength=5000;input.required=true;input.placeholder='Mesaj yaz…';input.style.cssText='flex:1;min-width:0;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:12px';const send=document.createElement('button');send.className='small-primary';send.textContent='Gönder';form.append(input,send);feed.appendChild(form);
     form.addEventListener('submit',async ev=>{ev.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;try{const result=await supabase.from('messages').insert({conversation_id:id,sender_id:currentUser.id,content});if(result.error)throw result.error;await openConversation(id,name);}catch(err){showNotice('Mesaj gönderilemedi: '+readableError(err),true);}finally{send.disabled=false;}});
