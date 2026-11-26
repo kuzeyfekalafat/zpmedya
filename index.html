@@ -224,7 +224,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const postIds=data.map(p=>p.id);
     const [likesResult,commentsResult]=await Promise.all([
       supabase.from('post_likes').select('post_id,user_id').in('post_id',postIds),
-      supabase.from('comments').select('id,post_id,user_id,content,created_at').in('post_id',postIds).order('created_at',{ascending:true})
+      supabase.from('comments').select('id,post_id,user_id,parent_comment_id,content,created_at').in('post_id',postIds).order('created_at',{ascending:true})
     ]);
     const likes=likesResult.error?[]:(likesResult.data||[]);
     const comments=commentsResult.error?[]:(commentsResult.data||[]);
@@ -252,7 +252,25 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       const shareBtn=document.createElement('button');shareBtn.type='button';shareBtn.textContent='↗ Paylaş';shareBtn.addEventListener('click',async()=>{const shareUrl=location.origin+location.pathname+'#post-'+post.id;try{if(navigator.share)await navigator.share({title:'ZP Medya gönderisi',text:post.content,url:shareUrl});else{await navigator.clipboard.writeText(shareUrl);showNotice('Gönderi bağlantısı kopyalandı.');}}catch(err){if(err.name!=='AbortError')showNotice('Bağlantı paylaşılamadı.',true);}});
       actions.append(likeBtn,commentBtn,shareBtn);card.appendChild(actions);
       const area=document.createElement('div');area.className='comments-area hidden';area.style.marginTop='12px';
-      postComments.forEach(c=>{const item=document.createElement('div');item.style.cssText='padding:9px 0;border-bottom:1px solid #25365b;font-size:14px';const label=document.createElement('strong');label.textContent=commentNames.get(c.user_id)||'Üye';const body=document.createElement('span');body.textContent='  '+c.content;item.append(label,body);area.appendChild(item);});
+      const topComments=postComments.filter(c=>!c.parent_comment_id);
+      const addCommentRow=(c,isReply=false)=>{
+        const item=document.createElement('div');item.style.cssText='padding:10px 0 10px '+(isReply?'24px':'0')+';border-bottom:1px solid #25365b;font-size:14px';
+        const label=document.createElement('strong');label.textContent=commentNames.get(c.user_id)||'Üye';
+        const body=document.createElement('div');body.style.cssText='margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere';body.textContent=c.content;
+        item.append(label,body);
+        if(!isReply){
+          const replyBtn=document.createElement('button');replyBtn.type='button';replyBtn.textContent='Yanıtla';replyBtn.style.cssText='margin-top:7px;background:transparent;border:0;color:#63dfff;padding:4px 0;font-weight:700';
+          const replyForm=document.createElement('form');replyForm.className='hidden';replyForm.style.cssText='display:flex;gap:8px;margin-top:8px';
+          const replyInput=document.createElement('input');replyInput.maxLength=1000;replyInput.required=true;replyInput.placeholder='Yanıtını yaz…';replyInput.style.cssText='min-width:0;flex:1;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:10px';
+          const replySend=document.createElement('button');replySend.type='submit';replySend.className='small-primary';replySend.textContent='Yanıtla';
+          replyForm.append(replyInput,replySend);
+          replyBtn.addEventListener('click',()=>{replyForm.classList.toggle('hidden');if(!replyForm.classList.contains('hidden'))replyInput.focus();});
+          replyForm.addEventListener('submit',async ev=>{ev.preventDefault();const value=replyInput.value.trim();if(!value)return;replySend.disabled=true;try{const {error}=await supabase.from('comments').insert({post_id:post.id,user_id:currentUser.id,parent_comment_id:c.id,content:value});if(error)throw error;await loadPosts();showNotice('Yanıtın eklendi.');}catch(err){showNotice('Yanıt eklenemedi: '+readableError(err),true);}finally{replySend.disabled=false;}});
+          item.append(replyBtn,replyForm);
+        }
+        area.appendChild(item);
+      };
+      topComments.forEach(c=>{addCommentRow(c);postComments.filter(reply=>String(reply.parent_comment_id)===String(c.id)).forEach(reply=>addCommentRow(reply,true));});
       const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:12px';const input=document.createElement('input');input.maxLength=1000;input.required=true;input.placeholder='Yorumunu yaz…';input.style.cssText='min-width:0;flex:1;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:11px';const send=document.createElement('button');send.type='submit';send.className='small-primary';send.textContent='Gönder';form.append(input,send);form.addEventListener('submit',async ev=>{ev.preventDefault();const value=input.value.trim();if(!value)return;send.disabled=true;try{const {error}=await supabase.from('comments').insert({post_id:post.id,user_id:currentUser.id,content:value});if(error)throw error;await loadPosts();showNotice('Yorumun eklendi.');}catch(err){showNotice('Yorum eklenemedi: '+readableError(err),true);}finally{send.disabled=false;}});area.appendChild(form);card.appendChild(area);feed.appendChild(card);
     });
   }
