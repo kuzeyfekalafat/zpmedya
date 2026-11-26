@@ -320,7 +320,8 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     else { $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.add('hidden');if(nav==='notifications')loadNotifications();else if(nav==='messages')loadMessages();else if(nav==='explore')loadExplore();else if(nav==='admin'){if(isAdmin)loadAdminPanel();else $('feed').innerHTML='<div class="empty-card">Yetkin yok.</div>';}else $('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
     window.scrollTo({top:0,behavior:'smooth'});
   }));
-  $('editProfileBtn').addEventListener('click',()=>{document.querySelector('[data-nav="profile"]').click();$('profileEditor').scrollIntoView({behavior:'smooth',block:'center'});});\n  $('adminQuickBtn').addEventListener('click',()=>{document.querySelector('[data-nav="admin"]').click();});
+  $('editProfileBtn').addEventListener('click',()=>{document.querySelector('[data-nav="profile"]').click();$('profileEditor').scrollIntoView({behavior:'smooth',block:'center'});});
+  $('adminQuickBtn').addEventListener('click',()=>{document.querySelector('[data-nav="admin"]').click();});
   $('profileForm').addEventListener('submit',async e=>{
     e.preventDefault();if(busy||!currentUser)return;const form=e.currentTarget;setBusy(form,true);$('profileEditStatus').textContent='Kaydediliyor…';
     const display_name=$('editDisplayName').value.trim(),username=$('editUsername').value.trim().toLowerCase(),bio=$('editBio').value.trim();
