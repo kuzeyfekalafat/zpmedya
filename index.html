@@ -443,9 +443,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
   $('logoutBtn').addEventListener('click',async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;currentUser=null;currentProfile=null;switchView('login');showNotice('Güvenli çıkış yapıldı.');}catch(err){showNotice(readableError(err),true);}});
   async function init(){
     try {
-      if(!window.supabase || typeof window.supabase.createClient!=='function'){
-        showNotice('Giriş bileşeni yüklenemedi. Sayfayı yenile; sorun sürerse bağlantıyı kontrol edelim.',true);
-        return;
+      if(typeof createClient!=='function'){
+        throw new Error('Supabase modülü yüklenemedi.');
       }
       const client=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
       if(!client || !client.auth || typeof client.auth.getSession!=='function'){
