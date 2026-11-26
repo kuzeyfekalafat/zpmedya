@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050817">
+<meta name="theme-color" content="#0b0e13">
 <title>ZP Medya</title>
 <style>
 :root{--bg:#050817;--panel:#0b1230;--panel2:#071025;--cyan:#00eaff;--blue:#168bff;--purple:#a000ff;--text:#f6f8ff;--muted:#aab6d7;--line:#30416f}
@@ -47,6 +47,70 @@ main{max-width:1440px;padding:24px 22px 110px}
 .footer-note{padding-top:12px}
 @media(max-width:1050px){.home-layout{grid-template-columns:190px minmax(0,1fr)}.right-rail{display:none}}
 @media(max-width:700px){main{padding:14px 10px 100px}.home-layout{display:block}.brand-title{font-size:22px}.tagline{font-size:10px;letter-spacing:2px}.logo-icon{width:50px;height:50px}.auth-wrap{margin:0 auto}}
+
+
+/* Premium editorial theme — sade, olgun ve profesyonel */
+:root{--bg:#0b0e13;--panel:#141a23;--panel2:#10151d;--cyan:#78b9d3;--blue:#397fa8;--purple:#716b9b;--text:#eef1f5;--muted:#a2acb9;--line:#2b3542}
+*{box-sizing:border-box}
+body{background:#0b0e13;color:var(--text);font-family:Inter,"Segoe UI",system-ui,-apple-system,Arial,sans-serif;letter-spacing:0;min-height:100vh}
+header{padding:15px clamp(16px,3vw,34px);background:#10151cf5;border-bottom:1px solid #28313d;box-shadow:0 5px 20px #0003;backdrop-filter:blur(16px)}
+.brand-title{font-size:25px;font-weight:800;letter-spacing:-.6px}.brand-title span{color:#91c7dc;background:none}.tagline{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9ca9b8}
+.logo-icon{border-radius:13px;background:#121b26;border:1px solid #4c7890;color:#e7f4fa;box-shadow:none;font-size:23px}
+main{max-width:1460px;padding:26px 24px 100px}
+.auth-wrap{max-width:520px;margin:28px auto;border:1px solid #303b48;border-radius:18px;padding:clamp(24px,5vw,42px);background:#141a23;box-shadow:0 18px 55px #0005;overflow:hidden}
+.auth-wrap:before{display:none}
+.eyebrow{color:#8fc6dc;font-size:11px;font-weight:750;letter-spacing:2.6px;margin:0 0 22px}
+.auth-wrap h1{font-size:clamp(30px,6vw,42px);font-weight:750;letter-spacing:-1.2px;line-height:1.12;margin:0 0 14px}
+.description{font-size:16px;line-height:1.65;color:#aab4c0;margin:0 0 26px}
+.field{margin:0 0 19px}.field-label{margin-bottom:9px;font-size:14px;font-weight:650;color:#d9e0e8}
+.input-shell{border:1px solid #354252;border-radius:11px;background:#0d1219;padding:0 14px;min-height:58px;box-shadow:none}
+.input-shell:focus-within{border-color:#6da9c3;box-shadow:0 0 0 3px #6da9c31c}
+.input-icon{font-size:17px;color:#8dbbd0}.input-shell input{font-size:15px;padding:15px 0}.input-shell input::placeholder{color:#778391}
+.show-pass{color:#9bc8d9;font-size:12px;letter-spacing:.3px}
+.options{font-size:13px;color:#aeb8c4;margin:0 0 22px}.remember input{accent-color:#5796b5}
+.text-button{color:#9bc8d9;font-size:13px;text-decoration:none}
+.primary{border-radius:11px;padding:16px;background:#356f91;color:#fff;font-size:16px;font-weight:750;box-shadow:none;margin:3px 0 17px}
+.primary:hover{background:#407f9f}
+.divider{font-size:13px;color:#8793a1;margin:20px 0}.divider:before,.divider:after{background:#35404d}
+.socials{gap:12px}.social{width:76px;height:68px;border-radius:12px;border:1px solid #364453;background:#101720;color:#e7edf3;font-size:23px}
+.social small{font-size:10px;color:#9daaba}
+.switch{font-size:14px;color:#aab4c0;margin-top:23px}.switch button{color:#9bc8d9}
+.notice{border-radius:10px;border-color:#38647a;background:#142632;color:#dcecf3}.notice.error{border-color:#874c59;background:#2a171d;color:#f1dce0}
+.home-layout{grid-template-columns:220px minmax(0,1fr) 280px;gap:22px;align-items:start}
+.side-nav,.composer,.post-card,.empty-card,.profile-card{background:#141a23;border:1px solid #2b3542;border-radius:15px;box-shadow:0 10px 28px #0003}
+.side-nav{padding:10px;top:88px}
+.nav-btn{border-radius:9px;padding:13px 12px;color:#c4ccd5;font-size:14px;font-weight:650}
+.nav-btn.active,.nav-btn:hover{background:#202c39;color:#f3f6f9;box-shadow:inset 3px 0 #79b8d0}
+.feed-title{font-size:23px;font-weight:750;letter-spacing:-.5px}
+.composer,.post-card{padding:17px}.composer{margin-bottom:16px}
+#storiesPanel{background:#141a23;border-color:#2b3542}
+#storiesPanel>strong{font-size:14px;font-weight:750;letter-spacing:.2px}
+.avatar{background:#385a70;color:#f1f6f8;font-weight:750}
+.composer textarea{background:#0d1219;border:1px solid #344150;border-radius:10px;color:#eef1f5;padding:13px}
+.composer textarea:focus{border-color:#6da9c3}
+.composer textarea::placeholder{color:#778391}
+.small-primary{border-radius:9px;background:#356f91;color:#fff;font-weight:700;padding:10px 15px;box-shadow:none}
+.small-primary:hover{background:#407f9f}
+.post-card{overflow:hidden}.post-name{font-weight:750}.post-meta{color:#8e9aa8}
+.post-content{color:#e0e5eb;line-height:1.7}
+.post-actions{border-color:#2b3542}.post-actions button{border:1px solid #303c49;background:#111821;color:#c4ced8;border-radius:9px}
+.post-actions button:hover{border-color:#6da9c3}
+.profile-card{padding:17px}.profile-card .avatar{background:#385a70}
+.right-rail{display:flex;flex-direction:column;gap:14px;position:sticky;top:88px}
+.rail-card{border:1px solid #2b3542;border-radius:15px;padding:16px;background:#141a23;box-shadow:0 10px 28px #0003}
+.rail-title{font-size:14px;font-weight:750;color:#e7edf3}
+.rail-brand-mark{border-radius:12px;background:#101720;border:1px solid #587d91;color:#eaf5f8;text-shadow:none;box-shadow:none}
+.rail-brand strong{font-size:15px}.rail-brand small,.rail-muted{color:#9ba7b5}
+.rail-link{border:1px solid #303c49;border-radius:9px;background:#101720;color:#e1e7ed;font-size:13px}
+.rail-link span:last-child{color:#9bc8d9}
+.rail-divider{background:#2b3542}
+.empty-card{color:#aab4c0}
+.bottom-nav{background:#10151cf7;border-top:1px solid #2b3542;backdrop-filter:blur(16px)}
+.bottom-nav button{color:#aeb9c5}
+.bottom-nav button.active{color:#9bc8d9}
+.footer-note{color:#778391}
+@media(max-width:1050px){.home-layout{grid-template-columns:190px minmax(0,1fr)}.right-rail{display:none}}
+@media(max-width:700px){main{padding:16px 12px 100px}.home-layout{display:block}.brand-title{font-size:22px}.tagline{font-size:9px;letter-spacing:1.5px}.logo-icon{width:50px;height:50px}.auth-wrap{margin:4px auto;border-radius:15px}.primary{font-size:16px;padding:16px}.input-shell{min-height:56px;border-radius:10px}}
 
 </style>
 </head>
