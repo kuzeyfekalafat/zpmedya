@@ -123,6 +123,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
   const $ = id => document.getElementById(id);
   const authSection = $('authSection'), homeSection = $('homeSection'), notice = $('notice');
   let supabase = null, currentUser = null, currentProfile = null, currentView = 'login', busy = false, isAdmin = false;
+  let activeMessageChannel = null, notificationChannel = null;
   let resolveSupabaseReady;
   const supabaseReadyPromise = new Promise(resolve => { resolveSupabaseReady = resolve; });
   async function requireAuthClient(){
@@ -155,8 +156,25 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     if(error) console.warn('Profil okunamadı:',error.message);
     return data || {id:user.id,username:(user.email||'uye').split('@')[0],display_name:user.user_metadata?.display_name || user.user_metadata?.full_name || (user.email||'ZP Medya üyesi').split('@')[0],avatar_url:null};
   }
+  function stopRealtimeChannels(){
+    if(activeMessageChannel){supabase.removeChannel(activeMessageChannel);activeMessageChannel=null;}
+    if(notificationChannel){supabase.removeChannel(notificationChannel);notificationChannel=null;}
+  }
+  function startNotificationRealtime(){
+    if(!currentUser || notificationChannel)return;
+    const userId=currentUser.id;
+    notificationChannel=supabase.channel('zp-notifications-'+userId)
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'recipient_id=eq.'+userId},payload=>{
+        const n=payload.new||{};
+        if(n.actor_id===userId)return;
+        showNotice(n.content||'Yeni bir bildirimin var.');
+        const nav=document.querySelector('[data-nav="notifications"].active');
+        if(nav)loadNotifications();
+      }).subscribe();
+  }
   async function showHome(user) {
     currentUser=user; currentProfile=await getProfile(user);
+    startNotificationRealtime();
     if(currentProfile.account_status==='suspended'){
       await supabase.auth.signOut();
       switchView('login');
@@ -363,7 +381,15 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const list=document.createElement('div');list.className='composer';feed.appendChild(list);
     const {data,error}=await supabase.from('messages').select('id,sender_id,content,created_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(100);
     if(error){list.textContent='Mesajlar yüklenemedi: '+error.message;return;}
-    (data||[]).forEach(m=>{const item=document.createElement('div');item.style.cssText='padding:9px;margin:6px 0;border-radius:12px;background:'+(m.sender_id===currentUser.id?'#12345a':'#17203d');item.textContent=(m.sender_id===currentUser.id?'Sen: ':'')+(m.content||'');list.appendChild(item);});
+    const renderedMessageIds=new Set();
+    const appendMessage=m=>{if(!m||renderedMessageIds.has(String(m.id)))return;renderedMessageIds.add(String(m.id));const item=document.createElement('div');item.style.cssText='padding:9px;margin:6px 0;border-radius:12px;background:'+(m.sender_id===currentUser.id?'#12345a':'#17203d');item.textContent=(m.sender_id===currentUser.id?'Sen: ':'')+(m.content||'');list.appendChild(item);list.scrollTop=list.scrollHeight;};
+    (data||[]).forEach(appendMessage);
+    if(activeMessageChannel){supabase.removeChannel(activeMessageChannel);activeMessageChannel=null;}
+    activeMessageChannel=supabase.channel('zp-conversation-'+id)
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'conversation_id=eq.'+id},payload=>{
+        const m=payload.new||{};appendMessage(m);
+        if(m.sender_id!==currentUser.id)showNotice('Yeni mesaj: '+(name||'sohbet'));
+      }).subscribe();
     const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:10px';const input=document.createElement('input');input.maxLength=5000;input.required=true;input.placeholder='Mesaj yaz…';input.style.cssText='flex:1;min-width:0;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:12px';const send=document.createElement('button');send.className='small-primary';send.textContent='Gönder';form.append(input,send);feed.appendChild(form);
     form.addEventListener('submit',async ev=>{ev.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;try{const result=await supabase.from('messages').insert({conversation_id:id,sender_id:currentUser.id,content});if(result.error)throw result.error;await openConversation(id,name);}catch(err){showNotice('Mesaj gönderilemedi: '+readableError(err),true);}finally{send.disabled=false;}});
   }
@@ -564,7 +590,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       if(data?.session?.user){await showHome(data.session.user);}
       else switchView('login');
       client.auth.onAuthStateChange((event,session)=>{
-        if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null;switchView('login');}
+        if(event==='SIGNED_OUT'){stopRealtimeChannels();currentUser=null;currentProfile=null;switchView('login');}
         else if(event==='SIGNED_IN' && session?.user && !currentUser){setTimeout(()=>showHome(session.user),0);}
       });
     } catch(err) {
