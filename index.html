@@ -73,7 +73,8 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
   </section>
 
   <section id="homeSection" class="hidden">
-    <div class="profile-card"><div class="avatar" id="profileAvatar">ZP</div><div><div class="profile-name" id="profileName">ZP Medya üyesi</div><div class="profile-handle" id="profileHandle">@uye</div></div></div>
+    <div class="profile-card"><div class="avatar" id="profileAvatar">ZP</div><div style="min-width:0;flex:1"><div class="profile-name" id="profileName">ZP Medya üyesi</div><div class="profile-handle" id="profileHandle">@uye</div></div><button type="button" class="small-primary" id="editProfileBtn">Profili Düzenle</button></div>
+    <section id="profileEditor" class="composer hidden"><h3 style="margin-top:0">Profilini düzenle</h3><form id="profileForm"><label class="field"><span class="field-label">Görünen ad</span><span class="input-shell"><input id="editDisplayName" maxlength="60" required placeholder="Görünen ad"></span></label><label class="field"><span class="field-label">Kullanıcı adı</span><span class="input-shell"><span class="input-icon">@</span><input id="editUsername" maxlength="30" pattern="[a-zA-Z0-9_]+" required placeholder="kullanici_adi"></span></label><label class="field"><span class="field-label">Hakkında</span><textarea id="editBio" maxlength="300" placeholder="Kendinden kısaca bahset…"></textarea></label><div class="composer-bottom"><span id="profileEditStatus">Kullanıcı adı yalnızca harf, rakam ve alt çizgi içerebilir.</span><button class="small-primary" type="submit">Kaydet</button></div></form></section>
     <div class="home-layout">
       <nav class="side-nav" aria-label="Ana menü">
         <button class="nav-btn active" data-nav="home">🏠　Ana Sayfa</button><button class="nav-btn" data-nav="explore">🔍　Keşfet</button><button class="nav-btn" data-nav="profile">👤　Profilim</button><button class="nav-btn" data-nav="notifications">🔔　Bildirimler</button><button class="nav-btn" data-nav="messages">💬　Mesajlar</button>
@@ -134,6 +135,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     $('logoutBtn').classList.remove('hidden'); $('refreshBtn').classList.remove('hidden'); $('bottomNav').classList.remove('hidden');
     const name=currentProfile.display_name || user.user_metadata?.display_name || user.email?.split('@')[0] || 'ZP Medya üyesi';
     $('profileName').textContent=name; $('profileHandle').textContent='@'+(currentProfile.username || (user.email||'uye').split('@')[0]);
+    $('editDisplayName').value=currentProfile.display_name||name; $('editUsername').value=currentProfile.username||(user.email||'uye').split('@')[0].replace(/[^a-z0-9_]/gi,''); $('editBio').value=currentProfile.bio||'';
     $('composerName').textContent=name+' olarak paylaş'; setAvatar($('profileAvatar'),currentProfile.avatar_url,name); setAvatar($('composerAvatar'),currentProfile.avatar_url,name);
     await loadPosts(); window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -227,11 +229,22 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x===b));
     const labels={home:'Ana Sayfa',explore:'Keşfet',profile:'Profilim',notifications:'Bildirimler',messages:'Mesajlar'};
     $('feedTitle').textContent=labels[nav]||'Ana Sayfa';
-    if(nav==='home'){ $('composer').classList.remove('hidden');loadPosts(); }
-    else if(nav==='profile'){ $('composer').classList.add('hidden');$('feed').innerHTML='<div class="empty-card">Profil bilgilerin burada gösteriliyor. Profil düzenleme özelliğini sonraki aşamada ekleyeceğiz.</div>'; }
-    else { $('composer').classList.add('hidden');$('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü için gerekli veritabanı ve işlevleri sonraki aşamada bağlayacağız.</div>'; }
+    if(nav==='home'){ $('composer').classList.remove('hidden');$('profileEditor').classList.add('hidden');loadPosts(); }
+    else if(nav==='profile'){ $('composer').classList.add('hidden');$('profileEditor').classList.remove('hidden');$('feed').innerHTML='<div class="empty-card">Profil bilgilerini buradan düzenleyebilirsin.</div>'; }
+    else { $('composer').classList.add('hidden');$('profileEditor').classList.add('hidden');$('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
     window.scrollTo({top:0,behavior:'smooth'});
   }));
+  $('editProfileBtn').addEventListener('click',()=>{document.querySelector('[data-nav="profile"]').click();$('profileEditor').scrollIntoView({behavior:'smooth',block:'center'});});
+  $('profileForm').addEventListener('submit',async e=>{
+    e.preventDefault();if(busy||!currentUser)return;const form=e.currentTarget;setBusy(form,true);$('profileEditStatus').textContent='Kaydediliyor…';
+    const display_name=$('editDisplayName').value.trim(),username=$('editUsername').value.trim().toLowerCase(),bio=$('editBio').value.trim();
+    try{
+      if(!/^[a-z0-9_]{3,30}$/.test(username))throw new Error('Kullanıcı adı 3-30 karakter olmalı; harf, rakam ve alt çizgi kullanılabilir.');
+      const {data,error}=await supabase.from('profiles').update({display_name,username,bio}).eq('id',currentUser.id).select('id,username,display_name,bio,avatar_url').single();
+      if(error)throw error;currentProfile=data;$('profileName').textContent=data.display_name;$('profileHandle').textContent='@'+data.username;$('composerName').textContent=data.display_name+' olarak paylaş';$('profileEditStatus').textContent='Profilin kaydedildi.';showNotice('Profilin güncellendi.');
+    }catch(err){$('profileEditStatus').textContent=readableError(err);showNotice('Profil kaydedilemedi: '+readableError(err),true);}
+    finally{setBusy(form,false);}
+  });
   $('refreshBtn').addEventListener('click',()=>{if(currentUser)loadPosts();});
   $('logoutBtn').addEventListener('click',async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;currentUser=null;currentProfile=null;switchView('login');showNotice('Güvenli çıkış yapıldı.');}catch(err){showNotice(readableError(err),true);}});
   async function init(){
