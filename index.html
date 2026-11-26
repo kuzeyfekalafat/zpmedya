@@ -442,16 +442,29 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
   $('refreshBtn').addEventListener('click',()=>{if(currentUser)loadPosts();});
   $('logoutBtn').addEventListener('click',async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;currentUser=null;currentProfile=null;switchView('login');showNotice('Güvenli çıkış yapıldı.');}catch(err){showNotice(readableError(err),true);}});
   async function init(){
-    if(!window.supabase || !window.supabase.createClient){showNotice('Giriş kütüphanesi yüklenemedi. İnternet bağlantını kontrol et.',true);return;}
-    supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-    const {data,error}=await supabase.auth.getSession();
-    if(error)console.warn(error.message);
-    if(data?.session?.user){await showHome(data.session.user);}
-    else switchView('login');
-    supabase.auth.onAuthStateChange((event,session)=>{
-      if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null;switchView('login');}
-      else if(event==='SIGNED_IN' && session?.user && !currentUser){setTimeout(()=>showHome(session.user),0);}
-    });
+    try {
+      if(!window.supabase || typeof window.supabase.createClient!=='function'){
+        showNotice('Giriş bileşeni yüklenemedi. Sayfayı yenile; sorun sürerse bağlantıyı kontrol edelim.',true);
+        return;
+      }
+      const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+      if(!client || !client.auth || typeof client.auth.getSession!=='function'){
+        throw new Error('Supabase giriş istemcisi başlatılamadı.');
+      }
+      supabase=client;
+      const {data,error}=await client.auth.getSession();
+      if(error) throw error;
+      if(data?.session?.user){await showHome(data.session.user);}
+      else switchView('login');
+      client.auth.onAuthStateChange((event,session)=>{
+        if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null;switchView('login');}
+        else if(event==='SIGNED_IN' && session?.user && !currentUser){setTimeout(()=>showHome(session.user),0);}
+      });
+    } catch(err) {
+      console.error('ZP Medya başlatma hatası:',err);
+      supabase=null;
+      showNotice('Giriş sistemi başlatılamadı: '+readableError(err)+' Sayfayı yenileyip tekrar dene.',true);
+    }
   }
   init();
 })();
