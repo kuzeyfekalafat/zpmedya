@@ -127,12 +127,19 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
   function safeText(value){ return String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function setAvatar(el,url,name){ el.innerHTML=''; if(url){const img=document.createElement('img');img.src=url;img.alt='Profil fotoğrafı';img.onerror=()=>{el.textContent=initials(name)};el.appendChild(img)}else el.textContent=initials(name); }
   async function getProfile(user) {
-    const {data,error}=await supabase.from('profiles').select('id,username,display_name,bio,avatar_url,created_at').eq('id',user.id).maybeSingle();
+    const {data,error}=await supabase.from('profiles').select('id,username,display_name,bio,avatar_url,created_at,account_status').eq('id',user.id).maybeSingle();
     if(error) console.warn('Profil okunamadı:',error.message);
     return data || {id:user.id,username:(user.email||'uye').split('@')[0],display_name:user.user_metadata?.display_name || user.user_metadata?.full_name || (user.email||'ZP Medya üyesi').split('@')[0],avatar_url:null};
   }
   async function showHome(user) {
-    currentUser=user; currentProfile=await getProfile(user); isAdmin=false; const roleCheck=await supabase.from('user_roles').select('role').eq('user_id',user.id).maybeSingle(); isAdmin=!!(roleCheck.data?.role==='admin' && (user.email||'').toLowerCase()==='zpmedyaapp@gmail.com'); $('adminNav').classList.toggle('hidden',!isAdmin); $('adminQuickBtn').classList.toggle('hidden',!isAdmin); $('accountBadge').innerHTML=isAdmin?'<span class="admin-badge">👑 YÖNETİCİ</span>':'<span class="verified-badge">✓</span>';
+    currentUser=user; currentProfile=await getProfile(user);
+    if(currentProfile.account_status==='suspended'){
+      await supabase.auth.signOut();
+      switchView('login');
+      showNotice('Hesabın yönetici tarafından geçici olarak askıya alındı. Destek için ZP Medya yönetimiyle iletişime geç.',true);
+      return;
+    }
+    isAdmin=false; const roleCheck=await supabase.from('user_roles').select('role').eq('user_id',user.id).maybeSingle(); isAdmin=!!(roleCheck.data?.role==='admin' && (user.email||'').toLowerCase()==='zpmedyaapp@gmail.com'); $('adminNav').classList.toggle('hidden',!isAdmin); $('adminQuickBtn').classList.toggle('hidden',!isAdmin); $('accountBadge').innerHTML=isAdmin?'<span class="admin-badge">👑 YÖNETİCİ</span>':'<span class="verified-badge">✓</span>';
     authSection.classList.add('hidden'); homeSection.classList.remove('hidden');
     $('logoutBtn').classList.remove('hidden'); $('refreshBtn').classList.remove('hidden'); $('bottomNav').classList.remove('hidden');
     const name=currentProfile.display_name || user.user_metadata?.display_name || user.email?.split('@')[0] || 'ZP Medya üyesi';
@@ -246,7 +253,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     if(!isAdmin){$('feed').innerHTML='<div class="empty-card">Bu alan yalnızca yetkili yönetici hesabına açıktır.</div>';return;}
     const feed=$('feed');feed.innerHTML='<div class="empty-card">Yönetim merkezi yükleniyor…</div>';
     const [users,posts,reports,roles,badges,announcements]=await Promise.all([
-      supabase.from('profiles').select('id,username,display_name,avatar_url,created_at').order('created_at',{ascending:false}).limit(100),
+      supabase.from('profiles').select('id,username,display_name,avatar_url,created_at,account_status').order('created_at',{ascending:false}).limit(100),
       supabase.from('posts').select('id,user_id,content,created_at').order('created_at',{ascending:false}).limit(100),
       supabase.from('reports').select('id,reporter_id,target_type,target_id,reason,status,created_at').in('status',['open','reviewing']).order('created_at',{ascending:false}).limit(100),
       supabase.from('user_roles').select('user_id,role'),
@@ -274,6 +281,16 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
       const meta=document.createElement('div');meta.className='post-meta';meta.textContent='@'+(u.username||'uye')+' · '+(roleMap.get(u.id)==='admin'?'Yönetici':'Üye');
       info.append(name,meta);row.append(avatar,info);
       if(u.id!==currentUser.id && roleMap.get(u.id)!=='admin'){
+        const statusBtn=document.createElement('button');statusBtn.className='small-primary';statusBtn.style.background=u.account_status==='suspended'?'#176b48':'#8b3d53';statusBtn.textContent=u.account_status==='suspended'?'Hesabı aktifleştir':'Hesabı askıya al';
+        statusBtn.addEventListener('click',async()=>{
+          const next=u.account_status==='suspended'?'active':'suspended';
+          const verb=next==='suspended'?'askıya almak':'yeniden aktifleştirmek';
+          if(!confirm((u.display_name||u.username)+' hesabını '+verb+' istediğine emin misin?'))return;
+          statusBtn.disabled=true;
+          try{const result=await supabase.rpc('admin_set_member_status',{p_user_id:u.id,p_status:next});if(result.error)throw result.error;showNotice(next==='suspended'?'Üye hesabı askıya alındı.':'Üye hesabı yeniden aktifleştirildi.');await loadAdminPanel();}
+          catch(err){showNotice('Hesap durumu değiştirilemedi: '+readableError(err),true);statusBtn.disabled=false;}
+        });
+        row.appendChild(statusBtn);
         const badgeBtn=document.createElement('button');badgeBtn.className='small-primary';badgeBtn.textContent=badgeMap.has(u.id)?'Mavi rozeti kaldır':'Mavi rozet ver';
         badgeBtn.addEventListener('click',async()=>{badgeBtn.disabled=true;try{if(badgeMap.has(u.id)){const x=await supabase.from('member_badges').delete().eq('user_id',u.id);if(x.error)throw x.error;badgeMap.delete(u.id);badgeBtn.textContent='Mavi rozet ver';}else{const x=await supabase.from('member_badges').insert({user_id:u.id,badge_type:'verified',granted_by:currentUser.id});if(x.error)throw x.error;badgeMap.add(u.id);badgeBtn.textContent='Mavi rozeti kaldır';}showNotice('Üye rozeti güncellendi.');}catch(err){showNotice('Rozet güncellenemedi: '+readableError(err),true);}finally{badgeBtn.disabled=false;}});
         row.appendChild(badgeBtn);
