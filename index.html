@@ -19,7 +19,24 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
 .primary{width:100%;border:0;border-radius:25px;padding:22px 16px;background:linear-gradient(100deg,#00dbe8,#168bff 54%,#c000f4);color:#fff;font-weight:900;font-size:23px;box-shadow:0 0 30px #008dff45;margin:4px 0 24px}.primary:disabled{opacity:.6}.divider{display:flex;align-items:center;gap:16px;color:#aab6d7;margin:24px 0}.divider:before,.divider:after{content:"";height:1px;background:#536386;flex:1}.socials{display:flex;justify-content:center;gap:18px}.social{width:84px;height:84px;border-radius:28px;border:1px solid #6679b4;background:linear-gradient(145deg,#17264b,#0a1330);color:white;font-size:28px;font-weight:900}.social small{display:block;font-size:10px;font-weight:600;color:#aebbe0;margin-top:2px}.switch{text-align:center;color:#aab6d7;margin-top:28px}.switch button{border:0;background:none;color:var(--cyan);font-weight:800}.notice{display:none;padding:14px 16px;border:1px solid #158c9d;background:#052b40;color:#d7fbff;border-radius:18px;margin-bottom:24px;line-height:1.5}.notice.show{display:block}.notice.error{border-color:#a94864;background:#310f26;color:#ffdce8}
 .home-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px}.side-nav,.composer,.post-card,.empty-card,.profile-card{background:#0a1230dd;border:1px solid #24365f;border-radius:22px;box-shadow:0 12px 34px #0002}.side-nav{padding:12px;height:max-content;position:sticky;top:95px}.nav-btn{width:100%;text-align:left;border:0;border-radius:14px;background:transparent;color:#dce6ff;padding:13px 12px;margin:2px 0;font-weight:750}.nav-btn.active,.nav-btn:hover{background:linear-gradient(90deg,#083f68,#29104a);color:white}.feed-title{font-size:25px;margin:2px 0 16px}.composer{padding:17px;margin-bottom:18px}.composer-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#00eaff,#8d39ff);display:grid;place-items:center;color:#06102a;font-weight:950;overflow:hidden;flex-shrink:0}.avatar img{width:100%;height:100%;object-fit:cover}.composer textarea{width:100%;min-height:100px;resize:vertical;background:#050b20;border:1px solid #293b67;border-radius:16px;color:white;padding:14px;outline:none}.composer textarea:focus{border-color:var(--cyan)}.composer-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;color:var(--muted);font-size:13px}.small-primary{border:0;border-radius:14px;background:linear-gradient(100deg,#00cfe8,#5b40ff,#a000ff);color:white;font-weight:850;padding:12px 18px}.post-card{padding:17px;margin-bottom:15px}.post-head{display:flex;align-items:center;gap:10px}.post-name{font-weight:850}.post-meta{font-size:12px;color:#93a2c8;margin-top:3px}.post-content{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;margin:16px 0}.post-actions{display:flex;gap:8px;border-top:1px solid #25365b;padding-top:12px}.post-actions button{flex:1;border:1px solid #26365c;background:#0b1734;color:#cbd8fa;border-radius:12px;padding:10px}.post-actions button:hover{border-color:#00dff4}.empty-card{padding:28px;text-align:center;color:#aab6d7}.profile-card{padding:20px;margin-bottom:18px;display:flex;align-items:center;gap:15px}.profile-card .avatar{width:64px;height:64px;font-size:22px}.profile-name{font-size:20px;font-weight:900}.profile-handle{color:#9eb0d6;margin-top:4px}.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:6;background:#050817f2;border-top:1px solid #24365f;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom));justify-content:space-around;backdrop-filter:blur(12px)}.bottom-nav button{border:0;background:transparent;color:#b8c5e6;font-size:20px;padding:8px}.bottom-nav button span{display:block;font-size:10px;margin-top:3px}.verified-badge{display:inline-block;margin-left:6px;color:#70d8ff;font-size:17px}.admin-badge{display:inline-block;margin-left:6px;padding:3px 8px;border-radius:20px;background:linear-gradient(100deg,#d49a28,#fff0a6,#2e8dff);color:#07132d;font-size:11px;font-weight:950}.footer-note{text-align:center;color:#7788ae;font-size:12px;margin:28px 0 0}
 @media(max-width:700px){.home-layout{display:block}.side-nav{display:none}.bottom-nav{display:flex}.header-actions .desktop-only{display:none}.brand-title{font-size:23px}.logo-icon{width:50px;height:50px}.auth-wrap{margin:0 auto}.social{width:76px;height:76px}.options{font-size:14px}.input-shell{min-height:68px;border-radius:22px}.primary{font-size:21px}}
-.comments-area input:focus{outline:1px solid var(--cyan)}.post-actions button:disabled{opacity:.55;cursor:wait}</style>
+.comments-area input:focus{outline:1px solid var(--cyan)}.post-actions button:disabled{opacity:.55;cursor:wait}
+/* Mobil yönetim ekranı: kart ve işlem düğmelerini taşmadan hizala */
+@media(max-width:700px){
+  .profile-card{display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;padding:16px;align-items:center}
+  .profile-card>.avatar{grid-column:1;grid-row:1;width:56px;height:56px}
+  .profile-card>div:nth-child(2){grid-column:2;min-width:0}
+  .profile-card>div:last-child{grid-column:1/-1;display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important;width:100%}
+  .profile-card .small-primary{width:100%;padding:12px 8px;font-size:14px;white-space:normal}
+  .profile-name{font-size:18px;overflow-wrap:anywhere}
+  .profile-handle{overflow-wrap:anywhere}
+  .admin-member-row{display:grid!important;grid-template-columns:46px minmax(0,1fr);gap:10px!important;align-items:center}
+  .admin-member-row>.avatar{grid-column:1;grid-row:1;width:46px;height:46px}
+  .admin-member-row>.member-info{grid-column:2;min-width:0}
+  .admin-member-row>.small-primary{grid-column:1/-1;width:100%;margin:0;padding:11px 10px;font-size:14px}
+  .admin-member-row>.small-primary+ .small-primary{grid-column:1/-1}
+  .post-card{padding:14px}
+}
+</style>
 </head>
 <body>
 <header>
@@ -274,9 +291,9 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     if(users.error) errorCard('Üyeler yüklenemedi: '+users.error.message);
     else if(!users.data?.length) errorCard('Henüz üye bulunmuyor.');
     else users.data.forEach(u=>{
-      const row=document.createElement('article');row.className='post-card';row.style.display='flex';row.style.alignItems='center';row.style.gap='10px';
+      const row=document.createElement('article');row.className='post-card admin-member-row';row.style.display='flex';row.style.alignItems='center';row.style.gap='10px';
       const avatar=document.createElement('div');avatar.className='avatar';setAvatar(avatar,u.avatar_url,u.display_name||u.username);
-      const info=document.createElement('div');info.style.cssText='min-width:0;flex:1';
+      const info=document.createElement('div');info.className='member-info';info.style.cssText='min-width:0;flex:1';
       const name=document.createElement('strong');name.textContent=u.display_name||u.username||'Üye';
       const meta=document.createElement('div');meta.className='post-meta';meta.textContent='@'+(u.username||'uye')+' · '+(roleMap.get(u.id)==='admin'?'Yönetici':'Üye');
       info.append(name,meta);row.append(avatar,info);
