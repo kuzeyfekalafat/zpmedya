@@ -209,6 +209,13 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     }catch(err){showNotice('Hikâye paylaşılamadı: '+readableError(err),true);}finally{setBusy(form,false);}
   });
 
+
+  async function loadExplore(){
+    const feed=$('feed');feed.innerHTML='';
+    const panel=document.createElement('div');panel.className='composer';const form=document.createElement('form');form.style.cssText='display:flex;gap:8px';const input=document.createElement('input');input.placeholder='Kullanıcı adı veya görünen ad ara…';input.style.cssText='flex:1;min-width:0;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:12px';const btn=document.createElement('button');btn.className='small-primary';btn.textContent='Ara';form.append(input,btn);panel.append(form);feed.appendChild(panel);
+    const results=document.createElement('div');feed.appendChild(results);
+    form.addEventListener('submit',async ev=>{ev.preventDefault();const term=input.value.trim();if(!term)return;results.innerHTML='<div class="empty-card">Aranıyor…</div>';const r=await supabase.from('profiles').select('id,username,display_name,bio,avatar_url').or('username.ilike.%'+term+'%,display_name.ilike.%'+term+'%').limit(20);if(r.error){results.textContent='Arama başarısız: '+r.error.message;return;}results.innerHTML='';if(!r.data.length){results.innerHTML='<div class="empty-card">Üye bulunamadı.</div>';return;}for(const p of r.data){if(p.id===currentUser.id)continue;const row=document.createElement('div');row.className='post-card';const name=document.createElement('strong');name.textContent=p.display_name||p.username;const handle=document.createElement('div');handle.className='post-meta';handle.textContent='@'+p.username;const bio=document.createElement('p');bio.textContent=p.bio||'';const follow=document.createElement('button');follow.className='small-primary';follow.textContent='Takip Et';const state=await supabase.from('follows').select('follower_id').eq('follower_id',currentUser.id).eq('following_id',p.id).maybeSingle();if(state.data)follow.textContent='Takibi Bırak';follow.addEventListener('click',async()=>{follow.disabled=true;try{if(follow.textContent==='Takip Et'){const x=await supabase.from('follows').insert({follower_id:currentUser.id,following_id:p.id});if(x.error)throw x.error;follow.textContent='Takibi Bırak';}else{const x=await supabase.from('follows').delete().eq('follower_id',currentUser.id).eq('following_id',p.id);if(x.error)throw x.error;follow.textContent='Takip Et';}}catch(err){showNotice('Takip işlemi başarısız: '+readableError(err),true);}finally{follow.disabled=false;}});row.append(name,handle,bio,follow);results.appendChild(row);}});
+  }
   async function loadMessages(){
     const feed=$('feed');feed.innerHTML='<div class="empty-card">Mesajlar yükleniyor…</div>';
     const {data,error}=await supabase.rpc('list_my_conversations');
@@ -293,7 +300,7 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
     $('feedTitle').textContent=labels[nav]||'Ana Sayfa';
     if(nav==='home'){ $('composer').classList.remove('hidden');$('profileEditor').classList.add('hidden');$('storiesPanel').classList.remove('hidden');loadPosts();loadStories(); }
     else if(nav==='profile'){ $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.remove('hidden');$('feed').innerHTML='<div class="empty-card">Profil bilgilerini buradan düzenleyebilirsin.</div>'; }
-    else { $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.add('hidden');if(nav==='notifications')loadNotifications();else if(nav==='messages')loadMessages();else $('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
+    else { $('composer').classList.add('hidden');$('storiesPanel').classList.add('hidden');$('profileEditor').classList.add('hidden');if(nav==='notifications')loadNotifications();else if(nav==='messages')loadMessages();else if(nav==='explore')loadExplore();else $('feed').innerHTML='<div class="empty-card">'+labels[nav]+' bölümü hazırlanıyor.</div>'; }
     window.scrollTo({top:0,behavior:'smooth'});
   }));
   $('editProfileBtn').addEventListener('click',()=>{document.querySelector('[data-nav="profile"]').click();$('profileEditor').scrollIntoView({behavior:'smooth',block:'center'});});
