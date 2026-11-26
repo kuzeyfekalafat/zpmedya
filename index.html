@@ -19,12 +19,41 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
 .primary{width:100%;border:0;border-radius:25px;padding:22px 16px;background:linear-gradient(100deg,#00dbe8,#168bff 54%,#c000f4);color:#fff;font-weight:900;font-size:23px;box-shadow:0 0 30px #008dff45;margin:4px 0 24px}.primary:disabled{opacity:.6}.divider{display:flex;align-items:center;gap:16px;color:#aab6d7;margin:24px 0}.divider:before,.divider:after{content:"";height:1px;background:#536386;flex:1}.socials{display:flex;justify-content:center;gap:18px}.social{width:84px;height:84px;border-radius:28px;border:1px solid #6679b4;background:linear-gradient(145deg,#17264b,#0a1330);color:white;font-size:28px;font-weight:900}.social small{display:block;font-size:10px;font-weight:600;color:#aebbe0;margin-top:2px}.switch{text-align:center;color:#aab6d7;margin-top:28px}.switch button{border:0;background:none;color:var(--cyan);font-weight:800}.notice{display:none;padding:14px 16px;border:1px solid #158c9d;background:#052b40;color:#d7fbff;border-radius:18px;margin-bottom:24px;line-height:1.5}.notice.show{display:block}.notice.error{border-color:#a94864;background:#310f26;color:#ffdce8}
 .home-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px}.side-nav,.composer,.post-card,.empty-card,.profile-card{background:#0a1230dd;border:1px solid #24365f;border-radius:22px;box-shadow:0 12px 34px #0002}.side-nav{padding:12px;height:max-content;position:sticky;top:95px}.nav-btn{width:100%;text-align:left;border:0;border-radius:14px;background:transparent;color:#dce6ff;padding:13px 12px;margin:2px 0;font-weight:750}.nav-btn.active,.nav-btn:hover{background:linear-gradient(90deg,#083f68,#29104a);color:white}.feed-title{font-size:25px;margin:2px 0 16px}.composer{padding:17px;margin-bottom:18px}.composer-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#00eaff,#8d39ff);display:grid;place-items:center;color:#06102a;font-weight:950;overflow:hidden;flex-shrink:0}.avatar img{width:100%;height:100%;object-fit:cover}.composer textarea{width:100%;min-height:100px;resize:vertical;background:#050b20;border:1px solid #293b67;border-radius:16px;color:white;padding:14px;outline:none}.composer textarea:focus{border-color:var(--cyan)}.composer-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;color:var(--muted);font-size:13px}.small-primary{border:0;border-radius:14px;background:linear-gradient(100deg,#00cfe8,#5b40ff,#a000ff);color:white;font-weight:850;padding:12px 18px}.post-card{padding:17px;margin-bottom:15px}.post-head{display:flex;align-items:center;gap:10px}.post-name{font-weight:850}.post-meta{font-size:12px;color:#93a2c8;margin-top:3px}.post-content{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;margin:16px 0}.post-actions{display:flex;gap:8px;border-top:1px solid #25365b;padding-top:12px}.post-actions button{flex:1;border:1px solid #26365c;background:#0b1734;color:#cbd8fa;border-radius:12px;padding:10px}.post-actions button:hover{border-color:#00dff4}.empty-card{padding:28px;text-align:center;color:#aab6d7}.profile-card{padding:20px;margin-bottom:18px;display:flex;align-items:center;gap:15px}.profile-card .avatar{width:64px;height:64px;font-size:22px}.profile-name{font-size:20px;font-weight:900}.profile-handle{color:#9eb0d6;margin-top:4px}.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:6;background:#050817f2;border-top:1px solid #24365f;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom));justify-content:space-around;backdrop-filter:blur(12px)}.bottom-nav button{border:0;background:transparent;color:#b8c5e6;font-size:20px;padding:8px}.bottom-nav button span{display:block;font-size:10px;margin-top:3px}.verified-badge{display:inline-block;margin-left:6px;color:#70d8ff;font-size:17px}.admin-badge{display:inline-block;margin-left:6px;padding:3px 8px;border-radius:20px;background:linear-gradient(100deg,#d49a28,#fff0a6,#2e8dff);color:#07132d;font-size:11px;font-weight:950}.footer-note{text-align:center;color:#7788ae;font-size:12px;margin:28px 0 0}
 @media(max-width:700px){.home-layout{display:block}.side-nav{display:none}.bottom-nav{display:flex}.header-actions .desktop-only{display:none}.brand-title{font-size:23px}.logo-icon{width:50px;height:50px}.auth-wrap{margin:0 auto}.social{width:76px;height:76px}.options{font-size:14px}.input-shell{min-height:68px;border-radius:22px}.primary{font-size:21px}}
-.comments-area input:focus{outline:1px solid var(--cyan)}.post-actions button:disabled{opacity:.55;cursor:wait}</style>
+.comments-area input:focus{outline:1px solid var(--cyan)}.post-actions button:disabled{opacity:.55;cursor:wait}
+/* ZP Medya kurumsal arayüz yenilemesi */
+.logo-icon{position:relative;border:1px solid #16dfff;background:radial-gradient(circle at 25% 20%,#071b45,#030713 72%);color:#fff;font-style:italic;letter-spacing:-4px;text-shadow:0 0 8px #00eaff,0 0 18px #a000ff;box-shadow:0 0 0 2px #a000ff22,0 0 24px #00bfff66,inset 0 0 18px #182c78;font-size:25px}
+.logo-icon:after{content:"";position:absolute;inset:-3px;border-radius:19px;border:1px solid transparent;background:linear-gradient(135deg,#00eaff,#246bff,#e000ff) border-box;-webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.brand-title{letter-spacing:-.8px}.tagline{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#b9c8ee}
+main{max-width:1440px;padding:24px 22px 110px}
+.home-layout{grid-template-columns:210px minmax(0,1fr) 280px;gap:20px;align-items:start}
+.side-nav{top:92px;background:linear-gradient(180deg,#09152fef,#070d20ef);border-color:#173d67}
+.nav-btn{padding:14px 13px;font-size:14px}.nav-btn.active,.nav-btn:hover{background:linear-gradient(100deg,#063d63,#17164c 72%,#3b0758);box-shadow:inset 3px 0 #00eaff,0 0 18px #007dff25}
+.feed-title{font-size:24px;letter-spacing:-.5px}
+.composer,.post-card,.profile-card,.empty-card,.side-nav{border-color:#1d416b;background:linear-gradient(145deg,#0b1833f2,#070d20f5);box-shadow:0 12px 34px #0005,0 0 18px #006bff0b}
+.composer,.post-card{padding:18px}.post-card{overflow:hidden}
+#storiesPanel{border-color:#174d83;background:linear-gradient(110deg,#0b1a37,#10102b)}
+#storiesPanel>strong{font-size:16px;letter-spacing:.4px}
+#storiesList>*{flex-shrink:0}
+.right-rail{display:flex;flex-direction:column;gap:15px;position:sticky;top:92px}
+.rail-card{border:1px solid #204775;border-radius:20px;padding:17px;background:linear-gradient(145deg,#0c1935f5,#080d20f5);box-shadow:0 12px 30px #0004}
+.rail-title{display:flex;align-items:center;gap:8px;font-weight:850;margin:0 0 13px;font-size:15px}
+.rail-brand{display:flex;align-items:center;gap:11px}
+.rail-brand-mark{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(140deg,#04152d,#08091b);border:1px solid #00dfff;color:white;font-size:21px;font-weight:950;font-style:italic;text-shadow:0 0 12px #00dfff,0 0 16px #c000ff;box-shadow:0 0 18px #006dff55}
+.rail-brand strong{display:block;font-size:16px}.rail-brand small{display:block;color:#9eafd4;margin-top:4px}
+.rail-link{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;margin-top:9px;border:1px solid #244b82;border-radius:13px;background:linear-gradient(100deg,#082c53,#21104b);font-weight:750;color:#f3f6ff}
+.rail-link span:last-child{color:#50eaff;font-size:18px}
+.rail-muted{color:#aab8d8;font-size:13px;line-height:1.6;margin:0}
+.rail-divider{height:1px;background:#20395f;margin:12px 0}
+.footer-note{padding-top:12px}
+@media(max-width:1050px){.home-layout{grid-template-columns:190px minmax(0,1fr)}.right-rail{display:none}}
+@media(max-width:700px){main{padding:14px 10px 100px}.home-layout{display:block}.brand-title{font-size:22px}.tagline{font-size:10px;letter-spacing:2px}.logo-icon{width:50px;height:50px}.auth-wrap{margin:0 auto}}
+
+</style>
 </head>
 <body>
 <header>
   <div class="logo-icon">ZP</div>
-  <div><div class="brand-title">ZP <span>MEDYA</span></div><div class="tagline">Kendini göster.</div></div>
+  <div><div class="brand-title">ZP <span>MEDYA</span></div><div class="tagline">PAYLAŞ • KEŞFET • BAĞLAN</div></div>
   <div class="header-actions">
     <button id="refreshBtn" class="icon-btn hidden" aria-label="Yenile">↻</button>
     <button id="logoutBtn" class="icon-btn hidden" aria-label="Çıkış yap">⇥</button>
@@ -89,6 +118,26 @@ main{max-width:980px;margin:0 auto;padding:20px 14px 100px}.auth-wrap{max-width:
         <div id="feed" aria-live="polite"><div class="empty-card">Gönderiler yükleniyor…</div></div>
       </div>
     </div>
+
+    <aside class="right-rail" aria-label="ZP Medya yan paneli">
+      <section class="rail-card">
+        <div class="rail-brand"><div class="rail-brand-mark">ZP</div><div><strong>ZP MEDYA</strong><small>Paylaş • Keşfet • Bağlan</small></div></div>
+        <div class="rail-divider"></div>
+        <p class="rail-muted">Kendini göster. Fikirlerini paylaş, yeni insanlarla tanış ve topluluğun bir parçası ol.</p>
+      </section>
+      <section class="rail-card">
+        <h3 class="rail-title">✦ ZP Dünyası</h3>
+        <div class="rail-link"><span>🎬　Zaman Perdesi Film</span><span>›</span></div>
+        <div class="rail-link"><span>♫　Zaman Perdesi Music</span><span>›</span></div>
+        <div class="rail-link"><span>✎　ZP Tasarım</span><span>›</span></div>
+      </section>
+      <section class="rail-card">
+        <h3 class="rail-title">◎ Topluluk</h3>
+        <p class="rail-muted">Hikâyeleri takip et, gönderilere katıl ve keşfet bölümünden yeni hesaplar bul.</p>
+        <div class="rail-divider"></div>
+        <p class="rail-muted">Güvenli ve saygılı bir topluluk için paylaşım kurallarına dikkat et.</p>
+      </section>
+    </aside>
   </section>
   <p class="footer-note">© 2026 ZP Medya · Kendini göster.</p>
 </main>
