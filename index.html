@@ -175,7 +175,11 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     refreshUnreadMessageCount();
     if(!currentUser||messageCountChannel)return;
     messageCountChannel=supabase.channel('zp-message-count-'+currentUser.id)
-      .on('postgres_changes',{event:'*',schema:'public',table:'messages'},()=>refreshUnreadMessageCount())
+      .on('postgres_changes',{event:'*',schema:'public',table:'messages'},()=>{
+        refreshUnreadMessageCount();
+        const feed=$('feed');
+        if(feed&&feed.querySelector('input[placeholder="Kullanıcı adı"]'))loadMessages();
+      })
       .subscribe();
   }
   async function refreshUnreadNotificationCount(){
@@ -395,6 +399,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const feed=$('feed');feed.innerHTML='<div class="empty-card">Mesajlar yükleniyor…</div>';
     const {data,error}=await supabase.rpc('list_my_conversations');
     if(error){feed.innerHTML='<div class="empty-card">Mesaj listesi yüklenemedi: '+safeText(error.message)+'</div>';return;}
+    const unreadResult=await supabase.from('messages').select('conversation_id').neq('sender_id',currentUser.id).is('read_at',null);
+    const unreadByConversation={};
+    if(!unreadResult.error){(unreadResult.data||[]).forEach(m=>{const key=String(m.conversation_id);unreadByConversation[key]=(unreadByConversation[key]||0)+1;});}
+    else console.warn('Sohbet bazlı okunmamış mesaj sayıları alınamadı:',unreadResult.error.message);
     const wrap=document.createElement('div');wrap.className='composer';
     const title=document.createElement('strong');title.textContent='Yeni sohbet başlat';
     const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:10px;flex-wrap:wrap';
@@ -403,7 +411,15 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     form.addEventListener('submit',async ev=>{ev.preventDefault();btn.disabled=true;try{const username=input.value.trim().replace(/^@/,'').toLowerCase();const found=await supabase.from('profiles').select('id').eq('username',username).maybeSingle();if(found.error)throw found.error;if(!found.data)throw new Error('Bu kullanıcı adı bulunamadı.');if(found.data.id===currentUser.id)throw new Error('Kendinle sohbet başlatamazsın.');const created=await supabase.rpc('create_conversation',{p_participant_ids:[found.data.id]});if(created.error)throw created.error;await loadMessages();showNotice('Sohbet oluşturuldu.');}catch(err){showNotice('Sohbet açılamadı: '+readableError(err),true);}finally{btn.disabled=false;}});
     wrap.append(title,form);feed.innerHTML='';feed.appendChild(wrap);
     if(!data||!data.length){const empty=document.createElement('div');empty.className='empty-card';empty.textContent='Henüz sohbetin yok. Kullanıcı adıyla yeni sohbet başlatabilirsin.';feed.appendChild(empty);return;}
-    data.forEach(c=>{const row=document.createElement('button');row.type='button';row.className='post-card';row.style.cssText='width:100%;text-align:left;color:white;display:block';const name=document.createElement('strong');name.textContent=c.display_name||c.username||'Üye';const last=document.createElement('div');last.className='post-meta';last.textContent=c.last_message||'Sohbeti aç';row.append(name,last);row.addEventListener('click',()=>openConversation(c.conversation_id,c.display_name||c.username||'Üye'));feed.appendChild(row);});
+    data.forEach(c=>{
+      const row=document.createElement('button');row.type='button';row.className='post-card';row.style.cssText='width:100%;text-align:left;color:white;display:block';
+      const top=document.createElement('div');top.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:10px';
+      const name=document.createElement('strong');name.textContent=c.display_name||c.username||'Üye';top.appendChild(name);
+      const unread=unreadByConversation[String(c.conversation_id)]||0;
+      if(unread>0){const badge=document.createElement('b');badge.textContent=unread>99?'99+':String(unread);badge.setAttribute('aria-label',unread+' okunmamış mesaj');badge.style.cssText='flex:none;min-width:22px;height:22px;padding:0 6px;border-radius:12px;background:#ff3158;color:white;font-size:12px;line-height:22px;text-align:center';top.appendChild(badge);}
+      const last=document.createElement('div');last.className='post-meta';last.textContent=c.last_message||'Sohbeti aç';row.append(top,last);
+      row.addEventListener('click',()=>openConversation(c.conversation_id,c.display_name||c.username||'Üye'));feed.appendChild(row);
+    });
   }
   async function openConversation(id,name){
     const feed=$('feed');feed.innerHTML='';
