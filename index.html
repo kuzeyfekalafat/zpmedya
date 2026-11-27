@@ -425,6 +425,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const feed=$('feed');feed.innerHTML='';
     const back=document.createElement('button');back.className='small-primary';back.textContent='← Mesaj listesi';back.addEventListener('click',loadMessages);feed.appendChild(back);
     const heading=document.createElement('h3');heading.textContent=name;feed.appendChild(heading);
+    const typingIndicator=document.createElement('div');typingIndicator.textContent='';typingIndicator.style.cssText='min-height:20px;margin:-8px 0 10px 2px;font-size:12px;color:#00dff4';feed.appendChild(typingIndicator);
     const list=document.createElement('div');list.className='composer';feed.appendChild(list);
     const {data,error}=await supabase.from('messages').select('id,sender_id,content,created_at,read_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(100);
     if(error){list.textContent='Mesajlar yüklenemedi: '+error.message;return;}
@@ -471,7 +472,19 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     if(markRead.error)console.warn('Mesaj okundu bilgisi güncellenemedi:',markRead.error.message);
     await refreshUnreadMessageCount();
     if(activeMessageChannel){supabase.removeChannel(activeMessageChannel);activeMessageChannel=null;}
-    activeMessageChannel=supabase.channel('zp-conversation-'+id)
+    let typingTimer=null, remoteTypingTimer=null;
+    const sendTypingState=(isTyping)=>activeMessageChannel?.send({type:'broadcast',event:'typing',payload:{user_id:currentUser.id,name:currentProfile?.display_name||currentProfile?.username||'Üye',is_typing:isTyping}});
+    activeMessageChannel=supabase.channel('zp-conversation-'+id,{config:{broadcast:{self:false}}})
+      .on('broadcast',{event:'typing'},({payload})=>{
+        if(!payload||payload.user_id===currentUser.id)return;
+        if(payload.is_typing){
+          typingIndicator.textContent=(payload.name||name)+' yazıyor…';
+          clearTimeout(remoteTypingTimer);
+          remoteTypingTimer=setTimeout(()=>{typingIndicator.textContent='';},2500);
+        }else{
+          clearTimeout(remoteTypingTimer);typingIndicator.textContent='';
+        }
+      })
       .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'conversation_id=eq.'+id},async payload=>{
         const m=payload.new||{};
         if(m.sender_id!==currentUser.id){
@@ -493,7 +506,13 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
         if(row)row.remove();
       }).subscribe();
     const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:10px';const input=document.createElement('input');input.maxLength=5000;input.required=true;input.placeholder='Mesaj yaz…';input.style.cssText='flex:1;min-width:0;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:12px';const send=document.createElement('button');send.className='small-primary';send.textContent='Gönder';form.append(input,send);feed.appendChild(form);
-    form.addEventListener('submit',async ev=>{ev.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;try{const result=await supabase.from('messages').insert({conversation_id:id,sender_id:currentUser.id,content});if(result.error)throw result.error;await refreshUnreadMessageCount();await openConversation(id,name);}catch(err){showNotice('Mesaj gönderilemedi: '+readableError(err),true);}finally{send.disabled=false;}});
+    input.addEventListener('input',()=>{
+      if(!activeMessageChannel)return;
+      sendTypingState(true);
+      clearTimeout(typingTimer);
+      typingTimer=setTimeout(()=>sendTypingState(false),1400);
+    });
+    form.addEventListener('submit',async ev=>{ev.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;clearTimeout(typingTimer);sendTypingState(false);try{const result=await supabase.from('messages').insert({conversation_id:id,sender_id:currentUser.id,content});if(result.error)throw result.error;await refreshUnreadMessageCount();await openConversation(id,name);}catch(err){showNotice('Mesaj gönderilemedi: '+readableError(err),true);}finally{send.disabled=false;}});
   }
   async function loadAdminPanel(){
     if(!isAdmin){$('feed').innerHTML='<div class="empty-card">Bu alan yalnızca yetkili yönetici hesabına açıktır.</div>';return;}
