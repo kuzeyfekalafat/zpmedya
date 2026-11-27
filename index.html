@@ -428,6 +428,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const list=document.createElement('div');list.className='composer';feed.appendChild(list);
     const {data,error}=await supabase.from('messages').select('id,sender_id,content,created_at,read_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(100);
     if(error){list.textContent='Mesajlar yüklenemedi: '+error.message;return;}
+    const hiddenResult=await supabase.from('message_hidden_for_users').select('message_id').eq('user_id',currentUser.id);
+    if(hiddenResult.error){list.textContent='Mesaj gizleme bilgileri yüklenemedi: '+hiddenResult.error.message;return;}
+    const hiddenIds=new Set((hiddenResult.data||[]).map(x=>String(x.message_id)));
     const renderedMessageIds=new Set();
     const appendMessage=m=>{
       if(!m||renderedMessageIds.has(String(m.id)))return;
@@ -438,9 +441,31 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       const body=document.createElement('div');body.textContent=(own?'Sen: ':'')+(m.content||'');
       item.appendChild(body);
       if(own){const receipt=document.createElement('small');receipt.dataset.readReceipt='true';receipt.style.cssText='display:block;text-align:right;font-size:11px;color:#aab6d7;margin-top:4px';receipt.textContent=m.read_at?'✓✓ Okundu':'✓ Gönderildi';item.appendChild(receipt);}
+      const actions=document.createElement('div');actions.style.cssText='display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:7px';
+      const hideButton=document.createElement('button');hideButton.type='button';hideButton.textContent='Benden sil';hideButton.style.cssText='border:0;background:transparent;color:#b9c8e8;font-size:12px;padding:4px';
+      hideButton.addEventListener('click',async()=>{
+        if(!confirm('Bu mesaj yalnızca senin ekranından silinsin mi?'))return;
+        hideButton.disabled=true;
+        const result=await supabase.from('message_hidden_for_users').insert({message_id:m.id,user_id:currentUser.id});
+        if(result.error){showNotice('Mesaj senden silinemedi: '+readableError(result.error),true);hideButton.disabled=false;return;}
+        item.remove();showNotice('Mesaj yalnızca senden silindi.');
+      });
+      actions.appendChild(hideButton);
+      if(own){
+        const everyoneButton=document.createElement('button');everyoneButton.type='button';everyoneButton.textContent='Herkesten sil';everyoneButton.style.cssText='border:0;background:transparent;color:#ff9baa;font-size:12px;padding:4px';
+        everyoneButton.addEventListener('click',async()=>{
+          if(!confirm('Bu mesaj tüm sohbet katılımcılarından silinsin mi? Bu işlem geri alınamaz.'))return;
+          everyoneButton.disabled=true;
+          const result=await supabase.from('messages').delete().eq('id',m.id);
+          if(result.error){showNotice('Mesaj herkesten silinemedi: '+readableError(result.error),true);everyoneButton.disabled=false;return;}
+          item.remove();showNotice('Mesaj herkesten silindi.');
+        });
+        actions.appendChild(everyoneButton);
+      }
+      item.appendChild(actions);
       list.appendChild(item);list.scrollTop=list.scrollHeight;
     };
-    (data||[]).forEach(appendMessage);
+    (data||[]).filter(m=>!hiddenIds.has(String(m.id))).forEach(appendMessage);
     // Sohbet açıldığında karşı taraftan gelen okunmamış mesajları okundu olarak işaretle.
     const markRead=await supabase.from('messages').update({read_at:new Date().toISOString()}).eq('conversation_id',id).neq('sender_id',currentUser.id).is('read_at',null);
     if(markRead.error)console.warn('Mesaj okundu bilgisi güncellenemedi:',markRead.error.message);
@@ -461,6 +486,11 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
         const row=list.querySelector('[data-message-id="'+m.id+'"]');
         const receipt=row&&row.querySelector('[data-read-receipt]');
         if(receipt)receipt.textContent='✓✓ Okundu';
+      })
+      .on('postgres_changes',{event:'DELETE',schema:'public',table:'messages',filter:'conversation_id=eq.'+id},payload=>{
+        const oldMessage=payload.old||{};
+        const row=list.querySelector('[data-message-id="'+oldMessage.id+'"]');
+        if(row)row.remove();
       }).subscribe();
     const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:10px';const input=document.createElement('input');input.maxLength=5000;input.required=true;input.placeholder='Mesaj yaz…';input.style.cssText='flex:1;min-width:0;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:12px';const send=document.createElement('button');send.className='small-primary';send.textContent='Gönder';form.append(input,send);feed.appendChild(form);
     form.addEventListener('submit',async ev=>{ev.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;try{const result=await supabase.from('messages').insert({conversation_id:id,sender_id:currentUser.id,content});if(result.error)throw result.error;await refreshUnreadMessageCount();await openConversation(id,name);}catch(err){showNotice('Mesaj gönderilemedi: '+readableError(err),true);}finally{send.disabled=false;}});
