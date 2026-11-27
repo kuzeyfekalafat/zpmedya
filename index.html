@@ -442,7 +442,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       if(m.content){const body=document.createElement('div');body.textContent=(own?'Sen: ':'')+m.content;item.appendChild(body);}
       if(m.media_url){
         const mediaUrl=String(m.media_url);const cleanUrl=mediaUrl.split('?')[0].toLowerCase();
-        if(/\\.(mp4|webm|mov|m4v)$/.test(cleanUrl)){
+        if(['.mp4','.webm','.mov','.m4v'].some(ext=>cleanUrl.endsWith(ext))){
           const video=document.createElement('video');video.src=mediaUrl;video.controls=true;video.playsInline=true;video.preload='metadata';video.style.cssText='display:block;width:100%;max-width:320px;max-height:360px;border-radius:10px;margin-top:7px';item.appendChild(video);
         }else{
           const image=document.createElement('img');image.src=mediaUrl;image.alt='Gönderilen fotoğraf';image.loading='lazy';image.style.cssText='display:block;width:100%;max-width:320px;max-height:360px;object-fit:contain;border-radius:10px;margin-top:7px';item.appendChild(image);
