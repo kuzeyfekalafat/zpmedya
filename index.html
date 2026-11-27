@@ -443,7 +443,18 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       if(m.media_url){
         const mediaUrl=String(m.media_url);const cleanUrl=mediaUrl.split('?')[0].toLowerCase();
         if(['.mp3','.m4a','.aac','.wav','.ogg','.opus'].some(ext=>cleanUrl.endsWith(ext))){
-          const audio=document.createElement('audio');audio.src=mediaUrl;audio.controls=true;audio.preload='metadata';audio.style.cssText='display:block;width:100%;max-width:320px;margin-top:7px';item.appendChild(audio);
+          const audio=document.createElement('audio');audio.src=mediaUrl;audio.preload='metadata';audio.style.display='none';
+          const player=document.createElement('div');player.style.cssText='display:flex;align-items:center;gap:9px;width:100%;max-width:260px;min-height:48px;margin-top:7px;padding:7px 10px;border-radius:14px;background:#0b1732;box-sizing:border-box';
+          const play=document.createElement('button');play.type='button';play.textContent='▶';play.setAttribute('aria-label','Sesli mesajı oynat');play.style.cssText='width:34px;height:34px;flex:0 0 34px;border:0;border-radius:50%;background:linear-gradient(120deg,#08c7e8,#8b19f5);color:white;font-size:15px';
+          const info=document.createElement('div');info.style.cssText='display:flex;flex:1;min-width:0;flex-direction:column;gap:4px';
+          const track=document.createElement('input');track.type='range';track.min='0';track.max='100';track.value='0';track.setAttribute('aria-label','Sesli mesaj ilerleme');track.style.cssText='width:100%;height:4px;accent-color:#21c9e8;margin:0';
+          const time=document.createElement('small');time.textContent='0:00 / 0:00';time.style.cssText='font-size:10px;color:#b9c8e8';
+          info.append(track,time);player.append(play,info,audio);item.appendChild(player);
+          const fmt=t=>{if(!Number.isFinite(t))return '0:00';const n=Math.floor(t);return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
+          const update=()=>{track.value=audio.duration?String(audio.currentTime/audio.duration*100):'0';time.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration);};
+          play.addEventListener('click',async()=>{if(audio.paused){try{await audio.play();play.textContent='Ⅱ';}catch(e){showNotice('Ses oynatılamadı.',true);}}else{audio.pause();play.textContent='▶';}});
+          audio.addEventListener('loadedmetadata',update);audio.addEventListener('timeupdate',update);audio.addEventListener('ended',()=>{play.textContent='▶';audio.currentTime=0;update();});
+          track.addEventListener('input',()=>{if(audio.duration)audio.currentTime=Number(track.value)/100*audio.duration;});
         }else if(['.mp4','.webm','.mov','.m4v'].some(ext=>cleanUrl.endsWith(ext))){
           const video=document.createElement('video');video.src=mediaUrl;video.controls=true;video.playsInline=true;video.preload='metadata';video.style.cssText='display:block;width:100%;max-width:320px;max-height:360px;border-radius:10px;margin-top:7px';item.appendChild(video);
         }else{
