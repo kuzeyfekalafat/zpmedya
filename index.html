@@ -442,7 +442,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       if(m.content){const body=document.createElement('div');body.textContent=(own?'Sen: ':'')+m.content;item.appendChild(body);}
       if(m.media_url){
         const mediaUrl=String(m.media_url);const cleanUrl=mediaUrl.split('?')[0].toLowerCase();
-        if(['.mp4','.webm','.mov','.m4v'].some(ext=>cleanUrl.endsWith(ext))){
+        if(['.mp3','.m4a','.aac','.wav','.ogg','.opus'].some(ext=>cleanUrl.endsWith(ext))){
+          const audio=document.createElement('audio');audio.src=mediaUrl;audio.controls=true;audio.preload='metadata';audio.style.cssText='display:block;width:100%;max-width:320px;margin-top:7px';item.appendChild(audio);
+        }else if(['.mp4','.webm','.mov','.m4v'].some(ext=>cleanUrl.endsWith(ext))){
           const video=document.createElement('video');video.src=mediaUrl;video.controls=true;video.playsInline=true;video.preload='metadata';video.style.cssText='display:block;width:100%;max-width:320px;max-height:360px;border-radius:10px;margin-top:7px';item.appendChild(video);
         }else{
           const image=document.createElement('img');image.src=mediaUrl;image.alt='Gönderilen fotoğraf';image.loading='lazy';image.style.cssText='display:block;width:100%;max-width:320px;max-height:360px;object-fit:contain;border-radius:10px;margin-top:7px';item.appendChild(image);
@@ -516,7 +518,42 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const input=document.createElement('input');input.maxLength=5000;input.placeholder='Mesaj yaz…';input.style.cssText='flex:1;min-width:130px;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:12px';
     const fileInput=document.createElement('input');fileInput.type='file';fileInput.accept='image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime';fileInput.hidden=true;
     const attach=document.createElement('button');attach.type='button';attach.className='small-primary';attach.textContent='📎 Foto/Video';attach.addEventListener('click',()=>fileInput.click());
-    const send=document.createElement('button');send.className='small-primary';send.textContent='Gönder';form.append(input,attach,send,fileInput);feed.appendChild(form);
+    const voiceButton=document.createElement('button');voiceButton.type='button';voiceButton.className='small-primary';voiceButton.textContent='🎙️ Sesli mesaj';
+    const send=document.createElement('button');send.className='small-primary';send.textContent='Gönder';form.append(input,attach,voiceButton,send,fileInput);feed.appendChild(form);
+    let voiceRecorder=null,voiceStream=null,voiceChunks=[];
+    async function uploadVoiceMessage(blob,mimeType){
+      if(blob.size>50*1024*1024)throw new Error('Ses kaydı 50 MB sınırını aşıyor.');
+      const ext=mimeType.includes('mp4')?'m4a':mimeType.includes('ogg')?'ogg':'webm';
+      const path=currentUser.id+'/'+id+'/'+Date.now()+'-voice.'+ext;
+      const upload=await supabase.storage.from('post-media').upload(path,blob,{contentType:mimeType,upsert:false});
+      if(upload.error)throw upload.error;
+      const mediaUrl=supabase.storage.from('post-media').getPublicUrl(path).data.publicUrl;
+      const result=await supabase.from('messages').insert({conversation_id:id,sender_id:currentUser.id,content:null,media_url:mediaUrl});
+      if(result.error)throw result.error;
+      await refreshUnreadMessageCount();await openConversation(id,name);
+    }
+    voiceButton.addEventListener('click',async()=>{
+      if(voiceRecorder&&voiceRecorder.state==='recording'){voiceButton.disabled=true;voiceButton.textContent='Gönderiliyor…';voiceRecorder.stop();return;}
+      if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){showNotice('Bu tarayıcı ses kaydını desteklemiyor. Tarayıcıyı güncelle veya ses dosyasını Foto/Video bölümünden seç.',true);return;}
+      try{
+        voiceStream=await navigator.mediaDevices.getUserMedia({audio:true});
+        const preferred=['audio/webm;codecs=opus','audio/mp4','audio/ogg;codecs=opus'];
+        const mimeType=preferred.find(type=>MediaRecorder.isTypeSupported(type))||'';
+        voiceRecorder=mimeType?new MediaRecorder(voiceStream,{mimeType}):new MediaRecorder(voiceStream);
+        voiceChunks=[];
+        voiceRecorder.ondataavailable=event=>{if(event.data&&event.data.size)voiceChunks.push(event.data);};
+        voiceRecorder.onerror=()=>showNotice('Ses kaydı sırasında hata oluştu.',true);
+        voiceRecorder.onstop=async()=>{
+          const type=voiceRecorder.mimeType||'audio/webm';
+          const blob=new Blob(voiceChunks,{type});
+          voiceStream?.getTracks().forEach(track=>track.stop());voiceStream=null;voiceRecorder=null;voiceChunks=[];
+          try{if(blob.size)await uploadVoiceMessage(blob,type);else showNotice('Ses kaydı boş olduğu için gönderilmedi.',true);}
+          catch(err){showNotice('Ses mesajı gönderilemedi: '+readableError(err),true);}
+          finally{voiceButton.disabled=false;voiceButton.textContent='🎙️ Sesli mesaj';}
+        };
+        voiceRecorder.start();voiceButton.textContent='⏹ Durdur ve gönder';showNotice('Ses kaydı başladı. Bitince düğmeye tekrar bas.');
+      }catch(err){voiceStream?.getTracks().forEach(track=>track.stop());voiceStream=null;showNotice('Mikrofon açılamadı: '+readableError(err),true);}
+    });
     const fileNote=document.createElement('div');fileNote.style.cssText='font-size:12px;color:#aab6d7;margin-top:5px';form.after(fileNote);
     fileInput.addEventListener('change',()=>{const file=fileInput.files?.[0];fileNote.textContent=file?('Seçildi: '+file.name+' ('+(file.size/1024/1024).toFixed(1)+' MB)'):'';});
     input.addEventListener('input',()=>{
