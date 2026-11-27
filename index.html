@@ -442,7 +442,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       if(m.content){const body=document.createElement('div');body.textContent=(own?'Sen: ':'')+m.content;item.appendChild(body);}
       if(m.media_url){
         const mediaUrl=String(m.media_url);const cleanUrl=mediaUrl.split('?')[0].toLowerCase();
-        if(['.mp3','.m4a','.aac','.wav','.ogg','.opus'].some(ext=>cleanUrl.endsWith(ext))){
+        if(['.mp3','.m4a','.aac','.wav','.ogg','.opus'].some(ext=>cleanUrl.endsWith(ext))||/-voice\.(webm|m4a|ogg)$/.test(cleanUrl)){
           const audio=new Audio(mediaUrl);audio.preload='metadata';
           const player=document.createElement('div');player.style.cssText='display:flex;align-items:center;gap:9px;width:100%;max-width:260px;min-height:48px;margin-top:7px;padding:7px 10px;border-radius:14px;background:#0b1732;box-sizing:border-box';
           const play=document.createElement('button');play.type='button';play.textContent='▶';play.setAttribute('aria-label','Sesli mesajı oynat');play.style.cssText='width:34px;height:34px;flex:0 0 34px;border:0;border-radius:50%;background:linear-gradient(120deg,#08c7e8,#8b19f5);color:white;font-size:15px';
