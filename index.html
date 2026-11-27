@@ -427,7 +427,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     const heading=document.createElement('h3');heading.textContent=name;feed.appendChild(heading);
     const typingIndicator=document.createElement('div');typingIndicator.textContent='';typingIndicator.style.cssText='min-height:20px;margin:-8px 0 10px 2px;font-size:12px;color:#00dff4';feed.appendChild(typingIndicator);
     const list=document.createElement('div');list.className='composer';feed.appendChild(list);
-    const {data,error}=await supabase.from('messages').select('id,sender_id,content,created_at,read_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(100);
+    const {data,error}=await supabase.from('messages').select('id,sender_id,content,media_url,created_at,read_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(100);
     if(error){list.textContent='Mesajlar yüklenemedi: '+error.message;return;}
     const hiddenResult=await supabase.from('message_hidden_for_users').select('message_id').eq('user_id',currentUser.id);
     if(hiddenResult.error){list.textContent='Mesaj gizleme bilgileri yüklenemedi: '+hiddenResult.error.message;return;}
@@ -439,8 +439,15 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
       const own=m.sender_id===currentUser.id;
       const item=document.createElement('div');item.dataset.messageId=String(m.id);
       item.style.cssText='padding:9px;margin:6px 0;border-radius:12px;background:'+(own?'#12345a':'#17203d');
-      const body=document.createElement('div');body.textContent=(own?'Sen: ':'')+(m.content||'');
-      item.appendChild(body);
+      if(m.content){const body=document.createElement('div');body.textContent=(own?'Sen: ':'')+m.content;item.appendChild(body);}
+      if(m.media_url){
+        const mediaUrl=String(m.media_url);const cleanUrl=mediaUrl.split('?')[0].toLowerCase();
+        if(/\\.(mp4|webm|mov|m4v)$/.test(cleanUrl)){
+          const video=document.createElement('video');video.src=mediaUrl;video.controls=true;video.playsInline=true;video.preload='metadata';video.style.cssText='display:block;width:100%;max-width:320px;max-height:360px;border-radius:10px;margin-top:7px';item.appendChild(video);
+        }else{
+          const image=document.createElement('img');image.src=mediaUrl;image.alt='Gönderilen fotoğraf';image.loading='lazy';image.style.cssText='display:block;width:100%;max-width:320px;max-height:360px;object-fit:contain;border-radius:10px;margin-top:7px';item.appendChild(image);
+        }
+      }
       if(own){const receipt=document.createElement('small');receipt.dataset.readReceipt='true';receipt.style.cssText='display:block;text-align:right;font-size:11px;color:#aab6d7;margin-top:4px';receipt.textContent=m.read_at?'✓✓ Okundu':'✓ Gönderildi';item.appendChild(receipt);}
       const actions=document.createElement('div');actions.style.cssText='display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:7px';
       const hideButton=document.createElement('button');hideButton.type='button';hideButton.textContent='Benden sil';hideButton.style.cssText='border:0;background:transparent;color:#b9c8e8;font-size:12px;padding:4px';
@@ -505,14 +512,43 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
         const row=list.querySelector('[data-message-id="'+oldMessage.id+'"]');
         if(row)row.remove();
       }).subscribe();
-    const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:10px';const input=document.createElement('input');input.maxLength=5000;input.required=true;input.placeholder='Mesaj yaz…';input.style.cssText='flex:1;min-width:0;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:12px';const send=document.createElement('button');send.className='small-primary';send.textContent='Gönder';form.append(input,send);feed.appendChild(form);
+    const form=document.createElement('form');form.style.cssText='display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap';
+    const input=document.createElement('input');input.maxLength=5000;input.placeholder='Mesaj yaz…';input.style.cssText='flex:1;min-width:130px;background:#050b20;border:1px solid #293b67;border-radius:12px;color:white;padding:12px';
+    const fileInput=document.createElement('input');fileInput.type='file';fileInput.accept='image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime';fileInput.hidden=true;
+    const attach=document.createElement('button');attach.type='button';attach.className='small-primary';attach.textContent='📎 Foto/Video';attach.addEventListener('click',()=>fileInput.click());
+    const send=document.createElement('button');send.className='small-primary';send.textContent='Gönder';form.append(input,attach,send,fileInput);feed.appendChild(form);
+    const fileNote=document.createElement('div');fileNote.style.cssText='font-size:12px;color:#aab6d7;margin-top:5px';form.after(fileNote);
+    fileInput.addEventListener('change',()=>{const file=fileInput.files?.[0];fileNote.textContent=file?('Seçildi: '+file.name+' ('+(file.size/1024/1024).toFixed(1)+' MB)'):'';});
     input.addEventListener('input',()=>{
       if(!activeMessageChannel)return;
       sendTypingState(true);
       clearTimeout(typingTimer);
       typingTimer=setTimeout(()=>sendTypingState(false),1400);
     });
-    form.addEventListener('submit',async ev=>{ev.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;clearTimeout(typingTimer);sendTypingState(false);try{const result=await supabase.from('messages').insert({conversation_id:id,sender_id:currentUser.id,content});if(result.error)throw result.error;await refreshUnreadMessageCount();await openConversation(id,name);}catch(err){showNotice('Mesaj gönderilemedi: '+readableError(err),true);}finally{send.disabled=false;}});
+    form.addEventListener('submit',async ev=>{
+      ev.preventDefault();const content=input.value.trim();const file=fileInput.files?.[0];if(!content&&!file)return;
+      if(file){
+        const allowed=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm','video/quicktime'];
+        if(!allowed.includes(file.type)){showNotice('Yalnızca JPG, PNG, WEBP, GIF, MP4, WEBM veya MOV dosyası gönderebilirsin.',true);return;}
+        if(file.size>50*1024*1024){showNotice('Dosya boyutu en fazla 50 MB olabilir.',true);return;}
+      }
+      send.disabled=true;attach.disabled=true;clearTimeout(typingTimer);sendTypingState(false);
+      try{
+        let mediaUrl=null;
+        if(file){
+          fileNote.textContent='Medya yükleniyor…';
+          const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+          const path=currentUser.id+'/'+id+'/'+Date.now()+'-'+safeName;
+          const upload=await supabase.storage.from('post-media').upload(path,file,{contentType:file.type,upsert:false});
+          if(upload.error)throw upload.error;
+          mediaUrl=supabase.storage.from('post-media').getPublicUrl(path).data.publicUrl;
+        }
+        const result=await supabase.from('messages').insert({conversation_id:id,sender_id:currentUser.id,content:content||null,media_url:mediaUrl});
+        if(result.error)throw result.error;
+        await refreshUnreadMessageCount();await openConversation(id,name);
+      }catch(err){showNotice('Mesaj gönderilemedi: '+readableError(err),true);fileNote.textContent='Yükleme başarısız.';}
+      finally{send.disabled=false;attach.disabled=false;}
+    });
   }
   async function loadAdminPanel(){
     if(!isAdmin){$('feed').innerHTML='<div class="empty-card">Bu alan yalnızca yetkili yönetici hesabına açıktır.</div>';return;}
